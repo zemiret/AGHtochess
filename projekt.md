@@ -1,9 +1,15 @@
 Skład grupy:
 
+13.03 godz. 13:00 - 
+
 * Antoni Mleczko - zemiret
-* Grzegorz Wcisło - 
-* Tomasz Zawadzki
-* Mateusz Hurbol
+* Grzegorz Wcisło - grzegorz-wcislo
+* Tomasz Zawadzki - tomekzaw
+* Mateusz Hurbol - matix522
+* Mateusz Naróg - narogm
+* Arkadiusz Kraus - arkadiuss
+* Dominik Mondzik - mondzikd
+* Łukaz Oleś - lukasz.oles797
 
 
 
