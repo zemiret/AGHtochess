@@ -9,7 +9,7 @@ Skład grupy:
 * Mateusz Naróg - narogm
 * Arkadiusz Kraus - arkadiuss
 * Maciej Mionskowski - maciekmm
-* Łukaz Oleś - lukasz.oles797
+* (Łukaz Oleś - lukasz.oles797) --(in progress)-> Piotr Matląg
 
 
 
