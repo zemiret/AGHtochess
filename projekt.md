@@ -8,7 +8,7 @@ Skład grupy:
 * Mateusz Hurbol - matix522
 * Mateusz Naróg - narogm
 * Arkadiusz Kraus - arkadiuss
-* Dominik Mondzik - mondzikd
+* Maciej Mionskowski - maciekmm
 * Łukaz Oleś - lukasz.oles797
 
 
