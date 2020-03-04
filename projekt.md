@@ -1,6 +1,6 @@
-Skład grupy:
+# Skład grupy:
 
-13.03 godz. 13:00 - 
+Spotkanie projektowe: 13.03 godz. 13:00 (lub 16:00?) 
 
 * Antoni Mleczko - zemiret
 * Grzegorz Wcisło - grzegorz-wcislo
@@ -8,8 +8,8 @@ Skład grupy:
 * Mateusz Hurbol - matix522
 * Mateusz Naróg - narogm
 * Arkadiusz Kraus - arkadiuss
-* Dominik Mondzik - mondzikd
-* Łukaz Oleś - lukasz.oles797
+* Maciej Mionskowski - maciekmm
+* Piotr Matląg
 
 
 
