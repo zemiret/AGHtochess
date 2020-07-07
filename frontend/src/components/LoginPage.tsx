@@ -16,6 +16,8 @@ const LoginPage: React.FunctionComponent<Props> = ({
   dispatch,
 }: Props) => {
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    if (connecting) return;
+
     dispatch(setUsername(e.target.value));
   };
 
