@@ -1,11 +1,5 @@
-import { createAction, createAsyncThunk } from "@reduxjs/toolkit";
+import { createAsyncThunk } from "@reduxjs/toolkit";
 
-// export const buyUnit = createAction<{ unitId: number }>("Buy Unit");
-
-export const buyUnit = createAsyncThunk<number, number>(
-  "BuyUnit",
-  async (unitId: number) => {
-    console.log(unitId);
-    return 1;
-  },
-);
+export const buyUnit = createAsyncThunk("buyUnit", async (_: number) => {
+  return 1;
+});

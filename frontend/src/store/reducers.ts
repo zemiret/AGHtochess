@@ -7,8 +7,9 @@ export const initialState: RootSchema = {
 };
 
 export const rootReducer = createReducer(initialState, {
-  [buyUnit.pending.type]: (state, action: PayloadAction<{ unitId: number }>) => ({
+  [buyUnit.pending.type]: (state, _: PayloadAction) => ({ ...state }),
+  [buyUnit.fulfilled.type]: (state, action: PayloadAction<number>) => ({
     ...state,
-    gameState: state.gameState + ";" + action.payload.unitId,
+    gameState: state.gameState + "; " + action.payload,
   }),
 });
