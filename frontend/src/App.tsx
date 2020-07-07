@@ -4,6 +4,8 @@ import { RootSchema } from "./store/root-schema";
 import { connect } from "react-redux";
 import { Dispatch } from "./store";
 
+import { Button } from "reactstrap";
+
 interface Props {
   gameState: string;
   dispatch: Dispatch;
@@ -13,7 +15,9 @@ const App: React.FunctionComponent<Props> = ({ gameState, dispatch }: Props) => 
   return (
     <div>
       <p>Hello, World! {gameState}</p>
-      <button onClick={async () => await dispatch(buyUnit(1))}>Click</button>
+      <Button color="success" onClick={async () => await dispatch(buyUnit(1))}>
+        Click
+      </Button>
     </div>
   );
 };
