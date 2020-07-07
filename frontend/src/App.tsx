@@ -1,26 +1,25 @@
 import React from "react";
-import { buyUnit } from './store/actions'
+import { buyUnit } from "./store/actions";
 import { RootSchema } from "./store/root-schema";
 import { connect } from "react-redux";
-import { bindActionCreators, Dispatch } from "redux";
+import { Dispatch } from "redux";
 
-class App extends React.Component { 
-  render() {
-    return (
-      <div>
-        <p>Hello, World! {this.state}</p>
-        <button onClick={() => buyUnit({unitId:1})}>Click</button>
-      </div>
-    );
-  };
+interface Props {
+  gameState: string;
+  dispatch: Dispatch;
 }
 
+const App: React.FunctionComponent<Props> = ({ gameState, dispatch }: Props) => {
+  return (
+    <div>
+      <p>Hello, World! {gameState}</p>
+      <button onClick={() => dispatch(buyUnit({ unitId: 1 }))}>Click</button>
+    </div>
+  );
+};
+
 const mapStateToProps = (state: RootSchema) => ({
-  state: state.gameState
-})
+  gameState: state.gameState,
+});
 
-const mapDispatchToProps = (dispatch: Dispatch) => bindActionCreators({
-  buyUnit
-}, dispatch)
-
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps)(App);
