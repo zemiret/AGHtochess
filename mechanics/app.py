@@ -14,3 +14,20 @@ def generate_units_handler():
     return {
         "units": [generate_unit(round) for _ in range(count)]
     }
+
+
+@app.route('/resolve_battle', methods=['POST'])
+def resolve_battle_handler():
+    data = request.get_json()
+
+    return {
+        "winner": 1,
+        "player_hp_change": -4,
+        "log": [
+            {
+                "action": "kill",
+                "who": 12,
+                "whom": 34,
+            },
+        ]
+    }
