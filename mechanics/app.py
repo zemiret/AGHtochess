@@ -9,8 +9,9 @@ app = Flask(__name__)
 def generate_units_handler():
     data = request.get_json()
     round: int = data['round']
+    count: int = data.get('count', 5)
 
-    units = generate_units(round)
+    units = generate_units(round, count=count)
 
     return {
         "units": list(units)
