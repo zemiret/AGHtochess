@@ -23,6 +23,10 @@ export const rootReducer = createReducer(initialState, {
     ...state,
     socketState: "connecting",
   }),
+  [connectWebSocket.fulfilled.type]: (state, _: PayloadAction) => ({
+    ...state,
+    socketState: "open",
+  }),
   [connectWebSocket.rejected.type]: (state, _: PayloadAction) => ({
     ...state,
     socketState: "closed",
