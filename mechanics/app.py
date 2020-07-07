@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from mechanics import generate_units
+from mechanics import generate_unit
 
 app = Flask(__name__)
 
@@ -11,8 +11,6 @@ def generate_units_handler():
     round: int = data['round']
     count: int = data.get('count', 5)
 
-    units = generate_units(round, count=count)
-
     return {
-        "units": list(units)
+        "units": [generate_unit(round) for _ in range(count)]
     }
