@@ -2,7 +2,7 @@ import React from "react";
 import { buyUnit } from "./store/actions";
 import { RootSchema } from "./store/root-schema";
 import { connect } from "react-redux";
-import { Dispatch } from "redux";
+import { Dispatch } from "./store";
 
 interface Props {
   gameState: string;
@@ -13,7 +13,7 @@ const App: React.FunctionComponent<Props> = ({ gameState, dispatch }: Props) => 
   return (
     <div>
       <p>Hello, World! {gameState}</p>
-      <button onClick={() => dispatch(buyUnit(1))}>Click</button>
+      <button onClick={async () => await dispatch(buyUnit(1))}>Click</button>
     </div>
   );
 };
