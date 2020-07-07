@@ -1,3 +1,5 @@
+from random import randint
+
 from flask import Flask, request
 
 from mechanics import generate_unit
@@ -21,8 +23,8 @@ def resolve_battle_handler():
     data = request.get_json()
 
     return {
-        "winner": 1,
-        "player_hp_change": -4,
+        "winner": randint(1, 2),
+        "player_hp_change": randint(-10, 0),
         "log": [
             {
                 "action": "kill",
