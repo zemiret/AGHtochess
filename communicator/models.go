@@ -4,8 +4,11 @@ type MessageType string
 type GamePhase string
 
 const (
-	MessageTypeStateChange MessageType = "stateChange"
-	MessageTypeInfo        MessageType = "info"
+	MessageTypeStateChange    MessageType = "STATE_CHANGE"
+	MessageTypeInfo           MessageType = "INFO"
+	MessageTypeBuyUnit        MessageType = "BUY_UNIT"
+	MessageTypePlaceUnit      MessageType = "PLACE_UNIT"
+	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
 
 	GamePhaseStore    GamePhase = "STORE"
 	GamePhaseBattle   GamePhase = "BATTLE"
@@ -23,18 +26,18 @@ type InfoPayload struct {
 }
 
 type PlayerStatePayload struct {
-	Phase               GamePhase        `json:"phase"`
-	PhaseEndsAt         int64            `json:"phaseEndsAt"`
-	Round               int              `json:"round"`
-	GameResult          string           `json:"gameResult"`
-	Player              Player           `json:"player"`
-	Enemy               Player           `json:"enemy"`
+	Phase               GamePhase         `json:"phase"`
+	PhaseEndsAt         int64             `json:"phaseEndsAt"`
+	Round               int               `json:"round"`
+	GameResult          string            `json:"gameResult"`
+	Player              Player            `json:"player"`
+	Enemy               Player            `json:"enemy"`
 	Question            *Question         `json:"question"`
-	Store               []Unit           `json:"store"`
-	Units               []Unit           `json:"units"`
-	UnitsPlacement      []UnitPlacement  `json:"unitsPlacement"`
-	EnemyUnits          []Unit           `json:"enemyUnits"`
-	EnemyUnitsPlacement []UnitPlacement  `json:"enemyUnitsPlacement"`
+	Store               []Unit            `json:"store"`
+	Units               []Unit            `json:"units"`
+	UnitsPlacement      []UnitPlacement   `json:"unitsPlacement"`
+	EnemyUnits          []Unit            `json:"enemyUnits"`
+	EnemyUnitsPlacement []UnitPlacement   `json:"enemyUnitsPlacement"`
 	BattleStatistics    *BattleStatistics `json:"battleStatistics"`
 }
 
@@ -79,3 +82,20 @@ type BattleStatistics struct {
 	HpChange int      `json:"hpChange"`
 	Log      []string `json:"log"`
 }
+
+type BuyUnitPayload struct {
+	ID int `json:"id"`
+}
+
+type AnswerQuestionPayload struct {
+	QuestionID int `json:"questionId"`
+	AnswerID   int `json:"answerId"`
+}
+
+type PlaceUnitPayload struct {
+	ID int `json:"id"`
+	X  int `json:"x"`
+	Y  int `json:"y"`
+}
+
+
