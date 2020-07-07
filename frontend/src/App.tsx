@@ -3,7 +3,7 @@ import { buyUnit } from "./store/actions";
 import { RootSchema } from "./store/root-schema";
 import { connect } from "react-redux";
 import { Dispatch } from "./store";
-import LoginPage from "./components/LoginPage";
+import PageController from "./components/PageController";
 
 import { Button } from "reactstrap";
 
@@ -19,7 +19,7 @@ const App: React.FunctionComponent<Props> = ({ gameState, dispatch }: Props) => 
       <Button color="success" onClick={async () => await dispatch(buyUnit(1))}>
         Click
       </Button>
-      <LoginPage login={console.log} />
+      <PageController />
     </div>
   );
 };
