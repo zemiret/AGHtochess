@@ -2,6 +2,7 @@ package main
 
 type MessageType string
 type GamePhase string
+type GameResult string
 
 const (
 	MessageTypeStateChange    MessageType = "STATE_CHANGE"
@@ -10,10 +11,14 @@ const (
 	MessageTypePlaceUnit      MessageType = "PLACE_UNIT"
 	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
 
+	GamePhaseWaiting  GamePhase = "WAITING_FOR_PLAYERS"
 	GamePhaseStore    GamePhase = "STORE"
 	GamePhaseBattle   GamePhase = "BATTLE"
 	GamePhaseQuestion GamePhase = "QUESTION"
 	GamePhaseGameEnd  GamePhase = "GAME_END"
+
+	GameResultWin  GameResult = "WIN"
+	GameResultLoss GameResult = "LOSS"
 )
 
 type Message struct {
@@ -25,11 +30,20 @@ type InfoPayload struct {
 	Message string `json:"message"`
 }
 
+func newInfoMessage(message string) *Message {
+	return &Message{
+		MessageType: MessageTypeInfo,
+		Payload: InfoPayload{
+			Message: message,
+		},
+	}
+}
+
 type PlayerStatePayload struct {
 	Phase               GamePhase         `json:"phase"`
 	PhaseEndsAt         int64             `json:"phaseEndsAt"`
 	Round               int               `json:"round"`
-	GameResult          string            `json:"gameResult"`
+	GameResult          *GameResult       `json:"gameResult"`
 	Player              Player            `json:"player"`
 	Enemy               Player            `json:"enemy"`
 	Question            *Question         `json:"question"`
@@ -78,9 +92,9 @@ type UnitPlacement struct {
 }
 
 type BattleStatistics struct {
-	Result   string   `json:"result"`
-	HpChange int      `json:"hpChange"`
-	Log      []string `json:"log"`
+	Result   GameResult `json:"result"`
+	HpChange int        `json:"hpChange"`
+	Log      []string   `json:"log"`
 }
 
 type BuyUnitPayload struct {
@@ -97,5 +111,3 @@ type PlaceUnitPayload struct {
 	X  int `json:"x"`
 	Y  int `json:"y"`
 }
-
-

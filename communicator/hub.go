@@ -40,6 +40,8 @@ func (h *Hub) run() {
 			h.waitingRoom.AddClient(client)
 			h.clients[client] = h.waitingRoom
 
+			log.Printf("Register: %v", client)
+
 			if h.waitingRoom.Full() {
 				go h.waitingRoom.Start()
 				h.waitingRoom = newRoom()
@@ -50,8 +52,14 @@ func (h *Hub) run() {
 				close(client.send)
 			}
 		case inboundMessage := <-h.inbound:
+			log.Println("Inbound message: ", string(inboundMessage.Message))
+
 			client := inboundMessage.Client
 			if clientRoom, ok := h.clients[client]; ok {
+				if !clientRoom.Full() {
+					log.Println("Unexpected message: ", inboundMessage.Message)
+					continue
+				}
 				var messageType struct {
 					MessageType MessageType `json:"messageType"`
 				}
@@ -67,6 +75,7 @@ func (h *Hub) run() {
 						log.Println("Invalid message", err)
 						continue
 					}
+					buyUnitMessage.Client = inboundMessage.Client
 					clientRoom.BuyUnitChannel <- buyUnitMessage
 				case MessageTypeAnswerQuestion:
 					var answerQuestionMessage AnswerQuestionMessage
@@ -74,6 +83,7 @@ func (h *Hub) run() {
 						log.Println("Invalid message", err)
 						continue
 					}
+					answerQuestionMessage.Client = inboundMessage.Client
 					clientRoom.AnswerQuestionChannel <- answerQuestionMessage
 				case MessageTypePlaceUnit:
 					var placeUnitMessage PlaceUnitMessage
@@ -81,6 +91,7 @@ func (h *Hub) run() {
 						log.Println("Invalid message", err)
 						continue
 					}
+					placeUnitMessage.Client = inboundMessage.Client
 					clientRoom.PlaceUnitChannel <- placeUnitMessage
 				default:
 					log.Println("Unknown message type")

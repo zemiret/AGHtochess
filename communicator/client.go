@@ -5,6 +5,8 @@ package main
 // license that can be found in the LICENSE file.
 import (
 	"bytes"
+	"encoding/json"
+	"errors"
 	"log"
 	"net/http"
 	"time"
@@ -45,6 +47,8 @@ type Client struct {
 
 	// Buffered channel of outbound messages.
 	send chan []byte
+
+	nickname string
 }
 
 type InboundMessage struct {
@@ -124,14 +128,37 @@ func (c *Client) writePump() {
 	}
 }
 
+func (c *Client) SendMessage(payload interface{}) error {
+	marshalled, err := json.Marshal(payload)
+	if err != nil {
+		return err
+	}
+	select {
+	case c.send <- marshalled:
+	default:
+		return errors.New("message not sent")
+	}
+	return nil
+}
+
 // serveWs handles websocket requests from the peer.
 func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
+	upgrader.CheckOrigin = func(r *http.Request) bool { return true }
+
+	nickname := r.URL.Query().Get("nickname")
+	if nickname == "" {
+		return
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
 		return
 	}
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256)}
+
+	log.Println("Client connected: ", nickname)
+
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), nickname: nickname}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in
