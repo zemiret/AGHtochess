@@ -8,14 +8,13 @@ import PageController from "./components/PageController";
 import { Button } from "reactstrap";
 
 interface Props {
-  gameState: string;
   dispatch: Dispatch;
 }
 
-const App: React.FunctionComponent<Props> = ({ gameState, dispatch }: Props) => {
+const App: React.FunctionComponent<Props> = ({ dispatch }: Props) => {
   return (
     <div>
-      <p>Hello, World! {gameState}</p>
+      <p>Hello, World!</p>
       <Button color="success" onClick={() => dispatch(buyUnit(1))}>
         Click
       </Button>
