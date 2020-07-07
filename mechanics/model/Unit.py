@@ -16,6 +16,9 @@ class Unit:
     type: str = "MAGICAL"
     price: int = 0
 
+    def __eq__(self, other):
+        return isinstance(other, Unit) and self.id == other.id
+
     @property
     def alive(self):
         return self.hp > 0
@@ -23,3 +26,7 @@ class Unit:
     @property
     def dead(self):
         return not self.alive
+
+    @classmethod
+    def from_dict(cls, d: dict):
+        return cls(**d)

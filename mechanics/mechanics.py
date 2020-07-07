@@ -1,5 +1,7 @@
-from random import choice, uniform
+from random import choice, uniform, randint
+from typing import Tuple, List
 
+from model.Board import Board
 from model.Unit import Unit
 
 golden_ratio = (1 + 5 ** 0.5) / 2
@@ -35,3 +37,17 @@ def generate_unit(round: int) -> Unit:
                 attack_speed=attack_speed,
                 type=type,
                 price=price)
+
+
+def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
+    winner = 1 if len(board1.tokens) > len(board2.tokens) else 2
+    player_hp_change = randint(-10, 0)
+    log = [
+        {
+            "action": "kill",
+            "who": 12,
+            "whom": 34,
+        },
+    ]
+
+    return winner, player_hp_change, log
