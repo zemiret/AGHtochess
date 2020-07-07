@@ -70,6 +70,7 @@ type Question struct {
 	ID      int      `json:"id"`
 	Text    string   `json:"text"`
 	Answers []Answer `json:"answers"`
+	CorrectAnswer int `json:"-"`
 }
 
 type Unit struct {
@@ -92,9 +93,9 @@ type UnitPlacement struct {
 }
 
 type BattleStatistics struct {
-	Result   GameResult `json:"result"`
-	HpChange int        `json:"hpChange"`
-	Log      []string   `json:"log"`
+	Result         GameResult    `json:"result"`
+	PlayerHpChange int           `json:"playerHpChange"`
+	Log            []interface{} `json:"log"`
 }
 
 type BuyUnitPayload struct {

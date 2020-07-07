@@ -6,17 +6,17 @@ import (
 )
 
 const (
-	RoomSize     = 1
+	RoomSize     = 2
 	initialHp    = 100
 	initialMoney = 5000
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
-	GamePhaseWaiting:  5 * time.Second,
-	GamePhaseStore:    30 * time.Second,
-	GamePhaseBattle:   5 * time.Second,
-	GamePhaseQuestion: 30 * time.Second,
-	GamePhaseGameEnd:  5 * time.Second,
+	GamePhaseWaiting:  5 * time.Millisecond,
+	GamePhaseStore:    45 * time.Millisecond,
+	GamePhaseBattle:   30 * time.Millisecond,
+	GamePhaseQuestion: 45 * time.Millisecond,
+	GamePhaseGameEnd:  10 * time.Millisecond,
 }
 
 type PlayerState struct {
@@ -137,7 +137,6 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 }
 
 func (r *Room) startStorePhase() {
-	r.schedulePhase(phaseDurations[GamePhaseStore], GamePhaseBattle)
 	for _, state := range r.playersState {
 		units, err := GetStoreUnits(r.round)
 		if err != nil {
@@ -155,6 +154,105 @@ func (r *Room) startStorePhase() {
 			return
 		}
 	}
+
+	r.schedulePhase(phaseDurations[GamePhaseStore], GamePhaseBattle)
+}
+
+func (r *Room) startBattlePhase() {
+	var clients []*Client
+	for client := range r.playersState {
+		clients = append(clients, client)
+	}
+
+	player1State := r.playersState[clients[0]]
+	player1 := PlayerBattleSetup{
+		UnitPlacement: player1State.UnitsPlacement,
+		Units:         player1State.Units,
+	}
+
+	player2State := r.playersState[clients[1]]
+	player2 := PlayerBattleSetup{
+		UnitPlacement: player2State.UnitsPlacement,
+		Units:         player2State.Units,
+	}
+
+	battleResult, err := GetBattleResult(player1, player2)
+	if err != nil {
+		r.Shutdown("Failed fetching battle result")
+		log.Println("Failed fetching battle result", err)
+		return
+	}
+
+	var finished bool
+	for i, c := range clients {
+		if i != battleResult.Winner {
+			r.playersState[c].Player.Hp += battleResult.PlayerHpChange
+
+			if r.playersState[c].Player.Hp <= 0 {
+				finished = true
+			}
+		}
+	}
+
+	for i, c := range clients {
+		battleStatistics := BattleStatistics{
+			Log: battleResult.Log,
+		}
+		if i == battleResult.Winner {
+			battleStatistics.Result = GameResultWin
+		} else {
+			battleStatistics.Result = GameResultLoss
+			battleStatistics.PlayerHpChange = battleResult.PlayerHpChange
+		}
+
+		if err := c.SendMessage(r.generateClientState(c, nil, &battleStatistics)); err != nil {
+			r.Shutdown("Failed to propagate client state")
+			log.Println("Failed to propagate client state for ", c.nickname, err)
+			return
+		}
+	}
+
+	if finished {
+		r.schedulePhase(phaseDurations[GamePhaseBattle], GamePhaseGameEnd)
+	} else {
+		r.schedulePhase(phaseDurations[GamePhaseBattle], GamePhaseQuestion)
+	}
+}
+
+func (r *Room) startQuestionPhase() {
+	question, err := GetQuestion()
+	if err != nil {
+		r.Shutdown("Failed to fetch question")
+		log.Println("Failed to fetch question", err)
+		return
+	}
+
+	for c, state := range r.playersState {
+		state.Question = question
+		if err := c.SendMessage(r.generateClientState(c, nil, nil)); err != nil {
+			r.Shutdown("Failed to propagate client state")
+			log.Println("Failed to propagate client state for ", c.nickname, err)
+			return
+		}
+	}
+	r.schedulePhase(phaseDurations[GamePhaseQuestion], GamePhaseStore)
+}
+
+func (r *Room) startGameEndPhase() {
+	for c, state := range r.playersState {
+		var gameResult GameResult
+		if state.Player.Hp > 0 {
+			gameResult = GameResultWin
+		} else {
+			gameResult = GameResultLoss
+		}
+		if err := c.SendMessage(r.generateClientState(c, &gameResult, nil)); err != nil {
+			r.Shutdown("Failed to propagate client state")
+			log.Println("Failed to propagate client state for ", c.nickname, err)
+			return
+		}
+	}
+	r.Shutdown("Game ended")
 }
 
 func (r *Room) handlePhaseChange(phase GamePhase) {
@@ -165,10 +263,11 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 	case GamePhaseStore:
 		r.startStorePhase()
 	case GamePhaseBattle:
-		r.schedulePhase(phaseDurations[phase], GamePhaseQuestion)
+		r.startBattlePhase()
 	case GamePhaseQuestion:
-		r.schedulePhase(phaseDurations[phase], GamePhaseStore)
+		r.startQuestionPhase()
 	case GamePhaseGameEnd:
+		r.startGameEndPhase()
 	}
 }
 
