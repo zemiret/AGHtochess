@@ -10,7 +10,6 @@ class Unit:
     magic_resist: int = 0
     critical_chance: int = 0
     hp: int = 50
-    max_hp: int = 100
     range: int = 0
     attack_speed: int = 0
     type: str = "MAGICAL"

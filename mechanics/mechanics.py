@@ -19,8 +19,7 @@ def generate_unit(round: int) -> Unit:
         defense = gen(0, 10, 1.1)
         magic_resist = gen(0, 5, 1.1)
         critical_chance = min((gen(1+0.6, 1+0.9, 1.1) - 1), 1) * 100
-        max_hp = gen(80, 120, 1.1)
-        hp = max_hp
+        hp = gen(80, 120, 1.1)
         range = gen(3, 5, 1.1)
         attack_speed = gen(0, 3, 1.1)
         type = "PHYSICAL"
@@ -32,7 +31,6 @@ def generate_unit(round: int) -> Unit:
                 magic_resist=magic_resist,
                 critical_chance=critical_chance,
                 hp=hp,
-                max_hp=max_hp,
                 range=range,
                 attack_speed=attack_speed,
                 type=type,
