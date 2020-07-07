@@ -2,7 +2,7 @@ from random import choice, uniform
 
 from model.Unit import Unit
 
-golden = (1 + 5 ** 0.5) / 2
+golden_ratio = (1 + 5 ** 0.5) / 2
 
 
 def generate_unit(round: int) -> Unit:
