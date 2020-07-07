@@ -14,10 +14,6 @@ interface Props {
 const App: React.FunctionComponent<Props> = ({ dispatch }: Props) => {
   return (
     <div>
-      <p>Hello, World!</p>
-      <Button color="success" onClick={() => dispatch(buyUnit(1))}>
-        Click
-      </Button>
       <PageController />
     </div>
   );
