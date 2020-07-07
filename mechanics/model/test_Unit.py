@@ -63,3 +63,12 @@ def test_from_dict():
     assert unit.attack_speed == 8
     assert unit.type == "MAGICAL"
     assert unit.price == 100
+
+
+@pytest.mark.parametrize('unit1, unit2, expected', [
+    (Unit(id=42), Unit(id=42), True),
+    (Unit(id=42, hp=10), Unit(id=42, hp=20), True),
+    (Unit(id=7), Unit(id=13), False),
+])
+def test_eq(unit1, unit2, expected):
+    assert (unit1 == unit2) is expected
