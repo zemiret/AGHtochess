@@ -23,3 +23,7 @@ class Unit:
     @property
     def dead(self):
         return not self.alive
+
+    @classmethod
+    def from_dict(cls, d: dict):
+        return cls(**d)
