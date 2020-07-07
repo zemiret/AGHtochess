@@ -11,7 +11,9 @@ module.exports = {
     sourceType: "module" // Allows for the use of imports
   },
   rules: {
-    "@typescript-eslint/no-use-before-define": ["error", { "functions": false, "classes": true }]
+    "@typescript-eslint/no-use-before-define": ["error", { "functions": false, "classes": true }],
+    "@typescript-eslint/no-unused-vars": ["error", { "argsIgnorePattern": "^_" }],
+    "@typescript-eslint/explicit-function-return-type": "off"
   },
   settings: {
     react: {

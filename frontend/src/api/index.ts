@@ -1,11 +1,8 @@
-import { Dispatch } from "../store";
-import { closeWebSocket } from "../store/actions";
-
 const url = "ws://localhost:4000";
 
-const handleMessage = (event: MessageEvent, dispatch: Dispatch): void => {
-  console.log(event);
-};
+// const handleMessage = (event: MessageEvent, _dispatch: Dispatch): void => {
+//   console.log(event);
+// };
 
 // export const connect = (username: string, dispatch: Dispatch): void => {
 //   const socket = new WebSocket(`${url}/${username}`);

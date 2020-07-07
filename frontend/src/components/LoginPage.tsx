@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import { Dispatch } from "../store";
@@ -27,7 +27,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
   return (
     <form onSubmit={handleSubmit}>
       <input type="text" value={username} onChange={handleChange} />
-      {connecting || <button type="submit">Play</button>}
+      {!connecting && <button type="submit">Play</button>}
       {connecting && (
         <button type="submit" disabled>
           Connecting
