@@ -6,9 +6,10 @@ import (
 )
 
 const (
-	RoomSize     = 2
-	initialHp    = 100
-	initialMoney = 5000
+	RoomSize       = 2
+	initialHp      = 100
+	initialMoney   = 5000
+	questionReward = 100
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
@@ -271,6 +272,114 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 	}
 }
 
+func (r *Room) handleBuyUnit(client *Client, order BuyUnitPayload) {
+	if r.phase != GamePhaseStore {
+		client.SendMessage(newInfoMessage("You can only buy units in store phase"))
+		return
+	}
+
+	state := r.playersState[client]
+
+	var unitToBuy *Unit
+	var unitIndex int
+	for i, unitInStore := range state.Store {
+		if unitInStore.ID == order.ID {
+			unitToBuy = &unitInStore
+			unitIndex = i
+			break
+		}
+	}
+
+	if unitToBuy == nil {
+		client.SendMessage(newInfoMessage("Unit not in store"))
+		return
+	}
+
+	if state.Player.Money < unitToBuy.Price {
+		client.SendMessage(newInfoMessage("You don't have enough money"))
+		return
+	}
+
+	state.Player.Money -= unitToBuy.Price
+	state.Store = append(state.Store[:unitIndex], state.Store[unitIndex+1:]...)
+	state.Units = append(state.Units, *unitToBuy)
+
+	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
+		r.Shutdown("Failed to propagate client state")
+		log.Println("Failed to propagate client state for ", client.nickname, err)
+	}
+}
+
+func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload) {
+	if r.phase != GamePhaseQuestion {
+		client.SendMessage(newInfoMessage("You can only answer questions in question phase"))
+		return
+	}
+
+	state := r.playersState[client]
+
+	if state.Question == nil {
+		client.SendMessage(newInfoMessage("Missing question"))
+		log.Println("Missing question while in question phase LOL")
+		return
+	}
+
+	if state.Question.CorrectAnswer == answer.AnswerID {
+		state.Player.Money += questionReward
+	}
+
+	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
+		r.Shutdown("Failed to propagate client state")
+		log.Println("Failed to propagate client state for ", client.nickname, err)
+	}
+}
+
+func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
+	if r.phase != GamePhaseStore {
+		client.SendMessage(newInfoMessage("You can only place units in store phase"))
+		return
+	}
+	state := r.playersState[client]
+
+	placement := UnitPlacement{
+		UnitID: payload.ID,
+		X:      payload.X,
+		Y:      payload.Y,
+	}
+
+	var unitToPlace *Unit
+	for _, unit := range state.Units {
+		if unit.ID == placement.UnitID {
+			unitToPlace = &unit
+			break
+		}
+	}
+
+	if unitToPlace == nil {
+		client.SendMessage(newInfoMessage("You don't own that unit"))
+		log.Println("Client tried to place invalid unit")
+		return
+	}
+
+	swapped := false
+	for i, existing := range state.UnitsPlacement {
+		if existing.X == placement.X && existing.Y == placement.Y {
+			swapped = true
+			state.UnitsPlacement[i] = placement
+			break
+		}
+	}
+
+	if !swapped {
+		state.UnitsPlacement = append(state.UnitsPlacement, placement)
+	}
+
+	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
+		r.Shutdown("Failed to propagate client state")
+		log.Println("Failed to propagate client state for ", client.nickname, err)
+	}
+}
+
 func (r *Room) Start() {
 	log.Println("Starting room")
 	// should send battle beginning phase to clients
@@ -285,10 +394,24 @@ func (r *Room) Start() {
 			r.handlePhaseChange(phase)
 		case message := <-r.BuyUnitChannel:
 			log.Printf("Buy unit %+v", message)
+			if message.BuyUnitPayload == nil {
+				message.Client.SendMessage(newInfoMessage("Missing payload"))
+				continue
+			}
+			r.handleBuyUnit(message.Client, *message.BuyUnitPayload)
 		case message := <-r.AnswerQuestionChannel:
-			log.Printf("answer unit %+v", message)
+			if message.AnswerQuestionPayload == nil {
+				message.Client.SendMessage(newInfoMessage("Missing payload"))
+				continue
+			}
+			r.handleAnswerQuestion(message.Client, *message.AnswerQuestionPayload)
 		case message := <-r.PlaceUnitChannel:
 			log.Printf("place unit %+v", message)
+			if message.PlaceUnitPayload == nil {
+				message.Client.SendMessage(newInfoMessage("Missing payload"))
+				continue
+			}
+			r.handlePlaceUnit(message.Client, *message.PlaceUnitPayload)
 		}
 	}
 }
