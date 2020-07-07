@@ -13,7 +13,7 @@ const App: React.FunctionComponent<Props> = ({ gameState, dispatch }: Props) => 
   return (
     <div>
       <p>Hello, World! {gameState}</p>
-      <button onClick={() => dispatch(buyUnit({ unitId: 1 }))}>Click</button>
+      <button onClick={() => dispatch(buyUnit(1))}>Click</button>
     </div>
   );
 };
