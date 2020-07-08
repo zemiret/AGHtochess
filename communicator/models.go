@@ -74,7 +74,7 @@ type Question struct {
 }
 
 type Unit struct {
-	ID             int    `json:"id"`
+	ID             string `json:"id"`
 	Attack         int    `json:"attack"`
 	Defense        int    `json:"defense"`
 	MagicResist    int    `json:"magicResist"`
@@ -87,7 +87,7 @@ type Unit struct {
 }
 
 type UnitPlacement struct {
-	UnitID int `json:"unitId"`
+	UnitID string `json:"unitId"`
 	X      int `json:"x"`
 	Y      int `json:"y"`
 }
@@ -99,7 +99,7 @@ type BattleStatistics struct {
 }
 
 type BuyUnitPayload struct {
-	ID int `json:"id"`
+	ID string `json:"id"`
 }
 
 type AnswerQuestionPayload struct {
@@ -108,7 +108,7 @@ type AnswerQuestionPayload struct {
 }
 
 type PlaceUnitPayload struct {
-	ID int `json:"id"`
+	ID string `json:"id"`
 	X  int `json:"x"`
 	Y  int `json:"y"`
 }
