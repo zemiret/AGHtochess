@@ -44,7 +44,7 @@ def shuffle_players(players: Tuple[Board, Board]) -> Tuple[Board, Board]:
     return players_list[0], players_list[1]
 
 
-def calculate_damage_divider(distance: float, attack_range: float, *, base=2) -> float:
+def calculate_damage_divider(distance: float, attack_range: float, *, base: float = 2.0) -> float:
     return base ** max(0.0, (distance - attack_range) / attack_range)
 
 
