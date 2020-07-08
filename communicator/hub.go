@@ -40,7 +40,7 @@ func (h *Hub) run() {
 			h.waitingRoom.AddClient(client)
 			h.clients[client] = h.waitingRoom
 
-			log.Printf("Register: %v", client)
+			log.Printf("Register: %+v", client)
 
 			if h.waitingRoom.Full() {
 				go h.waitingRoom.Start()

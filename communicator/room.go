@@ -44,6 +44,8 @@ type Room struct {
 	ClientDisconnectChannel     chan *Client
 
 	alive bool
+
+	phaseChangeTimer *time.Timer
 }
 
 type BuyUnitMessage struct {
@@ -101,11 +103,14 @@ func (r *Room) Shutdown(reason string) {
 	}
 	r.playersState = nil
 	r.alive = false
+	if r.phaseChangeTimer != nil {
+		r.phaseChangeTimer.Stop()
+	}
 }
 
 func (r *Room) schedulePhase(after time.Duration, phase GamePhase) {
 	log.Println("Scheduling phase change ", after, phase)
-	time.AfterFunc(after, func() {
+	r.phaseChangeTimer = time.AfterFunc(after, func() {
 		log.Println("Sending new phase", phase)
 		r.changePhaseChannel <- phase
 	})

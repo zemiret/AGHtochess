@@ -12,6 +12,8 @@ import (
 const port = 4000
 
 func main() {
+	log.SetFlags(log.Flags() | log.Lshortfile)
+
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	fmt.Printf("Starting communicator at :%d\n", port)
@@ -22,7 +24,8 @@ func main() {
 
 	questions = loadedQuestions
 
-	if mechanicsHost = os.Getenv("MECHANICS_HOST"); len(mechanicsHost) == 0 {
+	mechanicsHost = os.Getenv("GAME_MECHANICS_HOST")
+	if len(mechanicsHost) == 0 {
 		mechanicsHost = "http://localhost:5000"
 	}
 
