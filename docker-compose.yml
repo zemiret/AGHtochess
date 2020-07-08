@@ -3,7 +3,7 @@ services:
   communicator:
     build: ./communicator
     environment:
-      GAME_MECHANICS_HOST: mechanics
+      GAME_MECHANICS_HOST: http://mechanics
     ports:
       - "4000:4000"
     links:
