@@ -116,24 +116,27 @@ func (r *Room) getEnemy(client *Client) *Client {
 	return client
 }
 
-func (r *Room) generateClientState(client *Client, gameResult *GameResult, battleStatistics *BattleStatistics) *PlayerStatePayload {
+func (r *Room) generateClientState(client *Client, gameResult *GameResult, battleStatistics *BattleStatistics) *Message {
 	playerState := r.playersState[client]
 	enemy := r.getEnemy(client)
 	enemyState := r.playersState[enemy]
-	return &PlayerStatePayload{
-		Phase:               r.phase,
-		PhaseEndsAt:         r.phaseStarted.Add(phaseDurations[r.phase]).Unix(),
-		Round:               r.round,
-		GameResult:          gameResult,
-		Player:              playerState.Player,
-		Enemy:               enemyState.Player,
-		Question:            playerState.Question,
-		Store:               playerState.Store,
-		Units:               playerState.Units,
-		UnitsPlacement:      playerState.UnitsPlacement,
-		EnemyUnits:          enemyState.Units,
-		EnemyUnitsPlacement: enemyState.UnitsPlacement,
-		BattleStatistics:    battleStatistics,
+	return &Message{
+		MessageType: MessageTypeStateChange,
+		Payload: &PlayerStatePayload{
+			Phase:               r.phase,
+			PhaseEndsAt:         r.phaseStarted.Add(phaseDurations[r.phase]).Unix(),
+			Round:               r.round,
+			GameResult:          gameResult,
+			Player:              playerState.Player,
+			Enemy:               enemyState.Player,
+			Question:            playerState.Question,
+			Store:               playerState.Store,
+			Units:               playerState.Units,
+			UnitsPlacement:      playerState.UnitsPlacement,
+			EnemyUnits:          enemyState.Units,
+			EnemyUnitsPlacement: enemyState.UnitsPlacement,
+			BattleStatistics:    battleStatistics,
+		},
 	}
 }
 
