@@ -3,17 +3,23 @@ package main
 import (
 	"fmt"
 	"log"
+	"math/rand"
 	"net/http"
+	"time"
 )
 
 const port = 4000
 
 func main() {
+	rand.Seed(time.Now().UTC().UnixNano())
+
 	fmt.Printf("Starting communicator at :%d\n", port)
-	err := LoadQuestions()
+	loadedQuestions, err := LoadQuestions()
 	if err != nil {
 		log.Fatal("Did not load questions", err)
 	}
+
+	questions = loadedQuestions
 
 	hub := newHub()
 	go hub.run()

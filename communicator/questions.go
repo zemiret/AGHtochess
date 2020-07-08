@@ -9,7 +9,7 @@ import (
 )
 
 const (
-	QUESTIONS_FILE = "assets/questions.json"
+	QuestionsFile = "assets/questions.json"
 )
 
 type Questions []*Question
@@ -20,21 +20,32 @@ func GetQuestion() (*Question, error) {
 	if questions == nil {
 		return nil, errors.New("questions not loaded")
 	}
-	return questions[rand.Intn(len(questions))], nil
+	question := questions[rand.Intn(len(questions))]
+	answers := make([]Answer, len(question.Answers))
+	copy(answers, question.Answers)
+
+	return &Question{
+		ID:            question.ID,
+		Text:          question.Text,
+		Answers:       answers,
+		CorrectAnswer: question.CorrectAnswer,
+	}, nil
 }
 
 
-func LoadQuestions() error {
-	content, err := ioutil.ReadFile(QUESTIONS_FILE)
+func LoadQuestions() (Questions, error) {
+	var questions Questions
+
+	content, err := ioutil.ReadFile(QuestionsFile)
 	if err != nil {
-		log.Printf("Error loading file: %s", QUESTIONS_FILE)
-		return err
+		log.Printf("Error loading file: %s", QuestionsFile)
+		return nil, err
 	}
 
 	if err != json.Unmarshal(content, &questions) {
-		log.Printf("Error unmarshalling file: %s", QUESTIONS_FILE)
-		return err
+		log.Printf("Error unmarshalling file: %s", QuestionsFile)
+		return nil, err
 	}
 
-	return nil
+	return questions, err
 }
