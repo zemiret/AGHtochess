@@ -4,6 +4,7 @@ import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import Player from "./Player";
 import GamePhaseSpecific from "./GamePhaseSpecific";
+import { Col, Container, Row } from "reactstrap";
 
 interface Props {
   player: PlayerInfo;
@@ -12,14 +13,25 @@ interface Props {
 
 const GamePage: React.FunctionComponent<Props> = ({ player, enemy }: Props) => {
   return (
-    <div>
-      <h1>Player</h1>
-      <Player {...player} />
-      <h1>Enemy</h1>
-      <Player {...enemy} />
-      <hr />
-      <GamePhaseSpecific />
-    </div>
+    <Container className="game-phase-container">
+      <Row>
+        <Col className="h-flex-align-center">
+          <Player {...enemy} isEnemy={true} />
+        </Col>
+      </Row>
+
+      <Row>
+        <Col className="h-flex-align-center">
+          <GamePhaseSpecific />
+        </Col>
+      </Row>
+
+      <Row>
+        <Col className="h-flex-align-center">
+          <Player {...player} isEnemy={false} />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
