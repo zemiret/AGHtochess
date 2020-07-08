@@ -65,7 +65,7 @@ func newRoom() *Room {
 		BuyUnitChannel:        make(chan BuyUnitMessage),
 		AnswerQuestionChannel: make(chan AnswerQuestionMessage),
 		PlaceUnitChannel:      make(chan PlaceUnitMessage),
-		poisonPillChannel:     make(chan interface{}),
+		poisonPillChannel:     make(chan interface{}, 16),
 		changePhaseChannel:    make(chan GamePhase),
 	}
 }
@@ -78,9 +78,9 @@ func (r *Room) AddClient(client *Client) {
 			Money:    initialMoney,
 		},
 		Question:       nil,
-		Store:          nil,
-		Units:          nil,
-		UnitsPlacement: nil,
+		Store:          []Unit{},
+		Units:         	[]Unit{},
+		UnitsPlacement: []UnitPlacement{},
 	}
 }
 
@@ -144,8 +144,8 @@ func (r *Room) startStorePhase() {
 	for _, state := range r.playersState {
 		units, err := GetStoreUnits(r.round)
 		if err != nil {
-			r.Shutdown("Failed fetching units")
 			log.Println("Failed fetching units ", err)
+			r.Shutdown("Failed fetching units")
 			return
 		}
 		state.Store = units
