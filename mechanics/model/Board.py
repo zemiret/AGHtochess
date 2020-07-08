@@ -14,7 +14,7 @@ class Board:
         units = map(Unit.from_dict, d['units'])
         units = {unit.id: unit for unit in units}
         tokens = [
-            Token(units[placement['unit_id']], (placement['x'], placement['y']))
-            for placement in d['units_placement']
+            Token(units[placement['unitId']], (placement['x'], placement['y']))
+            for placement in d['unitsPlacement']
         ]
         return cls(tokens)

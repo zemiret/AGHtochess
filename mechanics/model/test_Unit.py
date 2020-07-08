@@ -43,11 +43,11 @@ def test_from_dict():
         "id": "1",
         "attack": 2,
         "defense": 3,
-        "magic_resist": 4,
-        "critical_chance": 5,
+        "magicResist": 4,
+        "criticalChance": 5,
         "hp": 6,
         "range": 7,
-        "attack_speed": 8,
+        "attackSpeed": 8,
         "type": "MAGICAL",
         "price": 100
     }
@@ -56,11 +56,11 @@ def test_from_dict():
     assert unit.id == "1"
     assert unit.attack == 2
     assert unit.defense == 3
-    assert unit.magic_resist == 4
-    assert unit.critical_chance == 5
+    assert unit.magicResist == 4
+    assert unit.criticalChance == 5
     assert unit.hp == 6
     assert unit.range == 7
-    assert unit.attack_speed == 8
+    assert unit.attackSpeed == 8
     assert unit.type == "MAGICAL"
     assert unit.price == 100
 
@@ -68,7 +68,7 @@ def test_from_dict():
 @pytest.mark.parametrize('unit1, unit2, expected', [
     (Unit(id="42"), Unit(id="42"), True),
     (Unit(id="42", hp=10), Unit(id="42", hp=20), True),
-    (Unit(id=7), Unit(id="13"), False),
+    (Unit(id="7"), Unit(id="13"), False),
 ])
 def test_eq(unit1, unit2, expected):
     assert (unit1 == unit2) is expected

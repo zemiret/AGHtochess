@@ -7,11 +7,11 @@ class Unit:
     id: str = field(default_factory=lambda: str(uuid1()))
     attack: int = 0
     defense: int = 0
-    magic_resist: int = 0
-    critical_chance: int = 0
+    magicResist: int = 0
+    criticalChance: int = 0
     hp: int = 50
     range: int = 0
-    attack_speed: int = 0
+    attackSpeed: int = 0
     type: str = "MAGICAL"
     price: int = 0
 

@@ -23,13 +23,13 @@ def generate_units_handler():
 def resolve_battle_handler():
     data = request.get_json()
 
-    board1 = Board.from_dict(data['player_1'])
-    board2 = Board.from_dict(data['player_2'])
+    board1 = Board.from_dict(data['player1'])
+    board2 = Board.from_dict(data['player2'])
 
     winner, player_hp_change, log = resolve_battle(board1, board2)
 
     return {
         "winner": winner,
-        "player_hp_change": player_hp_change,
+        "playerHpChange": player_hp_change,
         "log": log,
     }

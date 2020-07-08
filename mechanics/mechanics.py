@@ -28,11 +28,11 @@ def generate_unit(round: int) -> Unit:
 
     return Unit(attack=attack,
                 defense=defense,
-                magic_resist=magic_resist,
-                critical_chance=critical_chance,
+                magicResist=magic_resist,
+                criticalChance=critical_chance,
                 hp=hp,
                 range=range,
-                attack_speed=attack_speed,
+                attackSpeed=attack_speed,
                 type=type,
                 price=price)
 
