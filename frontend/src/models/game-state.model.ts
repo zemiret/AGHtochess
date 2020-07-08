@@ -1,10 +1,10 @@
-interface PlayerInfo {
+export interface PlayerInfo {
   username: string;
   hp: number;
   money: number;
 }
 
-interface Unit {
+export interface Unit {
   id: string;
   attack: number;
   defense: number;
@@ -17,29 +17,29 @@ interface Unit {
   price: number;
 }
 
-interface UnitPlacement {
+export interface UnitPlacement {
   unitId: number;
   x: number;
   y: number;
 }
 
-interface BattleStatistics {
+export interface BattleStatistics {
   result: "WIN" | "LOSS";
   hpChange: number;
 }
 
-interface Answer {
+export interface Answer {
   id: number;
   text: string;
 }
 
-interface Question {
+export interface Question {
   id: number;
   test: string;
   answers: Answer[];
 }
 
-interface CommonGameState {
+export interface CommonGameState {
   phaseEndsAt: Date;
   round: number;
   player: PlayerInfo;

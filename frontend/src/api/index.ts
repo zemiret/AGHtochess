@@ -26,7 +26,9 @@ export const connect = (
     server.onerror = (err): void => {
       reject(err);
     };
-    server.onmessage = (event: MessageEvent): void => onMessage(event.data as Message);
+    server.onmessage = (event: MessageEvent): void => {
+      onMessage(JSON.parse(event.data) as Message);
+    };
     server.onclose = onClosed;
   });
 };
