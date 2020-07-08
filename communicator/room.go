@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"log"
+	"os"
 	"time"
 )
 
@@ -13,11 +15,11 @@ const (
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
-	GamePhaseWaiting:  5 * time.Second,
-	GamePhaseStore:    45 * time.Second,
-	GamePhaseBattle:   30 * time.Second,
-	GamePhaseQuestion: 45 * time.Second,
-	GamePhaseGameEnd:  10 * time.Second,
+	GamePhaseWaiting:  1 * time.Second,
+	GamePhaseStore:    1 * time.Second,
+	GamePhaseBattle:   1 * time.Second,
+	GamePhaseQuestion: 1 * time.Second,
+	GamePhaseGameEnd:  1 * time.Second,
 }
 
 type PlayerState struct {
@@ -29,6 +31,7 @@ type PlayerState struct {
 }
 
 type Room struct {
+	log          *log.Logger
 	playersState map[*Client]*PlayerState
 
 	phase        GamePhase
@@ -42,6 +45,7 @@ type Room struct {
 	changePhaseChannel    chan GamePhase
 
 	ClientDisconnectChannel chan *Client
+	roomClosing             chan<- *Room
 
 	alive bool
 
@@ -63,16 +67,18 @@ type PlaceUnitMessage struct {
 	PlaceUnitPayload *PlaceUnitPayload `json:"payload"`
 }
 
-func newRoom() *Room {
+func newRoom(roomClosing chan<- *Room) *Room {
 	return &Room{
+		log:                     log.New(os.Stdout, "[Room]", log.Flags()),
 		playersState:            map[*Client]*PlayerState{},
 		phase:                   GamePhaseWaiting,
 		BuyUnitChannel:          make(chan BuyUnitMessage),
 		AnswerQuestionChannel:   make(chan AnswerQuestionMessage),
 		PlaceUnitChannel:        make(chan PlaceUnitMessage),
-		ClientDisconnectChannel: make(chan *Client),
+		ClientDisconnectChannel: make(chan *Client, 2),
 		changePhaseChannel:      make(chan GamePhase),
 		alive:                   true,
+		roomClosing:             roomClosing,
 	}
 }
 
@@ -88,6 +94,17 @@ func (r *Room) AddClient(client *Client) {
 		Units:          []Unit{},
 		UnitsPlacement: []UnitPlacement{},
 	}
+
+	r.updateLogger()
+	r.log.Println("Client ", client.nickname, " connected")
+}
+
+func (r *Room) updateLogger() {
+	var users []string
+	for user := range r.playersState {
+		users = append(users, user.nickname)
+	}
+	r.log.SetPrefix(fmt.Sprintf("[Room] %v: ", users))
 }
 
 func (r *Room) Full() bool {
@@ -95,23 +112,22 @@ func (r *Room) Full() bool {
 }
 
 func (r *Room) Shutdown(reason string) {
+	r.log.Println("Shutting down")
 	for client := range r.playersState {
 		if err := client.SendMessage(newInfoMessage(reason)); err != nil {
-			log.Println("Error sending shutdown message: ", err)
+			r.log.Println("Error sending shutdown message: ", err)
 		}
-		close(client.send)
 	}
 	r.playersState = nil
 	r.alive = false
+	r.roomClosing <- r
 	if r.phaseChangeTimer != nil {
 		r.phaseChangeTimer.Stop()
 	}
 }
 
 func (r *Room) schedulePhase(after time.Duration, phase GamePhase) {
-	log.Println("Scheduling phase change ", after, phase)
 	r.phaseChangeTimer = time.AfterFunc(after, func() {
-		log.Println("Sending new phase", phase)
 		r.changePhaseChannel <- phase
 	})
 }
@@ -122,7 +138,6 @@ func (r *Room) getEnemy(client *Client) *Client {
 			return candidate
 		}
 	}
-	log.Println("CHANGE ME")
 	return client
 }
 
@@ -154,7 +169,7 @@ func (r *Room) startStorePhase() {
 	for _, state := range r.playersState {
 		units, err := GetStoreUnits(r.round)
 		if err != nil {
-			log.Println("Failed fetching units ", err)
+			r.log.Println("Failed fetching units ", err)
 			r.Shutdown("Failed fetching units")
 			return
 		}
@@ -164,7 +179,7 @@ func (r *Room) startStorePhase() {
 	for c := range r.playersState {
 		if err := c.SendMessage(r.generateClientState(c, nil, nil)); err != nil {
 			r.Shutdown("Failed to propagate client state")
-			log.Println("Failed to propagate client state for ", c.nickname, err)
+			r.log.Println("Failed to propagate client state for ", c.nickname, err)
 			return
 		}
 	}
@@ -193,7 +208,7 @@ func (r *Room) startBattlePhase() {
 	battleResult, err := GetBattleResult(player1, player2)
 	if err != nil {
 		r.Shutdown("Failed fetching battle result")
-		log.Println("Failed fetching battle result", err)
+		r.log.Println("Failed fetching battle result", err)
 		return
 	}
 
@@ -221,7 +236,7 @@ func (r *Room) startBattlePhase() {
 
 		if err := c.SendMessage(r.generateClientState(c, nil, &battleStatistics)); err != nil {
 			r.Shutdown("Failed to propagate client state")
-			log.Println("Failed to propagate client state for ", c.nickname, err)
+			r.log.Println("Failed to propagate client state for ", c.nickname, err)
 			return
 		}
 	}
@@ -237,7 +252,7 @@ func (r *Room) startQuestionPhase() {
 	question, err := GetQuestion()
 	if err != nil {
 		r.Shutdown("Failed to fetch question")
-		log.Println("Failed to fetch question", err)
+		r.log.Println("Failed to fetch question", err)
 		return
 	}
 
@@ -245,7 +260,7 @@ func (r *Room) startQuestionPhase() {
 		state.Question = question
 		if err := c.SendMessage(r.generateClientState(c, nil, nil)); err != nil {
 			r.Shutdown("Failed to propagate client state")
-			log.Println("Failed to propagate client state for ", c.nickname, err)
+			r.log.Println("Failed to propagate client state for ", c.nickname, err)
 			return
 		}
 	}
@@ -262,7 +277,7 @@ func (r *Room) startGameEndPhase() {
 		}
 		if err := c.SendMessage(r.generateClientState(c, &gameResult, nil)); err != nil {
 			r.Shutdown("Failed to propagate client state")
-			log.Println("Failed to propagate client state for ", c.nickname, err)
+			r.log.Println("Failed to propagate client state for ", c.nickname, err)
 			return
 		}
 	}
@@ -270,7 +285,7 @@ func (r *Room) startGameEndPhase() {
 }
 
 func (r *Room) handlePhaseChange(phase GamePhase) {
-	log.Println("Starting new phase ", phase)
+	r.log.Println("Starting new phase ", phase)
 	r.phase = phase
 	r.phaseStarted = time.Now()
 	switch phase {
@@ -319,7 +334,7 @@ func (r *Room) handleBuyUnit(client *Client, order BuyUnitPayload) {
 
 	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
 		r.Shutdown("Failed to propagate client state")
-		log.Println("Failed to propagate client state for ", client.nickname, err)
+		r.log.Println("Failed to propagate client state for ", client.nickname, err)
 	}
 }
 
@@ -333,7 +348,7 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 
 	if state.Question == nil {
 		client.SendMessage(newInfoMessage("Missing question"))
-		log.Println("Missing question while in question phase LOL")
+		r.log.Println("Missing question while in question phase LOL")
 		return
 	}
 
@@ -343,7 +358,7 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 
 	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
 		r.Shutdown("Failed to propagate client state")
-		log.Println("Failed to propagate client state for ", client.nickname, err)
+		r.log.Println("Failed to propagate client state for ", client.nickname, err)
 	}
 }
 
@@ -370,7 +385,7 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 
 	if unitToPlace == nil {
 		client.SendMessage(newInfoMessage("You don't own that unit"))
-		log.Println("Client tried to place invalid unit")
+		r.log.Println("Client tried to place invalid unit")
 		return
 	}
 
@@ -389,12 +404,12 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 
 	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
 		r.Shutdown("Failed to propagate client state")
-		log.Println("Failed to propagate client state for ", client.nickname, err)
+		r.log.Println("Failed to propagate client state for ", client.nickname, err)
 	}
 }
 
 func (r *Room) Start() {
-	log.Println("Starting room")
+	r.log.Println("Starting room")
 	// should send battle beginning phase to clients
 	r.schedulePhase(phaseDurations[GamePhaseWaiting], GamePhaseStore)
 
@@ -405,7 +420,6 @@ func (r *Room) Start() {
 		case phase := <-r.changePhaseChannel:
 			r.handlePhaseChange(phase)
 		case message := <-r.BuyUnitChannel:
-			log.Printf("Buy unit %+v", message)
 			if message.BuyUnitPayload == nil {
 				message.Client.SendMessage(newInfoMessage("Missing payload"))
 				continue
@@ -418,7 +432,6 @@ func (r *Room) Start() {
 			}
 			r.handleAnswerQuestion(message.Client, *message.AnswerQuestionPayload)
 		case message := <-r.PlaceUnitChannel:
-			log.Printf("place unit %+v", message)
 			if message.PlaceUnitPayload == nil {
 				message.Client.SendMessage(newInfoMessage("Missing payload"))
 				continue
