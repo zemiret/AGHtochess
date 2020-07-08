@@ -8,11 +8,11 @@ def test_init():
                 "id": "43",
                 "attack": 1,
                 "defense": 10,
-                "magic_resist": 10,
-                "critical_chance": 40,
+                "magicResist": 10,
+                "criticalChance": 40,
                 "hp": 100,
                 "range": 40,
-                "attack_speed": 10,
+                "attackSpeed": 10,
                 "type": "MAGICAL/PHYSICAL",
                 "price": 100
             },
@@ -20,18 +20,18 @@ def test_init():
                 "id": "44",
                 "attack": 1,
                 "defense": 10,
-                "magic_resist": 10,
-                "critical_chance": 40,
+                "magicResist": 10,
+                "criticalChance": 40,
                 "hp": 100,
                 "range": 40,
-                "attack_speed": 10,
+                "attackSpeed": 10,
                 "type": "MAGICAL/PHYSICAL",
                 "price": 100
             },
         ],
-        "units_placement": [
-            {"unit_id": "43", "x": 2, "y": 3},
-            {"unit_id": "44", "x": 5, "y": 7},
+        "unitsPlacement": [
+            {"unitId": "43", "x": 2, "y": 3},
+            {"unitId": "44", "x": 5, "y": 7},
         ],
     }
     board = Board.from_dict(d)
