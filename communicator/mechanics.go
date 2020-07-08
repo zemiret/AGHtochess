@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"net/http"
 	"os"
@@ -39,7 +38,7 @@ func GetStoreUnits(round int) ([]Unit, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return []Unit{}, errors.New("invalid status code")
+		return []Unit{}, fmt.Errorf("invalid status code %s", resp.Status)
 	}
 
 	var store response
@@ -80,7 +79,7 @@ func GetBattleResult(player1 PlayerBattleSetup, player2 PlayerBattleSetup) (*Pla
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil, errors.New("invalid status code")
+		return nil, fmt.Errorf("invalid status code %s", resp.Status)
 	}
 
 	var battleResult PlayerBattleResult

@@ -65,7 +65,7 @@ func newRoom() *Room {
 		BuyUnitChannel:        make(chan BuyUnitMessage),
 		AnswerQuestionChannel: make(chan AnswerQuestionMessage),
 		PlaceUnitChannel:      make(chan PlaceUnitMessage),
-		poisonPillChannel:     make(chan interface{}, 1),
+		poisonPillChannel:     make(chan interface{}, 16),
 		changePhaseChannel:    make(chan GamePhase),
 	}
 }
@@ -78,9 +78,9 @@ func (r *Room) AddClient(client *Client) {
 			Money:    initialMoney,
 		},
 		Question:       nil,
-		Store:          nil,
-		Units:          nil,
-		UnitsPlacement: nil,
+		Store:          []Unit{},
+		Units:         	[]Unit{},
+		UnitsPlacement: []UnitPlacement{},
 	}
 }
 

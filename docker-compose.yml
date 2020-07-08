@@ -10,6 +10,8 @@ services:
       - mechanics
   mechanics:
     build: ./mechanics
+    ports:
+      - "5000:80"
   frontend:
     build: ./frontend
     ports:
