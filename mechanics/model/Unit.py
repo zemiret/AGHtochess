@@ -4,7 +4,7 @@ from uuid import uuid1
 
 @dataclass
 class Unit:
-    id: str = field(default_factory=lambda: str(uuid1()))
+    id: str = field(default_factory=lambda: str(uuid1().int))
     attack: int = 0
     defense: int = 0
     magicResist: int = 0
