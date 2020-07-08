@@ -16,7 +16,7 @@
         "text": "20"
       }
     ],
-    "correctAnswer": 4
+    "correctAnswer": 2
   },
   {
     "id": 2,
@@ -35,7 +35,7 @@
         "text": "20"
       }
     ],
-    "correctAnswer": 22
+    "correctAnswer": 1
   },
   {
     "id": 3,
@@ -54,6 +54,6 @@
         "text": "20"
       }
     ],
-    "correctAnswer": 20
+    "correctAnswer": 3
   }
 ]
