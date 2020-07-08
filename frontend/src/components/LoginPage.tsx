@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import { Dispatch } from "../store";
@@ -7,23 +7,22 @@ import { connectWebSocket, setUsername } from "../store/actions";
 interface Props {
   username: string;
   connecting: boolean;
-  dispatch: Dispatch;
+  login: (username: string) => void;
 }
 
 const LoginPage: React.FunctionComponent<Props> = ({
-  username,
+  username: defaultUsername,
   connecting,
-  dispatch,
+  login,
 }: Props) => {
+  const [username, setUsername] = useState<string>(defaultUsername);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
-    if (connecting) return;
-
-    dispatch(setUsername(e.target.value));
+    setUsername(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    dispatch(connectWebSocket(username));
+    login(username);
   };
 
   return (
@@ -44,4 +43,11 @@ const mapStateToProps = (state: RootSchema) => ({
   connecting: state.socketState === "connecting",
 });
 
-export default connect(mapStateToProps)(LoginPage);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  login: (username: string) => {
+    dispatch(setUsername(username));
+    dispatch(connectWebSocket(username));
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

@@ -13,6 +13,7 @@ import { GameState } from "../models/game-state.model";
 
 export const initialState: RootSchema = {
   gameState: undefined,
+  state: "login",
   username: "",
   socket: undefined,
   socketState: "closed",
@@ -34,14 +35,17 @@ export const rootReducer = createReducer(initialState, {
   [connectWebSocket.fulfilled.type]: (state, _: PayloadAction) => ({
     ...state,
     socketState: "open",
+    state: "lobby",
   }),
   [connectWebSocket.rejected.type]: (state, _: PayloadAction) => ({
     ...state,
     socketState: "closed",
+    state: "login",
   }),
   [closeWebSocket.type]: (state, _: PayloadAction) => ({
     ...state,
     socketState: "closed",
+    state: "login",
   }),
   [showInfoMessage.type]: (state, _: PayloadAction<InfoMessage>) => ({
     ...state,
