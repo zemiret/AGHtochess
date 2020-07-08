@@ -1,3 +1,20 @@
+# AGHtochess
+
+## Installation
+
+In order to deploy the application locally run:
+
+```bash
+docker-compose up -d
+```
+
+and navigate to `localhost:8080`
+
+## Architecture
+
+![Architecture](assets/architecture.png)
+
+
 # Skład grupy:
 
 Spotkanie projektowe: 13.03 godz. 13:00 (lub 16:00?) 
