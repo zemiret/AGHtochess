@@ -13,22 +13,37 @@ const loginUrl = (username: string): string => {
   return `${url}?nickname=${username}`;
 };
 
+let socket: WebSocket | undefined;
+
 export const connect = (
   username: string,
   onMessage: (message: Message) => void,
   onClosed: () => void,
-): Promise<WebSocket> => {
+): Promise<void> => {
   return new Promise((resolve, reject) => {
-    const server = new WebSocket(loginUrl(username));
-    server.onopen = (): void => {
-      resolve(server);
+    socket = new WebSocket(loginUrl(username));
+    socket.onopen = (): void => {
+      resolve();
     };
-    server.onerror = (err): void => {
+    socket.onerror = (err): void => {
       reject(err);
     };
-    server.onmessage = (event: MessageEvent): void => {
+    socket.onmessage = (event: MessageEvent): void => {
       onMessage(JSON.parse(event.data) as Message);
     };
-    server.onclose = onClosed;
+    socket.onclose = onClosed;
   });
+};
+
+export const buyUnit = (id: string): void => {
+  socket?.send(JSON.stringify({ messageType: "BUY_UNIT", payload: { id } }));
+};
+
+export const answerQuestion = (q: number, a: number): void => {
+  socket?.send(
+    JSON.stringify({
+      messageType: "ANSWER_QUESTION",
+      payload: { questionId: q, answerId: a },
+    }),
+  );
 };

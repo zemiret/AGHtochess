@@ -6,21 +6,32 @@ import Store from "./Store";
 import GameEnd from "./GameEnd";
 import Battle from "./Battle";
 import Question from "./Question";
+import { Dispatch } from "../store";
+import { buyUnit, answerQuestion } from "../store/actions";
 
 interface Props {
   gameState: GameState;
+  dispatch: Dispatch;
 }
 
-const GamePhaseSpecific: React.FunctionComponent<Props> = ({ gameState }: Props) => {
+const GamePhaseSpecific: React.FunctionComponent<Props> = ({
+  gameState,
+  dispatch,
+}: Props) => {
   switch (gameState.phase) {
     case "STORE":
-      return (
-        <Store {...gameState} buyUnit={(id: number) => console.log(`Buying ${id}`)} />
-      );
+      return <Store {...gameState} buyUnit={(id: string) => dispatch(buyUnit(id))} />;
     case "BATTLE":
       return <Battle {...gameState.battleStatistics} />;
     case "QUESTION":
-      return <Question {...gameState.question} />;
+      return (
+        <Question
+          {...gameState.question}
+          answerQuestion={(q: number, a: number) =>
+            dispatch(answerQuestion({ questionId: q, answerId: a }))
+          }
+        />
+      );
     case "GAME_END":
       return <GameEnd gameResult={gameState.gameResult} />;
   }
