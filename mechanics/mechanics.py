@@ -44,6 +44,10 @@ def shuffle_players(players: Tuple[Board, Board]) -> Tuple[Board, Board]:
     return players_list[0], players_list[1]
 
 
+def calculate_damage_divider(distance: float, attack_range: float) -> float:
+    return 2 ** max(0.0, (distance - attack_range) / attack_range)
+
+
 def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     log = []
 
@@ -56,7 +60,16 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
         attack = randint(0, attacking_token.unit.attack)
         defense = randint(0, defending_token.unit.defense)
 
+        distance = defending_token.distance(attacking_token)
+        attack_range = attacking_token.unit.range
+        if distance <= 0:
+            raise ValueError("Distance between tokens is 0")
+
+        damage_reduction_divider = calculate_damage_divider(distance, attack_range)
+
         damage = max(0, attack - defense)
+        damage /= damage_reduction_divider
+
         defending_token.unit.hp = max(0, defending_token.unit.hp - damage)
 
         log.append({
