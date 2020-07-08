@@ -20,6 +20,7 @@ export const connectWebSocket = createAsyncThunk(
   "connectWebSocket",
   async (username: string, thunkApi) => {
     const onMessage = (message: Message) => {
+      console.log(message);
       switch (message.messageType) {
         case MessageType.INFO:
           thunkApi.dispatch(showInfoMessage(message.payload as InfoMessage));
