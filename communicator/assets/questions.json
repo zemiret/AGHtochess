@@ -1,0 +1,59 @@
+[
+  {
+    "id": 1,
+    "text": "JS: 2 + 2 = ?",
+    "answers": [
+      {
+        "id": 1,
+        "text": "22"
+      },
+      {
+        "id": 2,
+        "text": "4"
+      },
+      {
+        "id": 3,
+        "text": "20"
+      }
+    ],
+    "correctAnswer": 2
+  },
+  {
+    "id": 2,
+    "text": "JS: '2' + 2 = ?",
+    "answers": [
+      {
+        "id": 1,
+        "text": "22"
+      },
+      {
+        "id": 2,
+        "text": "4"
+      },
+      {
+        "id": 3,
+        "text": "20"
+      }
+    ],
+    "correctAnswer": 1
+  },
+  {
+    "id": 3,
+    "text": "JS: '2' + '2' - 2 = ?",
+    "answers": [
+      {
+        "id": 1,
+        "text": "22"
+      },
+      {
+        "id": 2,
+        "text": "4"
+      },
+      {
+        "id": 3,
+        "text": "20"
+      }
+    ],
+    "correctAnswer": 3
+  }
+]
