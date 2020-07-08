@@ -33,7 +33,6 @@ func main() {
 		serveWs(hub, w, r)
 	})
 
-	fmt.Printf("Starting communicator at :%d\n", port)
 	if err := http.ListenAndServe(fmt.Sprintf(":%d", port), nil); err != nil {
 		log.Fatal("ListenAndServe: ", err)
 	}
