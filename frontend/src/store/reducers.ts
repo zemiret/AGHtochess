@@ -3,6 +3,7 @@ import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import { buyUnit, closeWebSocket, connectWebSocket, setUsername } from "./actions";
 
 export const initialState: RootSchema = {
+  state: "login",
   gameState: "",
   username: "",
   socket: undefined,
@@ -26,13 +27,16 @@ export const rootReducer = createReducer(initialState, {
   [connectWebSocket.fulfilled.type]: (state, _: PayloadAction) => ({
     ...state,
     socketState: "open",
+    state: "lobby",
   }),
   [connectWebSocket.rejected.type]: (state, _: PayloadAction) => ({
     ...state,
     socketState: "closed",
+    state: "login",
   }),
   [closeWebSocket.type]: (state, _: PayloadAction) => ({
     ...state,
     socketState: "closed",
+    state: "login",
   }),
 });

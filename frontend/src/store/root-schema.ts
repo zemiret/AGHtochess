@@ -1,6 +1,7 @@
 export interface RootSchema {
+  state: "login" | "lobby" | "game";
   gameState: string;
   username: string;
-  socket: WebSocket | undefined;
+  socket?: WebSocket;
   socketState: "closed" | "connecting" | "open";
 }

@@ -18,7 +18,7 @@ const PageController: React.FunctionComponent<Props> = ({ showLogin }: Props) =>
 };
 
 const mapStateToProps = (state: RootSchema) => ({
-  showLogin: state.socketState === "closed" || state.socketState === "connecting",
+  showLogin: state.state === "login",
 });
 
 export default connect(mapStateToProps)(PageController);
