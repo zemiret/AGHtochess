@@ -1,10 +1,19 @@
 import { RootSchema } from "./root-schema";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
-import { buyUnit, closeWebSocket, connectWebSocket, setUsername } from "./actions";
+import {
+  buyUnit,
+  closeWebSocket,
+  connectWebSocket,
+  setUsername,
+  showInfoMessage,
+  changeGameState,
+} from "./actions";
+import { InfoMessage } from "../models/info-message.model";
+import { GameState } from "../models/game-state.model";
 
 export const initialState: RootSchema = {
+  gameState: undefined,
   state: "login",
-  gameState: "",
   username: "",
   socket: undefined,
   socketState: "closed",
@@ -16,9 +25,8 @@ export const rootReducer = createReducer(initialState, {
     username: action.payload,
   }),
   [buyUnit.pending.type]: (state, _: PayloadAction) => ({ ...state }),
-  [buyUnit.fulfilled.type]: (state, action: PayloadAction<number>) => ({
+  [buyUnit.fulfilled.type]: (state, _: PayloadAction<number>) => ({
     ...state,
-    gameState: state.gameState + "; " + action.payload,
   }),
   [connectWebSocket.pending.type]: (state, _: PayloadAction) => ({
     ...state,
@@ -38,5 +46,13 @@ export const rootReducer = createReducer(initialState, {
     ...state,
     socketState: "closed",
     state: "login",
+  }),
+  [showInfoMessage.type]: (state, _: PayloadAction<InfoMessage>) => ({
+    ...state,
+    // TODO this action shouldn't be handled by reducer but by some toasts component
+  }),
+  [changeGameState.type]: (state, action: PayloadAction<GameState>) => ({
+    ...state,
+    gameState: action.payload,
   }),
 });
