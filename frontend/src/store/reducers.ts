@@ -54,5 +54,6 @@ export const rootReducer = createReducer(initialState, {
   [changeGameState.type]: (state, action: PayloadAction<GameState>) => ({
     ...state,
     gameState: action.payload,
+    state: "game",
   }),
 });

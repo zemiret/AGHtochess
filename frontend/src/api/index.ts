@@ -2,12 +2,16 @@ import { MessageType } from "../models/message-type.enum";
 import { GameState } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 
-const url = "ws://localhost:4000";
+const url = "ws://localhost:4000/ws";
 
 export interface Message {
   messageType: MessageType;
   payload: GameState | InfoMessage;
 }
+
+const loginUrl = (username: string): string => {
+  return `${url}?nickname=${username}`;
+};
 
 export const connect = (
   username: string,
@@ -15,14 +19,16 @@ export const connect = (
   onClosed: () => void,
 ): Promise<WebSocket> => {
   return new Promise((resolve, reject) => {
-    const server = new WebSocket(`${url}/${username}`);
+    const server = new WebSocket(loginUrl(username));
     server.onopen = (): void => {
       resolve(server);
     };
     server.onerror = (err): void => {
       reject(err);
     };
-    server.onmessage = (event: MessageEvent): void => onMessage(event.data as Message);
+    server.onmessage = (event: MessageEvent): void => {
+      onMessage(JSON.parse(event.data) as Message);
+    };
     server.onclose = onClosed;
   });
 };

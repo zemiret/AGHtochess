@@ -23,8 +23,10 @@ export const connectWebSocket = createAsyncThunk(
       switch (message.messageType) {
         case MessageType.INFO:
           thunkApi.dispatch(showInfoMessage(message.payload as InfoMessage));
+          break;
         case MessageType.STATE_CHANGE:
           thunkApi.dispatch(changeGameState(message.payload as GameState));
+          break;
         default:
           console.log("Received unknown message");
       }
