@@ -5,16 +5,9 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
-	"os"
 )
 
 var mechanicsHost string
-
-func init() {
-	if mechanicsHost = os.Getenv("MECHANICS_HOST"); len(mechanicsHost) == 0 {
-		mechanicsHost = "http://localhost:5000"
-	}
-}
 
 func GetStoreUnits(round int) ([]Unit, error) {
 	type response struct {
