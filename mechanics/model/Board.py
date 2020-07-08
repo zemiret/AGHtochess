@@ -1,15 +1,14 @@
-from dataclasses import dataclass
-from typing import List
+from dataclasses import dataclass, field
+from typing import List, Sequence, Generator, Iterator
 from random import choice
 
 from model.Token import Token
 from model.Unit import Unit
-from model.NoOneAliveError import NoOneAliveError
 
 
 @dataclass(eq=True)
 class Board:
-    tokens: List[Token]
+    tokens: List[Token] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, d: dict):
@@ -20,12 +19,10 @@ class Board:
             for placement in d['unitsPlacement']
         ]
         return cls(tokens)
-    
-    def anyone_alive(self):
-        alive_tokens = list(filter(lambda token: token.unit.hp > 0, tokens))
-        if len(alive_tokens) > 0:
-            return True
-        raise False
 
-    def get_random_alive_token(self):
-        return choice(list(filter(lambda token: token.unit.hp > 0, tokens)))
+    @property
+    def anyone_alive(self) -> bool:
+        return any(token.unit.alive for token in self.tokens)
+
+    def get_random_alive_token(self) -> Token:
+        return choice([token for token in self.tokens if token.unit.alive])
