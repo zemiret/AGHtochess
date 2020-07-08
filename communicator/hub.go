@@ -40,17 +40,22 @@ func (h *Hub) run() {
 			h.waitingRoom.AddClient(client)
 			h.clients[client] = h.waitingRoom
 
-			log.Printf("Register: %v", client)
+			log.Printf("Register: %+v", client)
 
 			if h.waitingRoom.Full() {
 				go h.waitingRoom.Start()
 				h.waitingRoom = newRoom()
 			}
 		case client := <-h.unregister:
-			if _, ok := h.clients[client]; ok {
-				//TODO: handle disconnects
-				delete(h.clients, client)
-				close(client.send)
+			if closingRoom, ok := h.clients[client]; ok {
+				h.clients[client].ClientDisconnectChannel <- client
+
+				for player, room := range h.clients {
+					if room != closingRoom {
+						continue
+					}
+					delete(h.clients, player)
+				}
 			}
 		case inboundMessage := <-h.inbound:
 			log.Println("Inbound message: ", string(inboundMessage.Message))

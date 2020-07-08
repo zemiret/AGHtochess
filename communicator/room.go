@@ -13,11 +13,11 @@ const (
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
-	GamePhaseWaiting:  5 * time.Millisecond,
-	GamePhaseStore:    45 * time.Millisecond,
-	GamePhaseBattle:   30 * time.Millisecond,
-	GamePhaseQuestion: 45 * time.Millisecond,
-	GamePhaseGameEnd:  10 * time.Millisecond,
+	GamePhaseWaiting:  5 * time.Second,
+	GamePhaseStore:    45 * time.Second,
+	GamePhaseBattle:   30 * time.Second,
+	GamePhaseQuestion: 45 * time.Second,
+	GamePhaseGameEnd:  10 * time.Second,
 }
 
 type PlayerState struct {
@@ -40,7 +40,12 @@ type Room struct {
 	PlaceUnitChannel      chan PlaceUnitMessage
 	AnswerQuestionChannel chan AnswerQuestionMessage
 	changePhaseChannel    chan GamePhase
-	poisonPillChannel     chan interface{}
+
+	ClientDisconnectChannel chan *Client
+
+	alive bool
+
+	phaseChangeTimer *time.Timer
 }
 
 type BuyUnitMessage struct {
@@ -60,13 +65,14 @@ type PlaceUnitMessage struct {
 
 func newRoom() *Room {
 	return &Room{
-		playersState:          map[*Client]*PlayerState{},
-		phase:                 GamePhaseWaiting,
-		BuyUnitChannel:        make(chan BuyUnitMessage),
-		AnswerQuestionChannel: make(chan AnswerQuestionMessage),
-		PlaceUnitChannel:      make(chan PlaceUnitMessage),
-		poisonPillChannel:     make(chan interface{}, 16),
-		changePhaseChannel:    make(chan GamePhase),
+		playersState:            map[*Client]*PlayerState{},
+		phase:                   GamePhaseWaiting,
+		BuyUnitChannel:          make(chan BuyUnitMessage),
+		AnswerQuestionChannel:   make(chan AnswerQuestionMessage),
+		PlaceUnitChannel:        make(chan PlaceUnitMessage),
+		ClientDisconnectChannel: make(chan *Client),
+		changePhaseChannel:      make(chan GamePhase),
+		alive:                   true,
 	}
 }
 
@@ -79,7 +85,7 @@ func (r *Room) AddClient(client *Client) {
 		},
 		Question:       nil,
 		Store:          []Unit{},
-		Units:         	[]Unit{},
+		Units:          []Unit{},
 		UnitsPlacement: []UnitPlacement{},
 	}
 }
@@ -93,14 +99,18 @@ func (r *Room) Shutdown(reason string) {
 		if err := client.SendMessage(newInfoMessage(reason)); err != nil {
 			log.Println("Error sending shutdown message: ", err)
 		}
-		//TODO: disconnect client
+		close(client.send)
 	}
-	r.poisonPillChannel <- struct{}{}
+	r.playersState = nil
+	r.alive = false
+	if r.phaseChangeTimer != nil {
+		r.phaseChangeTimer.Stop()
+	}
 }
 
 func (r *Room) schedulePhase(after time.Duration, phase GamePhase) {
 	log.Println("Scheduling phase change ", after, phase)
-	time.AfterFunc(after, func() {
+	r.phaseChangeTimer = time.AfterFunc(after, func() {
 		log.Println("Sending new phase", phase)
 		r.changePhaseChannel <- phase
 	})
@@ -388,11 +398,10 @@ func (r *Room) Start() {
 	// should send battle beginning phase to clients
 	r.schedulePhase(phaseDurations[GamePhaseWaiting], GamePhaseStore)
 
-	for {
+	for r.alive {
 		select {
-		case <-r.poisonPillChannel:
-			log.Println("Shutting down room")
-			return
+		case <-r.ClientDisconnectChannel:
+			r.Shutdown("Client disconnected")
 		case phase := <-r.changePhaseChannel:
 			r.handlePhaseChange(phase)
 		case message := <-r.BuyUnitChannel:
