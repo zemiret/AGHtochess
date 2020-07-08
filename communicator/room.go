@@ -41,7 +41,7 @@ type Room struct {
 	AnswerQuestionChannel chan AnswerQuestionMessage
 	changePhaseChannel    chan GamePhase
 
-	ClientDisconnectChannel     chan *Client
+	ClientDisconnectChannel chan *Client
 
 	alive bool
 
@@ -65,14 +65,14 @@ type PlaceUnitMessage struct {
 
 func newRoom() *Room {
 	return &Room{
-		playersState:          map[*Client]*PlayerState{},
-		phase:                 GamePhaseWaiting,
-		BuyUnitChannel:        make(chan BuyUnitMessage),
-		AnswerQuestionChannel: make(chan AnswerQuestionMessage),
-		PlaceUnitChannel:      make(chan PlaceUnitMessage),
-		ClientDisconnectChannel:     make(chan *Client),
-		changePhaseChannel:    make(chan GamePhase),
-		alive: true,
+		playersState:            map[*Client]*PlayerState{},
+		phase:                   GamePhaseWaiting,
+		BuyUnitChannel:          make(chan BuyUnitMessage),
+		AnswerQuestionChannel:   make(chan AnswerQuestionMessage),
+		PlaceUnitChannel:        make(chan PlaceUnitMessage),
+		ClientDisconnectChannel: make(chan *Client),
+		changePhaseChannel:      make(chan GamePhase),
+		alive:                   true,
 	}
 }
 
@@ -85,7 +85,7 @@ func (r *Room) AddClient(client *Client) {
 		},
 		Question:       nil,
 		Store:          []Unit{},
-		Units:         	[]Unit{},
+		Units:          []Unit{},
 		UnitsPlacement: []UnitPlacement{},
 	}
 }
@@ -400,7 +400,7 @@ func (r *Room) Start() {
 
 	for r.alive {
 		select {
-		case <- r.ClientDisconnectChannel:
+		case <-r.ClientDisconnectChannel:
 			r.Shutdown("Client disconnected")
 		case phase := <-r.changePhaseChannel:
 			r.handlePhaseChange(phase)

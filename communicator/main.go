@@ -5,8 +5,8 @@ import (
 	"log"
 	"math/rand"
 	"net/http"
-	"time"
 	"os"
+	"time"
 )
 
 const port = 4000

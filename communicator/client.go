@@ -52,7 +52,7 @@ type Client struct {
 }
 
 type InboundMessage struct {
-	Client *Client
+	Client  *Client
 	Message []byte
 }
 

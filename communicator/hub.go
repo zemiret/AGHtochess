@@ -48,7 +48,6 @@ func (h *Hub) run() {
 			}
 		case client := <-h.unregister:
 			if closingRoom, ok := h.clients[client]; ok {
-				//TODO: handle disconnects
 				h.clients[client].ClientDisconnectChannel <- client
 
 				for player, room := range h.clients {
