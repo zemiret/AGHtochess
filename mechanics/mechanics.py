@@ -1,9 +1,8 @@
-from random import choice, uniform, randint
+from random import choice, uniform, randint, sample
 from typing import Tuple, List
 
 from model.Board import Board
 from model.Unit import Unit
-from model.NoOneAliveError import NoOneAliveError
 
 golden_ratio = (1 + 5 ** 0.5) / 2
 
@@ -39,21 +38,28 @@ def generate_unit(round: int) -> Unit:
 
 
 def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
-    logs = []
-    attaker = choice([board1, board2])
-    while board1.anyone_alive() and board2.anyone_alive():
-        attacking_token = board1.get_alive_token()
-        defending_token = board2.get_alive_token()
-        hp_diff = attacking_token.unit.attack - defending_token.unit.defense
-        defending_token.hp = max(0, defending_token.hp - hp_diff)
-        log = {
-            "action": "kill" if defending_token.hp == 0 else "damage",
+    log = []
+    attacking_player, defending_player = board1, board2  # TODO randomize attacker
+
+    while attacking_player.anyone_alive and defending_player.anyone_alive:
+        attacking_token = attacking_player.get_random_alive_token()
+        defending_token = defending_player.get_random_alive_token()
+
+        attack = randint(0, attacking_token.unit.attack)
+        defense = randint(0, defending_token.unit.defense)
+
+        damage = max(0, attack - defense)
+        defending_token.unit.hp = max(0, defending_token.unit.hp - damage)
+
+        log.append({
+            "action": "kill" if defending_token.unit.dead else "damage",
             "who": attacking_token.unit.id,
             "whom": defending_token.unit.id
-        }
-        logs.append(log)
-        attaker = board1 if attacker = board2 else board2
+        })
 
-    winner = 1 if board1.anyone_alive() else 2
+        attacking_player, defending_player = defending_player, attacking_player
+
+    winner = 1 if board2.anyone_alive else 0  # TODO handle draw
     player_hp_change = randint(-10, 0)
-    return winner, player_hp_change, logs
+
+    return winner, player_hp_change, log
