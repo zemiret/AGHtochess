@@ -3,6 +3,7 @@ import { PlayerInfo } from "../models/game-state.model";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import Player from "./Player";
+import GamePhaseSpecific from "./GamePhaseSpecific";
 
 interface Props {
   player: PlayerInfo;
@@ -16,6 +17,8 @@ const GamePage: React.FunctionComponent<Props> = ({ player, enemy }: Props) => {
       <Player {...player} />
       <h1>Enemy</h1>
       <Player {...enemy} />
+      <hr />
+      <GamePhaseSpecific />
     </div>
   );
 };
