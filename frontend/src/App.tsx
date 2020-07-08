@@ -1,30 +1,8 @@
 import React from "react";
-import { buyUnit } from "./store/actions";
-import { RootSchema } from "./store/root-schema";
-import { connect } from "react-redux";
-import { Dispatch } from "./store";
 import PageController from "./components/PageController";
 
-import { Button } from "reactstrap";
-
-interface Props {
-  dispatch: Dispatch;
-}
-
-const App: React.FunctionComponent<Props> = ({ dispatch }: Props) => {
-  return (
-    <div>
-      <p>Hello, World!</p>
-      <Button color="success" onClick={() => dispatch(buyUnit(1))}>
-        Click
-      </Button>
-      <PageController />
-    </div>
-  );
+const App: React.FunctionComponent = () => {
+  return <PageController />;
 };
 
-const mapStateToProps = (state: RootSchema) => ({
-  gameState: state.gameState,
-});
-
-export default connect(mapStateToProps)(App);
+export default App;
