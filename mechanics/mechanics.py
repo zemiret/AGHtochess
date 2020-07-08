@@ -1,4 +1,4 @@
-from random import choice, uniform, randint
+from random import choice, uniform, randint, sample
 from typing import Tuple, List
 
 from model.Board import Board
@@ -38,14 +38,28 @@ def generate_unit(round: int) -> Unit:
 
 
 def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
-    winner = 1 if len(board1.tokens) > len(board2.tokens) else 2
+    log = []
+    attacking_player, defending_player = board1, board2  # TODO randomize attacker
+
+    while attacking_player.anyone_alive and defending_player.anyone_alive:
+        attacking_token = attacking_player.get_random_alive_token()
+        defending_token = defending_player.get_random_alive_token()
+
+        attack = randint(0, attacking_token.unit.attack)
+        defense = randint(0, defending_token.unit.defense)
+
+        damage = max(0, attack - defense)
+        defending_token.unit.hp = max(0, defending_token.unit.hp - damage)
+
+        log.append({
+            "action": "kill" if defending_token.unit.dead else "damage",
+            "who": attacking_token.unit.id,
+            "whom": defending_token.unit.id
+        })
+
+        attacking_player, defending_player = defending_player, attacking_player
+
+    winner = 1 if board2.anyone_alive else 0  # TODO handle draw
     player_hp_change = randint(-10, 0)
-    log = [
-        {
-            "action": "kill",
-            "who": "12",
-            "whom": "34",
-        },
-    ]
 
     return winner, player_hp_change, log
