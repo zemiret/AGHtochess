@@ -25,7 +25,7 @@ export interface UnitPlacement {
 
 export interface BattleStatistics {
   result: "WIN" | "LOSS";
-  hpChange: number;
+  playerHpChange: number;
 }
 
 export interface Answer {
@@ -35,7 +35,7 @@ export interface Answer {
 
 export interface Question {
   id: number;
-  test: string;
+  text: string;
   answers: Answer[];
 }
 
