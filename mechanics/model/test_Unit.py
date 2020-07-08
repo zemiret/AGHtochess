@@ -40,7 +40,7 @@ def test_dead(hp, expected):
 
 def test_from_dict():
     d = {
-        "id": 1,
+        "id": "1",
         "attack": 2,
         "defense": 3,
         "magic_resist": 4,
@@ -53,7 +53,7 @@ def test_from_dict():
     }
     unit = Unit.from_dict(d)
 
-    assert unit.id == 1
+    assert unit.id == "1"
     assert unit.attack == 2
     assert unit.defense == 3
     assert unit.magic_resist == 4
@@ -66,9 +66,9 @@ def test_from_dict():
 
 
 @pytest.mark.parametrize('unit1, unit2, expected', [
-    (Unit(id=42), Unit(id=42), True),
-    (Unit(id=42, hp=10), Unit(id=42, hp=20), True),
-    (Unit(id=7), Unit(id=13), False),
+    (Unit(id="42"), Unit(id="42"), True),
+    (Unit(id="42", hp=10), Unit(id="42", hp=20), True),
+    (Unit(id=7), Unit(id="13"), False),
 ])
 def test_eq(unit1, unit2, expected):
     assert (unit1 == unit2) is expected

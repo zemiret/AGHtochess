@@ -43,8 +43,8 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     log = [
         {
             "action": "kill",
-            "who": 12,
-            "whom": 34,
+            "who": "12",
+            "whom": "34",
         },
     ]
 
