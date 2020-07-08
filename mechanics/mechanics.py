@@ -1,3 +1,4 @@
+from random import shuffle
 from random import choice, uniform, randint, sample
 from typing import Tuple, List
 
@@ -18,7 +19,7 @@ def generate_unit(round: int) -> Unit:
         attack = gen(5, 50, 1.1)
         defense = gen(0, 10, 1.1)
         magic_resist = gen(0, 5, 1.1)
-        critical_chance = min((gen(1+0.6, 1+0.9, 1.1) - 1), 1) * 100
+        critical_chance = min((gen(1 + 0.6, 1 + 0.9, 1.1) - 1), 1) * 100
         hp = gen(80, 120, 1.1)
         range = gen(3, 5, 1.1)
         attack_speed = gen(0, 3, 1.1)
@@ -37,9 +38,16 @@ def generate_unit(round: int) -> Unit:
                 price=price)
 
 
+def shuffle_players(players: Tuple[Board, Board]) -> Tuple[Board, Board]:
+    players_list = [*players]
+    shuffle(players_list)
+    return players_list[0], players_list[1]
+
+
 def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     log = []
-    attacking_player, defending_player = board1, board2  # TODO randomize attacker
+
+    attacking_player, defending_player = shuffle_players((board1, board2))
 
     while attacking_player.anyone_alive and defending_player.anyone_alive:
         attacking_token = attacking_player.get_random_alive_token()
@@ -53,13 +61,14 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
 
         log.append({
             "action": "kill" if defending_token.unit.dead else "damage",
+            "damage": damage,
             "who": attacking_token.unit.id,
             "whom": defending_token.unit.id
         })
 
         attacking_player, defending_player = defending_player, attacking_player
 
-    winner = 1 if board2.anyone_alive else 0  # TODO handle draw
-    player_hp_change = randint(-10, 0)
+    winner = 1 if board2.anyone_alive else 0
+    player_hp_change = randint(-10, -1)
 
     return winner, player_hp_change, log
