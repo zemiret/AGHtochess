@@ -348,13 +348,15 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 
 	if state.Question == nil {
 		client.SendMessage(newInfoMessage("Missing question"))
-		r.log.Println("Missing question while in question phase LOL")
+		r.log.Println("Missing question while in question phase")
 		return
 	}
 
 	if state.Question.CorrectAnswer == answer.AnswerID {
 		state.Player.Money += questionReward
 	}
+
+	state.Question = nil
 
 	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
 		r.Shutdown("Failed to propagate client state")
