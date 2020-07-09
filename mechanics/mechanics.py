@@ -58,7 +58,10 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
         defending_token = defending_player.get_random_alive_token()
 
         attack = randint(0, attacking_token.unit.attack)
-        defense = randint(0, defending_token.unit.defense)
+        if attacking_token.unit.physical:
+            defense = randint(0, defending_token.unit.defense)
+        else:
+            defense = randint(0, defending_token.unit.magicResist)
 
         distance = defending_token.distance(attacking_token)
         attack_range = attacking_token.unit.range

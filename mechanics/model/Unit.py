@@ -26,6 +26,10 @@ class Unit:
     def dead(self):
         return not self.alive
 
+    @property
+    def physical(self):
+        return type == "PHYSICAL"
+
     @classmethod
     def from_dict(cls, d: dict):
         return cls(**d)
