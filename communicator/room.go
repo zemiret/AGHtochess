@@ -384,12 +384,12 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 		r.log.Println("Failed to propagate question result", client.nickname, err)
 	}
 
-	message := fmt.Sprintf("Correct answer, +%d €cts", reward)
+	message := newInfoMessage(fmt.Sprintf("Correct answer, +%d €cts", reward))
 	if questionResult == QuestionResultIncorrect {
-		message = "Incorrect answer"
+		message = newErrorMessage("Incorrect answer")
 	}
 
-	if err := client.SendMessage(newInfoMessage(message)); err != nil {
+	if err := client.SendMessage(message); err != nil {
 		r.Shutdown("Failed to propagate question message")
 		r.log.Println("Failed to propagate question message", client.nickname, err)
 	}
