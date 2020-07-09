@@ -1,5 +1,5 @@
 import React from "react";
-import {PlayerInfo, Unit} from "../models/game-state.model";
+import { PlayerInfo, Unit } from "../models/game-state.model";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import Player from "./Player";
