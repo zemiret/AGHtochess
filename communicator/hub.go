@@ -114,6 +114,14 @@ func (h *Hub) run() {
 					}
 					placeUnitMessage.Client = inboundMessage.Client
 					clientRoom.PlaceUnitChannel <- placeUnitMessage
+				case MessageTypeUnplaceUnit:
+					var unplaceUnitMessage UnplaceUnitMessage
+					if err := json.Unmarshal(inboundMessage.Message, &unplaceUnitMessage); err != nil {
+						h.log.Println("Invalid message", err)
+						continue
+					}
+					unplaceUnitMessage.Client = inboundMessage.Client
+					clientRoom.UnplaceUnitChannel <- unplaceUnitMessage
 				default:
 					h.log.Println("Unknown message type")
 				}
