@@ -67,13 +67,12 @@ table {
 }
 
 .v-flex-align-center {
+  display: flex;
 	align-items: center;
 }
 
 .h-flex-align-center {
   display: flex;
-	align-items: center;
-	justify-items: center;
 	justify-content: center;
 }
 
