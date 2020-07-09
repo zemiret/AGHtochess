@@ -3,6 +3,7 @@ import { PlayerInfo, Unit } from "../models/game-state.model";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import Player from "./Player";
+import Timer from "./Timer";
 import GamePhaseSpecificCenter from "./GamePhaseSpecificCenter";
 import { Col, Row } from "reactstrap";
 import GamePhaseSpecificSidebar from "./GamePhaseSpecificSidebar";
@@ -13,6 +14,9 @@ import { selectUnit } from "../store/actions";
 interface Props {
   player: PlayerInfo;
   enemy: PlayerInfo;
+  phase: string;
+  round: number;
+  phaseEndsAt: number;
   units: Unit[];
   selectedUnit: Unit | null;
   dispatch: Dispatch;
@@ -24,6 +28,9 @@ const GamePage: React.FunctionComponent<Props> = ({
   units,
   dispatch,
   selectedUnit,
+  phase,
+  round,
+  phaseEndsAt,
 }: Props) => {
   return (
     <div>
@@ -39,11 +46,11 @@ const GamePage: React.FunctionComponent<Props> = ({
         <Col xs="6">
           <div className="game-center-container">
             <Row>
-              <Col className="h-flex-align-center">
+              <Col className="h-flex-align-center top-bar">
                 <Player {...enemy} isEnemy={true} />
+                <Timer phase={phase} phaseEndsAt={phaseEndsAt} round={round} />
               </Col>
             </Row>
-
             <Row>
               <Col className="h-flex-align-center">
                 <GamePhaseSpecificCenter />
@@ -69,6 +76,9 @@ const GamePage: React.FunctionComponent<Props> = ({
 const mapStateToProps = ({ gameState, selectedUnit }: RootSchema) => ({
   player: gameState!.player,
   enemy: gameState!.enemy,
+  phase: gameState!.phase,
+  round: gameState!.round,
+  phaseEndsAt: gameState!.phaseEndsAt,
   units: gameState!.units,
   selectedUnit,
 });

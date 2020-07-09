@@ -40,7 +40,7 @@ export interface Question {
 }
 
 export interface CommonGameState {
-  phaseEndsAt: Date;
+  phaseEndsAt: number;
   round: number;
   player: PlayerInfo;
   enemy: PlayerInfo;
