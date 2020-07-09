@@ -12,7 +12,7 @@ const Timer: React.FunctionComponent<Props> = ({
   round,
 }: Props) => {
   const calcTimeLeft = (end: number): number => {
-    return Math.round(end - Date.now() / 1000);
+    return Math.max(0, Math.round(end - Date.now() / 1000));
   };
 
   const initialTimerState = calcTimeLeft(phaseEndsAt);

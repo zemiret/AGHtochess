@@ -33,43 +33,41 @@ const GamePage: React.FunctionComponent<Props> = ({
   phaseEndsAt,
 }: Props) => {
   return (
-    <div>
-      <Row className="game-panel-row">
-        <Col xs="3">
-          <Backpack
-            units={units}
-            selectedUnit={selectedUnit}
-            selectUnit={(unit: Unit) => dispatch(selectUnit(unit))}
-          />
-        </Col>
+    <Row className="game-panel-row">
+      <Col className="sidebar" xs="3">
+        <Backpack
+          units={units}
+          selectedUnit={selectedUnit}
+          selectUnit={(unit: Unit) => dispatch(selectUnit(unit))}
+        />
+      </Col>
 
-        <Col xs="6">
-          <div className="game-center-container">
-            <Row>
-              <Col className="h-flex-align-center top-bar">
-                <Player {...enemy} isEnemy={true} />
-                <Timer phase={phase} phaseEndsAt={phaseEndsAt} round={round} />
-              </Col>
-            </Row>
-            <Row>
-              <Col className="h-flex-align-center">
-                <GamePhaseSpecificCenter />
-              </Col>
-            </Row>
+      <Col xs="6">
+        <div className="game-center-container">
+          <Row>
+            <Col className="h-flex-align-center top-bar">
+              <Player {...enemy} isEnemy={true} />
+              <Timer phase={phase} phaseEndsAt={phaseEndsAt} round={round} />
+            </Col>
+          </Row>
+          <Row>
+            <Col className="h-flex-align-center">
+              <GamePhaseSpecificCenter />
+            </Col>
+          </Row>
 
-            <Row>
-              <Col className="h-flex-align-center">
-                <Player {...player} isEnemy={false} />
-              </Col>
-            </Row>
-          </div>
-        </Col>
+          <Row>
+            <Col className="h-flex-align-center">
+              <Player {...player} isEnemy={false} />
+            </Col>
+          </Row>
+        </div>
+      </Col>
 
-        <Col xs="3">
-          <GamePhaseSpecificSidebar />
-        </Col>
-      </Row>
-    </div>
+      <Col className="sidebar" xs="3">
+        <GamePhaseSpecificSidebar />
+      </Col>
+    </Row>
   );
 };
 
