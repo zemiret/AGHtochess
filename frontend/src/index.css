@@ -114,6 +114,27 @@ body, html {
 	height: 100vh;
 }
 
+.unit {
+	cursor: pointer;
+}
+
+.unit--selected {
+	background-color: aquamarine;
+}
+
+.with-border {
+	border: 1px solid black;
+}
+
+.board {
+	margin: 10px;
+}
+
+.board-cell {
+	padding: 5px;
+	cursor: pointer;
+}
+
 .game-panel-row {
 	margin: 0;
 	height: 100%;
@@ -180,4 +201,12 @@ body, html {
 .sidebar {
 	height: 100%;
 	overflow: auto;
+}
+
+.info-toast {
+	font-size: 2rem;
+	z-index: 1000;
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%, 0);
 }

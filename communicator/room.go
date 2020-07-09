@@ -16,9 +16,9 @@ const (
 
 var phaseDurations = map[GamePhase]time.Duration{
 	GamePhaseWaiting:  1 * time.Second,
-	GamePhaseStore:    5 * time.Second,
+	GamePhaseStore:    30 * time.Second,
 	GamePhaseBattle:   1 * time.Second,
-	GamePhaseQuestion: 5 * time.Second,
+	GamePhaseQuestion: 10 * time.Second,
 	GamePhaseGameEnd:  1 * time.Second,
 }
 
@@ -41,6 +41,7 @@ type Room struct {
 
 	BuyUnitChannel        chan BuyUnitMessage
 	PlaceUnitChannel      chan PlaceUnitMessage
+	UnplaceUnitChannel    chan UnplaceUnitMessage
 	AnswerQuestionChannel chan AnswerQuestionMessage
 	changePhaseChannel    chan GamePhase
 
@@ -67,6 +68,11 @@ type PlaceUnitMessage struct {
 	PlaceUnitPayload *PlaceUnitPayload `json:"payload"`
 }
 
+type UnplaceUnitMessage struct {
+	Client             *Client             `json:"-"`
+	UnplaceUnitPayload *UnplaceUnitPayload `json:"payload"`
+}
+
 func newRoom(roomClosing chan<- *Room) *Room {
 	return &Room{
 		log:                     log.New(os.Stdout, "[Room]", log.Flags()),
@@ -75,11 +81,11 @@ func newRoom(roomClosing chan<- *Room) *Room {
 		BuyUnitChannel:          make(chan BuyUnitMessage),
 		AnswerQuestionChannel:   make(chan AnswerQuestionMessage),
 		PlaceUnitChannel:        make(chan PlaceUnitMessage),
+		UnplaceUnitChannel:      make(chan UnplaceUnitMessage),
 		ClientDisconnectChannel: make(chan *Client, 2),
 		changePhaseChannel:      make(chan GamePhase),
 		alive:                   true,
 		roomClosing:             roomClosing,
-		round:                   1,
 	}
 }
 
@@ -173,7 +179,10 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 }
 
 func (r *Room) startStorePhase() {
+	r.round++
 	for _, state := range r.playersState {
+		state.UnitsPlacement = []UnitPlacement{}
+
 		units, err := GetStoreUnits(r.round)
 		if err != nil {
 			r.log.Println("Failed fetching units ", err)
@@ -395,6 +404,40 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 	}
 }
 
+func (r *Room) handleUnplaceUnit(client *Client, payload UnplaceUnitPayload) {
+	if r.phase != GamePhaseStore {
+		client.SendMessage(newInfoMessage("You can only place units in store phase"))
+		return
+	}
+	state := r.playersState[client]
+
+	var unitToUnplace *Unit
+	for _, unit := range state.Units {
+		if unit.ID == payload.ID {
+			unitToUnplace = &unit
+			break
+		}
+	}
+
+	if unitToUnplace == nil {
+		client.SendMessage(newInfoMessage("You don't own that unit"))
+		r.log.Println("Client tried to place invalid unit")
+		return
+	}
+
+	for i, existing := range state.UnitsPlacement {
+		if existing.UnitID == payload.ID {
+			state.UnitsPlacement = append(state.UnitsPlacement[:i], state.UnitsPlacement[i+1:]...)
+			break
+		}
+	}
+
+	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
+		r.Shutdown("Failed to propagate client state")
+		r.log.Println("Failed to propagate client state for ", client.nickname, err)
+	}
+}
+
 func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 	if r.phase != GamePhaseStore {
 		client.SendMessage(newErrorMessage("You can only place units in store phase"))
@@ -422,6 +465,15 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 		return
 	}
 
+	moved := false
+	for i, existing := range state.UnitsPlacement {
+		if existing.UnitID == placement.UnitID {
+			moved = true
+			state.UnitsPlacement[i] = placement
+			break
+		}
+	}
+
 	swapped := false
 	for i, existing := range state.UnitsPlacement {
 		if existing.X == placement.X && existing.Y == placement.Y {
@@ -431,7 +483,7 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 		}
 	}
 
-	if !swapped {
+	if !swapped && !moved {
 		state.UnitsPlacement = append(state.UnitsPlacement, placement)
 	}
 
@@ -470,6 +522,12 @@ func (r *Room) Start() {
 				continue
 			}
 			r.handlePlaceUnit(message.Client, *message.PlaceUnitPayload)
+		case message := <-r.UnplaceUnitChannel:
+			if message.UnplaceUnitPayload == nil {
+				message.Client.SendMessage(newInfoMessage("Missing payload"))
+				continue
+			}
+			r.handleUnplaceUnit(message.Client, *message.UnplaceUnitPayload)
 		}
 	}
 }

@@ -4,4 +4,4 @@
 **/*.sqlite
 .vscode/
 .idea
-
+docker-compose.hostnetwork.yml

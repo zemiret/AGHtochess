@@ -21,28 +21,33 @@ const Question: React.FunctionComponent<Props> = ({
   answerQuestion,
 }: Props) => {
   return (
-    <Card>
-      <CardHeader>Question</CardHeader>
-      <CardBody>
-        <CardTitle>{text}</CardTitle>
-        <CardText>
-          <ListGroup>
-            {answers.map(a => {
-              return (
-                <ListGroupItem
-                  key={a.id}
-                  tag="button"
-                  action
-                  onClick={() => answerQuestion(questionId, a.id)}
-                >
-                  {a.text}
-                </ListGroupItem>
-              );
-            })}
-          </ListGroup>
-        </CardText>
-      </CardBody>
-    </Card>
+    <>
+      {!answers && "No more questions"}
+      {answers && (
+        <Card>
+          <CardHeader>Question</CardHeader>
+          <CardBody>
+            <CardTitle>{text}</CardTitle>
+            <CardText>
+              <ListGroup>
+                {answers.map(a => {
+                  return (
+                    <ListGroupItem
+                      key={a.id}
+                      tag="button"
+                      action
+                      onClick={() => answerQuestion(questionId, a.id)}
+                    >
+                      {a.text}
+                    </ListGroupItem>
+                  );
+                })}
+              </ListGroup>
+            </CardText>
+          </CardBody>
+        </Card>
+      )}
+    </>
   );
 };
 

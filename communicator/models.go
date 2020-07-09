@@ -13,6 +13,7 @@ const (
 
 	MessageTypeBuyUnit        MessageType = "BUY_UNIT"
 	MessageTypePlaceUnit      MessageType = "PLACE_UNIT"
+	MessageTypeUnplaceUnit    MessageType = "UNPLACE_UNIT"
 	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
 
 	GamePhaseWaiting  GamePhase = "WAITING_FOR_PLAYERS"
@@ -146,4 +147,8 @@ type PlaceUnitPayload struct {
 	ID string `json:"id"`
 	X  int    `json:"x"`
 	Y  int    `json:"y"`
+}
+
+type UnplaceUnitPayload struct {
+	ID string `json:"id"`
 }

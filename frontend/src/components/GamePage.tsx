@@ -8,6 +8,8 @@ import GamePhaseSpecificCenter from "./GamePhaseSpecificCenter";
 import { Col, Row } from "reactstrap";
 import GamePhaseSpecificSidebar from "./GamePhaseSpecificSidebar";
 import Backpack from "./Backpack";
+import { Dispatch } from "../store";
+import { selectUnit } from "../store/actions";
 
 interface Props {
   player: PlayerInfo;
@@ -16,12 +18,16 @@ interface Props {
   round: number;
   phaseEndsAt: number;
   units: Unit[];
+  selectedUnit?: Unit;
+  dispatch: Dispatch;
 }
 
 const GamePage: React.FunctionComponent<Props> = ({
   player,
   enemy,
   units,
+  dispatch,
+  selectedUnit,
   phase,
   round,
   phaseEndsAt,
@@ -29,7 +35,11 @@ const GamePage: React.FunctionComponent<Props> = ({
   return (
     <Row className="game-panel-row">
       <Col className="sidebar" xs="3">
-        <Backpack units={units} />
+        <Backpack
+          units={units}
+          selectedUnit={selectedUnit}
+          selectUnit={(unit: Unit) => dispatch(selectUnit(unit))}
+        />
       </Col>
 
       <Col xs="6">
@@ -61,13 +71,14 @@ const GamePage: React.FunctionComponent<Props> = ({
   );
 };
 
-const mapStateToProps = ({ gameState }: RootSchema) => ({
+const mapStateToProps = ({ gameState, selectedUnit }: RootSchema) => ({
   player: gameState!.player,
   enemy: gameState!.enemy,
   phase: gameState!.phase,
   round: gameState!.round,
   phaseEndsAt: gameState!.phaseEndsAt,
   units: gameState!.units,
+  selectedUnit,
 });
 
 export default connect(mapStateToProps)(GamePage);
