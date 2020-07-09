@@ -79,7 +79,6 @@ func newRoom(roomClosing chan<- *Room) *Room {
 		changePhaseChannel:      make(chan GamePhase),
 		alive:                   true,
 		roomClosing:             roomClosing,
-		round: 1,
 	}
 }
 
@@ -173,7 +172,10 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 }
 
 func (r *Room) startStorePhase() {
+	r.round++
 	for _, state := range r.playersState {
+		state.UnitsPlacement = []UnitPlacement{}
+
 		units, err := GetStoreUnits(r.round)
 		if err != nil {
 			r.log.Println("Failed fetching units ", err)
