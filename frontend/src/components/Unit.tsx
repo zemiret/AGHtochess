@@ -2,7 +2,7 @@ import React from "react";
 import { Unit as UnitType } from "../models/game-state.model";
 import { Col, Container, Row } from "reactstrap";
 import UnitStat from "./UnitStat";
-import RoundIcon from "./RoundIcon";
+import UnitAvatar from "./UnitAvatar";
 
 interface Props {
   unit: UnitType;
@@ -13,7 +13,7 @@ const Unit: React.FunctionComponent<Props> = ({ unit }: Props) => {
     <Container>
       <Row>
         <Col xs="4" className="v-flex-align-center">
-          <RoundIcon />
+          <UnitAvatar unit={unit} />
         </Col>
 
         <Col xs="8">
