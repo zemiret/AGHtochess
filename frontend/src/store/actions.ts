@@ -12,6 +12,8 @@ export const changeGameState = createAction<GameState>("changeGameState");
 
 export const showInfoMessage = createAction<InfoMessage>("showInfoMessage");
 
+export const showErrorMessage = createAction<InfoMessage>("showErrorMessage");
+
 export const connectWebSocket = createAsyncThunk(
   "connectWebSocket",
   async (username: string, thunkApi) => {
@@ -19,6 +21,9 @@ export const connectWebSocket = createAsyncThunk(
       switch (message.messageType) {
         case MessageType.INFO:
           thunkApi.dispatch(showInfoMessage(message.payload as InfoMessage));
+          break;
+        case MessageType.ERROR:
+          thunkApi.dispatch(showErrorMessage(message.payload as InfoMessage));
           break;
         case MessageType.STATE_CHANGE:
           thunkApi.dispatch(changeGameState(message.payload as GameState));
