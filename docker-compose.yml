@@ -1,18 +1,24 @@
-version: '3'
+version: '3.6'
 services:
   communicator:
-    build: ./communicator
+    build: 
+      context: ./communicator
+      network: host
     environment:
-      - GAME_MECHANICS_HOST=http://mechanics
+      - GAME_MECHANICS_HOST=http://localhost:80
     ports:
       - "4000:4000"
-    links:
-      - mechanics
+    network_mode: host
   mechanics:
-    build: ./mechanics
+    build: 
+      context: ./mechanics
+      network: host
     ports:
       - "5000:80"
+    network_mode: host
   frontend:
-    build: ./frontend
+    build: 
+      context: ./frontend
+      network: host
     ports:
       - "8080:80"

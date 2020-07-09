@@ -16,13 +16,16 @@ const Question: React.FunctionComponent<Props> = ({
       <h2>Question</h2>
       <h3>{text}</h3>
       <ul>
-        {answers.map(a => {
-          return (
-            <li key={a.id}>
-              <button onClick={() => answerQuestion(questionId, a.id)}>{a.text}</button>
-            </li>
-          );
-        })}
+        {answers &&
+          answers.map(a => {
+            return (
+              <li key={a.id}>
+                <button onClick={() => answerQuestion(questionId, a.id)}>
+                  {a.text}
+                </button>
+              </li>
+            );
+          })}
       </ul>
     </div>
   );

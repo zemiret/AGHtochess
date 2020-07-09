@@ -16,9 +16,9 @@ const (
 
 var phaseDurations = map[GamePhase]time.Duration{
 	GamePhaseWaiting:  1 * time.Second,
-	GamePhaseStore:    5 * time.Second,
+	GamePhaseStore:    60 * time.Second,
 	GamePhaseBattle:   1 * time.Second,
-	GamePhaseQuestion: 5 * time.Second,
+	GamePhaseQuestion: 10 * time.Second,
 	GamePhaseGameEnd:  1 * time.Second,
 }
 

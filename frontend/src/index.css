@@ -88,3 +88,14 @@ table {
 	height: 100vh;
 }
 
+.with-border {
+	border: 1px solid black;
+}
+
+.board {
+	margin: 10px
+}
+
+.board-cell {
+	padding: 5px
+}
