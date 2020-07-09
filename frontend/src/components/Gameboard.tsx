@@ -24,7 +24,7 @@ const Gameboard: React.FunctionComponent<Props> = ({
   });
 
   const toggleSelected = (x: number, y: number) => {
-    if (x < BOARD_HEIGHT / 2) {
+    if (y < BOARD_HEIGHT / 2) {
       // Do not allow placing units not on our half
       return;
     }
@@ -39,11 +39,11 @@ const Gameboard: React.FunctionComponent<Props> = ({
     <Container>
       <Row>
         <table className="board with-border">
-          {range(BOARD_HEIGHT).map(x => (
-            <tr key={x} className="with-border">
-              {range(BOARD_WIDTH).map(y => (
+          {range(BOARD_HEIGHT).map(y => (
+            <tr key={y} className="with-border">
+              {range(BOARD_WIDTH).map(x => (
                 <td
-                  key={x * BOARD_WIDTH + y}
+                  key={y * BOARD_WIDTH + x}
                   className="board-cell with-border"
                   onClick={() => toggleSelected(x, y)}
                 >
