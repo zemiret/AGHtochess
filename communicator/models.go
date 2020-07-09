@@ -8,6 +8,7 @@ type QuestionResult string
 const (
 	MessageTypeStateChange    MessageType = "STATE_CHANGE"
 	MessageTypeInfo           MessageType = "INFO"
+	MessageTypeError          MessageType = "ERROR"
 	MessageTypeQuestionResult MessageType = "QUESTION_RESULT"
 
 	MessageTypeBuyUnit        MessageType = "BUY_UNIT"
@@ -39,6 +40,15 @@ type InfoPayload struct {
 func newInfoMessage(message string) *Message {
 	return &Message{
 		MessageType: MessageTypeInfo,
+		Payload: InfoPayload{
+			Message: message,
+		},
+	}
+}
+
+func newErrorMessage(message string) *Message {
+	return &Message{
+		MessageType: MessageTypeError,
 		Payload: InfoPayload{
 			Message: message,
 		},
@@ -119,7 +129,7 @@ type AnswerQuestionPayload struct {
 
 type QuestionResultPayload struct {
 	Result QuestionResult `json:"result"`
-	Reward int `json:"reward"`
+	Reward int            `json:"reward"`
 }
 
 func newQuestionResultMessage(result QuestionResult, reward int) *Message {

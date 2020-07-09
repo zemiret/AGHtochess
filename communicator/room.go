@@ -114,7 +114,7 @@ func (r *Room) Full() bool {
 func (r *Room) Shutdown(reason string) {
 	r.log.Println("Shutting down")
 	for client := range r.playersState {
-		if err := client.SendMessage(newInfoMessage(reason)); err != nil {
+		if err := client.SendMessage(newErrorMessage(reason)); err != nil {
 			r.log.Println("Error sending shutdown message: ", err)
 		}
 	}
@@ -311,7 +311,7 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 
 func (r *Room) handleBuyUnit(client *Client, order BuyUnitPayload) {
 	if r.phase != GamePhaseStore {
-		client.SendMessage(newInfoMessage("You can only buy units in store phase"))
+		client.SendMessage(newErrorMessage("You can only buy units in store phase"))
 		return
 	}
 
@@ -328,12 +328,12 @@ func (r *Room) handleBuyUnit(client *Client, order BuyUnitPayload) {
 	}
 
 	if unitToBuy == nil {
-		client.SendMessage(newInfoMessage("Unit not in store"))
+		client.SendMessage(newErrorMessage("Unit not in store"))
 		return
 	}
 
 	if state.Player.Money < unitToBuy.Price {
-		client.SendMessage(newInfoMessage("You don't have enough money"))
+		client.SendMessage(newErrorMessage("You don't have enough money"))
 		return
 	}
 
@@ -345,18 +345,23 @@ func (r *Room) handleBuyUnit(client *Client, order BuyUnitPayload) {
 		r.Shutdown("Failed to propagate client state")
 		r.log.Println("Failed to propagate client state for ", client.nickname, err)
 	}
+
+	if err := client.SendMessage(newInfoMessage("Unit bought")); err != nil {
+		r.Shutdown("Failed to send info message")
+		r.log.Println("Failed to send info message", client.nickname, err)
+	}
 }
 
 func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload) {
 	if r.phase != GamePhaseQuestion {
-		client.SendMessage(newInfoMessage("You can only answer questions in question phase"))
+		client.SendMessage(newErrorMessage("You can only answer questions in question phase"))
 		return
 	}
 
 	state := r.playersState[client]
 
 	if state.Question == nil {
-		client.SendMessage(newInfoMessage("Missing question"))
+		client.SendMessage(newErrorMessage("Missing question"))
 		r.log.Println("Missing question while in question phase")
 		return
 	}
@@ -380,11 +385,21 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 		r.Shutdown("Failed to propagate question result")
 		r.log.Println("Failed to propagate question result", client.nickname, err)
 	}
+
+	message := newInfoMessage(fmt.Sprintf("Correct answer, +%d €cts", reward))
+	if questionResult == QuestionResultIncorrect {
+		message = newErrorMessage("Incorrect answer")
+	}
+
+	if err := client.SendMessage(message); err != nil {
+		r.Shutdown("Failed to propagate question message")
+		r.log.Println("Failed to propagate question message", client.nickname, err)
+	}
 }
 
 func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 	if r.phase != GamePhaseStore {
-		client.SendMessage(newInfoMessage("You can only place units in store phase"))
+		client.SendMessage(newErrorMessage("You can only place units in store phase"))
 		return
 	}
 	state := r.playersState[client]
@@ -404,7 +419,7 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 	}
 
 	if unitToPlace == nil {
-		client.SendMessage(newInfoMessage("You don't own that unit"))
+		client.SendMessage(newErrorMessage("You don't own that unit"))
 		r.log.Println("Client tried to place invalid unit")
 		return
 	}
@@ -450,19 +465,19 @@ func (r *Room) Start() {
 			r.handlePhaseChange(phase)
 		case message := <-r.BuyUnitChannel:
 			if message.BuyUnitPayload == nil {
-				message.Client.SendMessage(newInfoMessage("Missing payload"))
+				message.Client.SendMessage(newErrorMessage("Missing payload"))
 				continue
 			}
 			r.handleBuyUnit(message.Client, *message.BuyUnitPayload)
 		case message := <-r.AnswerQuestionChannel:
 			if message.AnswerQuestionPayload == nil {
-				message.Client.SendMessage(newInfoMessage("Missing payload"))
+				message.Client.SendMessage(newErrorMessage("Missing payload"))
 				continue
 			}
 			r.handleAnswerQuestion(message.Client, *message.AnswerQuestionPayload)
 		case message := <-r.PlaceUnitChannel:
 			if message.PlaceUnitPayload == nil {
-				message.Client.SendMessage(newInfoMessage("Missing payload"))
+				message.Client.SendMessage(newErrorMessage("Missing payload"))
 				continue
 			}
 			r.handlePlaceUnit(message.Client, *message.PlaceUnitPayload)

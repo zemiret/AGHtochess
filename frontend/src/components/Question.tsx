@@ -1,5 +1,14 @@
 import React from "react";
 import { Question as QuestionType } from "../models/game-state.model";
+import {
+  Card,
+  CardText,
+  CardBody,
+  CardHeader,
+  CardTitle,
+  ListGroup,
+  ListGroupItem,
+} from "reactstrap";
 
 interface Props extends QuestionType {
   answerQuestion: (q: number, a: number) => void;
@@ -12,26 +21,33 @@ const Question: React.FunctionComponent<Props> = ({
   answerQuestion,
 }: Props) => {
   return (
-    <div>
-      {answers && (
-        <div>
-          <h2>Question</h2>
-          <h3>{text}</h3>
-          <ul>
-            {answers.map(a => {
-              return (
-                <li key={a.id}>
-                  <button onClick={() => answerQuestion(questionId, a.id)}>
-                    {a.text}
-                  </button>
-                </li>
-              );
-            })}
-          </ul>
-        </div>
-      )}
+    <>
       {!answers && "No more questions"}
-    </div>
+      {answers && (
+        <Card>
+          <CardHeader>Question</CardHeader>
+          <CardBody>
+            <CardTitle>{text}</CardTitle>
+            <CardText>
+              <ListGroup>
+                {answers.map(a => {
+                  return (
+                    <ListGroupItem
+                      key={a.id}
+                      tag="button"
+                      action
+                      onClick={() => answerQuestion(questionId, a.id)}
+                    >
+                      {a.text}
+                    </ListGroupItem>
+                  );
+                })}
+              </ListGroup>
+            </CardText>
+          </CardBody>
+        </Card>
+      )}
+    </>
   );
 };
 
