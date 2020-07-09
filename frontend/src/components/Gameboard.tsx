@@ -2,11 +2,13 @@ import React from "react";
 import { StoreGameState, Unit, UnitPlacement } from "../models/game-state.model";
 import { Container, Row } from "reactstrap";
 import { BOARD_HEIGHT, BOARD_WIDTH } from "../constants";
+import BoardUnit from "./BoardUnit";
 
 interface Props extends StoreGameState {
   placeUnit: (unitsPlacement: UnitPlacement) => void;
   unplaceUnit: (unitId: string) => void;
   selectedUnit?: Unit;
+  units: Unit[];
 }
 
 const Gameboard: React.FunctionComponent<Props> = ({
@@ -14,6 +16,7 @@ const Gameboard: React.FunctionComponent<Props> = ({
   placeUnit,
   unplaceUnit,
   selectedUnit,
+  units,
 }: Props) => {
   const range = (n: number): number[] => {
     return Array.from(Array(n).keys());
@@ -37,7 +40,7 @@ const Gameboard: React.FunctionComponent<Props> = ({
   };
   return (
     <Container>
-      <Row>
+      <Row className="h-flex-align-center">
         <table className="board with-border">
           {range(BOARD_HEIGHT).map(x => (
             <tr key={x} className="with-border">
@@ -47,7 +50,13 @@ const Gameboard: React.FunctionComponent<Props> = ({
                   className="board-cell with-border"
                   onClick={() => toggleSelected(x, y)}
                 >
-                  {!board[x][y] ? `(${x},${y})` : board[x][y]}
+                  {!board[x][y] ? (
+                    <Container />
+                  ) : (
+                    <BoardUnit
+                      unit={units.find(u => u.id === board[x][y]) || units[0]}
+                    />
+                  )}
                 </td>
               ))}
             </tr>
