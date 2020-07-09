@@ -27,10 +27,16 @@ const Timer: React.FunctionComponent<Props> = ({
   }, [phaseEndsAt]);
 
   return (
-    <div>
-      <h3>{phase} phase</h3>
-      <h4>Round number: {round}</h4>
-      <p>Time left: {timeLeft}s</p>
+    <div className="timer-bar">
+      <p>
+        <span className="bolded">Phase:</span> {phase}
+      </p>
+      <p>
+        <span className="bolded">Round:</span> {round}
+      </p>
+      <p>
+        <span className="bolded">Time left:</span> {timeLeft}s
+      </p>
     </div>
   );
 };

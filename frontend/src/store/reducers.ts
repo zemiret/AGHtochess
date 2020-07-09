@@ -15,7 +15,6 @@ export const initialState: RootSchema = {
   gameState: undefined,
   state: "login",
   username: "",
-  socket: undefined,
   socketState: "closed",
 };
 

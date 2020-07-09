@@ -25,9 +25,7 @@ func GetQuestion() (*Question, error) {
 	copy(answers, question.Answers)
 
 	return &Question{
-		ID:            question.ID,
-		Text:          question.Text,
-		Answers:       answers,
+		PublicQuestion: question.PublicQuestion,
 		CorrectAnswer: question.CorrectAnswer,
 	}, nil
 }
