@@ -12,8 +12,16 @@ const StoreUnit: React.FunctionComponent<Props> = ({ unit, buyUnit }: Props) => 
   return (
     <div>
       <Unit unit={unit} />
-      <p>Price: {unit.price}</p>
-      <Button onClick={buyUnit}>Buy</Button>
+      <span className="v-spacer-sm" />
+
+      <div className="store-unit-buy-row v-flex-align-center">
+        <div>
+          <span className="strong">{unit.price}</span> €cts
+        </div>
+        <Button outline color="primary" size="sm" onClick={buyUnit}>
+          Buy
+        </Button>
+      </div>
     </div>
   );
 };

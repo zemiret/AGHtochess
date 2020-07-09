@@ -1,5 +1,8 @@
 import React from "react";
 import { Unit as UnitType } from "../models/game-state.model";
+import { Col, Container, Row } from "reactstrap";
+import UnitStat from "./UnitStat";
+import UnitAvatar from "./UnitAvatar";
 
 interface Props {
   unit: UnitType;
@@ -7,10 +10,27 @@ interface Props {
 
 const Unit: React.FunctionComponent<Props> = ({ unit }: Props) => {
   return (
-    <div>
-      <h5>ID: {unit.id}</h5>
-      <p>HP: {unit.hp}</p>
-    </div>
+    <Container>
+      <Row>
+        <Col xs="5" className="v-flex-align-center">
+          <UnitAvatar unit={unit} />
+        </Col>
+
+        <Col xs="7">
+          <div className="unit-caption">
+            <p>{unit.type}</p>
+          </div>
+
+          <UnitStat text="HP" value={unit.hp} />
+          <UnitStat text="Attack" value={unit.attack} />
+          <UnitStat text="Defense" value={unit.defense} />
+          <UnitStat text="Magic resistance" value={unit.magicResist} />
+          <UnitStat text="Range" value={unit.range} />
+          <UnitStat text="Critic chance" value={unit.criticalChance} />
+          <UnitStat text="Attack speed" value={unit.attackSpeed} />
+        </Col>
+      </Row>
+    </Container>
   );
 };
 
