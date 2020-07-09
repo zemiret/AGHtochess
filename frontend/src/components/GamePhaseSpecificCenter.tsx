@@ -25,12 +25,14 @@ const GamePhaseSpecificCenter: React.FunctionComponent<Props> = ({
       return <Battle {...gameState.battleStatistics} />;
     case "QUESTION":
       return (
-        <Question
-          {...gameState.question}
-          answerQuestion={(q: number, a: number) =>
-            dispatch(answerQuestion({ questionId: q, answerId: a }))
-          }
-        />
+        !!gameState.question && (
+          <Question
+            {...gameState.question}
+            answerQuestion={(q: number, a: number) =>
+              dispatch(answerQuestion({ questionId: q, answerId: a }))
+            }
+          />
+        )
       );
     case "GAME_END":
       return <GameEnd gameResult={gameState.gameResult} />;
