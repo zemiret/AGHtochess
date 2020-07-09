@@ -344,7 +344,7 @@ func (r *Room) handleBuyUnit(client *Client, order BuyUnitPayload) {
 		r.log.Println("Failed to propagate client state for ", client.nickname, err)
 	}
 
-	if err := client.SendMessage(newInfoMessage("Kupiłeś jednostkę")); err != nil {
+	if err := client.SendMessage(newInfoMessage("Unit bought")); err != nil {
 		r.Shutdown("Failed to send info message")
 		r.log.Println("Failed to send info message", client.nickname, err)
 	}
@@ -384,9 +384,9 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 		r.log.Println("Failed to propagate question result", client.nickname, err)
 	}
 
-	message := fmt.Sprintf("Poprawna odpowiedź, zdobywasz %d €cts", reward)
+	message := fmt.Sprintf("Correct answer, +%d €cts", reward)
 	if questionResult == QuestionResultIncorrect {
-		message = "Niepoprawna odpowiedź"
+		message = "Incorrect answer"
 	}
 
 	if err := client.SendMessage(newInfoMessage(message)); err != nil {
