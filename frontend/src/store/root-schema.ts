@@ -5,5 +5,7 @@ export interface RootSchema {
   state: "login" | "lobby" | "game";
   username: string;
   socketState: "closed" | "connecting" | "open";
-  selectedUnit: Unit | null;
+  selectedUnit?: Unit;
+  message: string;
+  messageType: "success" | "danger";
 }

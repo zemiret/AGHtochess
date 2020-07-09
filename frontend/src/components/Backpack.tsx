@@ -6,7 +6,7 @@ import UnitCmp from "./Unit";
 export interface Props {
   units: Unit[];
   selectUnit: (unit: Unit) => void;
-  selectedUnit: Unit | null;
+  selectedUnit?: Unit;
 }
 
 const Backpack: React.FunctionComponent<Props> = ({

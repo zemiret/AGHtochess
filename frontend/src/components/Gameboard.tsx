@@ -6,7 +6,7 @@ import { BOARD_HEIGHT, BOARD_WIDTH } from "../constants";
 interface Props extends StoreGameState {
   placeUnit: (unitsPlacement: UnitPlacement) => void;
   unplaceUnit: (unitId: string) => void;
-  selectedUnit: Unit | null;
+  selectedUnit?: Unit;
 }
 
 const Gameboard: React.FunctionComponent<Props> = ({

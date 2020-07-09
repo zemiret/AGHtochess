@@ -18,7 +18,7 @@ interface Props {
   round: number;
   phaseEndsAt: number;
   units: Unit[];
-  selectedUnit: Unit | null;
+  selectedUnit?: Unit;
   dispatch: Dispatch;
 }
 

@@ -11,7 +11,7 @@ import Gameboard from "./Gameboard";
 
 interface Props {
   gameState: GameState;
-  selectedUnit: Unit | null;
+  selectedUnit?: Unit;
   dispatch: Dispatch;
 }
 
