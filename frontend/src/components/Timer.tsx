@@ -11,16 +11,20 @@ const Timer: React.FunctionComponent<Props> = ({
   phaseEndsAt,
   round,
 }: Props) => {
-  const initialTimerState = Math.round((phaseEndsAt - Date.now()) / 1000);
-  const [timeLeft, setTimeLeft] = useState(initialTimerState);
+  const calcTimeLeft = (end: number): number => {
+    return Math.round(end - Date.now() / 1000);
+  };
+
+  const initialTimerState = calcTimeLeft(phaseEndsAt);
+  const [timeLeft, setTimeLeft] = useState<number>(initialTimerState);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setTimeLeft(timeLeft => timeLeft - 1);
-    }, 1000);
+      setTimeLeft(calcTimeLeft(phaseEndsAt));
+    }, 100);
 
     return () => clearInterval(interval);
-  }, []);
+  }, [phaseEndsAt]);
 
   return (
     <div>
