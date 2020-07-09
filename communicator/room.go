@@ -16,9 +16,9 @@ const (
 
 var phaseDurations = map[GamePhase]time.Duration{
 	GamePhaseWaiting:  1 * time.Second,
-	GamePhaseStore:    1 * time.Second,
+	GamePhaseStore:    5 * time.Second,
 	GamePhaseBattle:   1 * time.Second,
-	GamePhaseQuestion: 1 * time.Second,
+	GamePhaseQuestion: 5 * time.Second,
 	GamePhaseGameEnd:  1 * time.Second,
 }
 
@@ -145,6 +145,12 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 	playerState := r.playersState[client]
 	enemy := r.getEnemy(client)
 	enemyState := r.playersState[enemy]
+
+	var publicQuestion *PublicQuestion
+	if playerState.Question != nil {
+		publicQuestion = &playerState.Question.PublicQuestion
+	}
+
 	return &Message{
 		MessageType: MessageTypeStateChange,
 		Payload: &PlayerStatePayload{
@@ -154,7 +160,7 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 			GameResult:          gameResult,
 			Player:              playerState.Player,
 			Enemy:               enemyState.Player,
-			Question:            playerState.Question,
+			Question:            publicQuestion,
 			Store:               playerState.Store,
 			Units:               playerState.Units,
 			UnitsPlacement:      playerState.UnitsPlacement,
@@ -352,8 +358,12 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 		return
 	}
 
+	questionResult := QuestionResultIncorrect
+	reward := 0
 	if state.Question.CorrectAnswer == answer.AnswerID {
-		state.Player.Money += questionReward
+		reward = questionReward
+		questionResult = QuestionResultCorrect
+		state.Player.Money += reward
 	}
 
 	state.Question = nil
@@ -361,6 +371,11 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 	if err := client.SendMessage(r.generateClientState(client, nil, nil)); err != nil {
 		r.Shutdown("Failed to propagate client state")
 		r.log.Println("Failed to propagate client state for ", client.nickname, err)
+	}
+
+	if err := client.SendMessage(newQuestionResultMessage(questionResult, reward)); err != nil {
+		r.Shutdown("Failed to propagate client state")
+		log.Println("Failed to propagate client state for ", client.nickname, err)
 	}
 }
 

@@ -3,10 +3,13 @@ package main
 type MessageType string
 type GamePhase string
 type GameResult string
+type QuestionResult string
 
 const (
 	MessageTypeStateChange    MessageType = "STATE_CHANGE"
 	MessageTypeInfo           MessageType = "INFO"
+	MessageTypeQuestionResult MessageType = "QUESTION_RESULT"
+
 	MessageTypeBuyUnit        MessageType = "BUY_UNIT"
 	MessageTypePlaceUnit      MessageType = "PLACE_UNIT"
 	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
@@ -19,6 +22,9 @@ const (
 
 	GameResultWin  GameResult = "WIN"
 	GameResultLoss GameResult = "LOSS"
+
+	QuestionResultCorrect   QuestionResult = "CORRECT"
+	QuestionResultIncorrect QuestionResult = "INCORRECT"
 )
 
 type Message struct {
@@ -43,16 +49,16 @@ type PlayerStatePayload struct {
 	Phase               GamePhase         `json:"phase"`
 	PhaseEndsAt         int64             `json:"phaseEndsAt"`
 	Round               int               `json:"round"`
-	GameResult          *GameResult       `json:"gameResult"`
+	GameResult          *GameResult       `json:"gameResult,omitempty"`
 	Player              Player            `json:"player"`
 	Enemy               Player            `json:"enemy"`
-	Question            *Question         `json:"question"`
+	Question            *PublicQuestion   `json:"question,omitempty"`
 	Store               []Unit            `json:"store"`
 	Units               []Unit            `json:"units"`
 	UnitsPlacement      []UnitPlacement   `json:"unitsPlacement"`
 	EnemyUnits          []Unit            `json:"enemyUnits"`
 	EnemyUnitsPlacement []UnitPlacement   `json:"enemyUnitsPlacement"`
-	BattleStatistics    *BattleStatistics `json:"battleStatistics"`
+	BattleStatistics    *BattleStatistics `json:"battleStatistics,omitempty"`
 }
 
 type Player struct {
@@ -67,10 +73,14 @@ type Answer struct {
 }
 
 type Question struct {
+	PublicQuestion
+	CorrectAnswer int `json:"correctAnswer"`
+}
+
+type PublicQuestion struct {
 	ID      int      `json:"id"`
 	Text    string   `json:"text"`
 	Answers []Answer `json:"answers"`
-	CorrectAnswer int `json:"-"`
 }
 
 type Unit struct {
@@ -88,8 +98,8 @@ type Unit struct {
 
 type UnitPlacement struct {
 	UnitID string `json:"unitId"`
-	X      int `json:"x"`
-	Y      int `json:"y"`
+	X      int    `json:"x"`
+	Y      int    `json:"y"`
 }
 
 type BattleStatistics struct {
@@ -107,8 +117,23 @@ type AnswerQuestionPayload struct {
 	AnswerID   int `json:"answerId"`
 }
 
+type QuestionResultPayload struct {
+	Result QuestionResult `json:"result"`
+	Reward int `json:"reward"`
+}
+
+func newQuestionResultMessage(result QuestionResult, reward int) *Message {
+	return &Message{
+		MessageType: MessageTypeQuestionResult,
+		Payload: &QuestionResultPayload{
+			Result: result,
+			Reward: reward,
+		},
+	}
+}
+
 type PlaceUnitPayload struct {
 	ID string `json:"id"`
-	X  int `json:"x"`
-	Y  int `json:"y"`
+	X  int    `json:"x"`
+	Y  int    `json:"y"`
 }
