@@ -54,7 +54,7 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     attacking_player, defending_player = shuffle_players((board1, board2))
 
     while attacking_player.anyone_alive and defending_player.anyone_alive:
-        attacking_token = attacking_player.get_random_alive_token()
+        attacking_token = attacking_player.get_alive_token_from_queue()
         defending_token = defending_player.get_random_alive_token()
 
         if attacking_token.unit.physical:
@@ -79,6 +79,9 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
         damage /= damage_reduction_divider
 
         defending_token.unit.hp = max(0, defending_token.unit.hp - damage)
+
+        if defending_token.unit.dead:
+            defending_player.remove_unit_from_queue(defending_token)
 
         log.append({
             "action": "kill" if defending_token.unit.dead else "damage",
