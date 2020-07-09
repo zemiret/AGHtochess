@@ -20,7 +20,6 @@ time, mark, audio, video {
 	padding: 0;
 	border: 0;
 	font-size: 100%;
-	font: inherit;
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -46,3 +45,46 @@ table {
 	border-collapse: collapse;
 	border-spacing: 0;
 }
+
+.round-icon {
+	width: 80px;
+	height: 80px;
+	background-color: #efefef;
+	border-radius: 50%;
+}
+
+.player-card {
+	width: 80%;
+}
+
+.next-player-row {
+	padding-top: 14px
+}
+
+.player-username {
+	font-weight: bold;
+	font-size: 1.5em;
+}
+
+.v-flex-align-center {
+  display: flex;
+	align-items: center;
+}
+
+.h-flex-align-center {
+  display: flex;
+	justify-content: center;
+}
+
+.strong {
+	font-weight: bold;
+}
+
+.game-phase-container {
+  display: flex;
+	flex-direction: column;
+	/*align-items: center;*/
+	justify-content: space-between;
+	height: 100vh;
+}
+
