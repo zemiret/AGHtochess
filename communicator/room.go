@@ -41,6 +41,7 @@ type Room struct {
 
 	BuyUnitChannel        chan BuyUnitMessage
 	PlaceUnitChannel      chan PlaceUnitMessage
+	UnplaceUnitChannel    chan UnplaceUnitMessage
 	AnswerQuestionChannel chan AnswerQuestionMessage
 	changePhaseChannel    chan GamePhase
 
@@ -67,6 +68,11 @@ type PlaceUnitMessage struct {
 	PlaceUnitPayload *PlaceUnitPayload `json:"payload"`
 }
 
+type UnplaceUnitMessage struct {
+	Client             *Client             `json:"-"`
+	UnplaceUnitPayload *UnplaceUnitPayload `json:"payload"`
+}
+
 func newRoom(roomClosing chan<- *Room) *Room {
 	return &Room{
 		log:                     log.New(os.Stdout, "[Room]", log.Flags()),
@@ -75,11 +81,12 @@ func newRoom(roomClosing chan<- *Room) *Room {
 		BuyUnitChannel:          make(chan BuyUnitMessage),
 		AnswerQuestionChannel:   make(chan AnswerQuestionMessage),
 		PlaceUnitChannel:        make(chan PlaceUnitMessage),
+		UnplaceUnitChannel:      make(chan UnplaceUnitMessage),
 		ClientDisconnectChannel: make(chan *Client, 2),
 		changePhaseChannel:      make(chan GamePhase),
 		alive:                   true,
 		roomClosing:             roomClosing,
-		round: 1,
+		round:                   1,
 	}
 }
 

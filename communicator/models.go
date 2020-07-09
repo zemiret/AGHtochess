@@ -12,6 +12,7 @@ const (
 
 	MessageTypeBuyUnit        MessageType = "BUY_UNIT"
 	MessageTypePlaceUnit      MessageType = "PLACE_UNIT"
+	MessageTypeUnplaceUnit    MessageType = "UNPLACE_UNIT"
 	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
 
 	GamePhaseWaiting  GamePhase = "WAITING_FOR_PLAYERS"
@@ -119,7 +120,7 @@ type AnswerQuestionPayload struct {
 
 type QuestionResultPayload struct {
 	Result QuestionResult `json:"result"`
-	Reward int `json:"reward"`
+	Reward int            `json:"reward"`
 }
 
 func newQuestionResultMessage(result QuestionResult, reward int) *Message {
@@ -136,4 +137,8 @@ type PlaceUnitPayload struct {
 	ID string `json:"id"`
 	X  int    `json:"x"`
 	Y  int    `json:"y"`
+}
+
+type UnplaceUnitPayload struct {
+	ID string `json:"id"`
 }
