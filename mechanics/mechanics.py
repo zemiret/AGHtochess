@@ -1,5 +1,5 @@
 from random import shuffle
-from random import choice, uniform, randint, sample
+from random import choice, uniform, randint, sample, random
 from typing import Tuple, List
 
 from model.Board import Board
@@ -57,10 +57,15 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
         attacking_token = attacking_player.get_random_alive_token()
         defending_token = defending_player.get_random_alive_token()
 
-        attack = randint(0, attacking_token.unit.attack)
         if attacking_token.unit.physical:
+            attack = attacking_token.unit.attack
+            if randint(0, 101) < attacking_token.unit.criticalChance:
+                attack *= random() + 1
+            else:
+                attack = randint(0, attack)
             defense = randint(0, defending_token.unit.defense)
         else:
+            attack = attacking_token.unit.attack
             defense = randint(0, defending_token.unit.magicResist)
 
         distance = defending_token.distance(attacking_token)
