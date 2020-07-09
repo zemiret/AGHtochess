@@ -3,13 +3,13 @@ import { PlayerInfo } from "../models/game-state.model";
 import RoundIcon from "./RoundIcon";
 import {
   Card,
-  CardTitle,
-  CardText,
   CardBody,
-  Container,
-  Row,
+  CardText,
+  CardTitle,
   Col,
+  Container,
   Progress,
+  Row,
 } from "reactstrap";
 
 import { MAX_PLAYER_HP } from "../constants";
@@ -41,17 +41,19 @@ const Player: React.FunctionComponent<PlayerInfoDisplay> = ({
           </Row>
 
           <Row className="next-player-row v-flex-align-center">
-            <Col xs="8">
+            <Col xs={isEnemy ? "12" : "10"}>
               <Progress color={progressColor} value={progressState}>
                 {hp}/{MAX_PLAYER_HP}
               </Progress>
             </Col>
 
-            <Col xs="4">
-              <CardText>
-                <span className="strong">{money}</span> €cts
-              </CardText>
-            </Col>
+            {!isEnemy && (
+              <Col xs="2">
+                <CardText>
+                  <span className="strong">{money}</span> €cts
+                </CardText>
+              </Col>
+            )}
           </Row>
         </Container>
       </CardBody>
