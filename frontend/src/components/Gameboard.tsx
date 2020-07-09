@@ -29,10 +29,10 @@ const Gameboard: React.FunctionComponent<Props> = ({
       return;
     }
 
-    if (board[x][y]) {
-      unplaceUnit(board[x][y]);
-    } else if (selectedUnit) {
+    if (selectedUnit && board[x][y] !== selectedUnit.id) {
       placeUnit({ unitId: selectedUnit.id, x, y });
+    } else if (board[x][y]) {
+      unplaceUnit(board[x][y]);
     }
   };
   return (
