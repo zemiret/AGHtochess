@@ -6,7 +6,6 @@ import {
   CardBody,
   CardHeader,
   CardTitle,
-  Button,
   ListGroup,
   ListGroupItem,
 } from "reactstrap";
@@ -23,9 +22,7 @@ const Question: React.FunctionComponent<Props> = ({
 }: Props) => {
   return (
     <Card>
-      <CardHeader>
-        Question
-      </CardHeader>
+      <CardHeader>Question</CardHeader>
       <CardBody>
         <CardTitle>{text}</CardTitle>
         <CardText>
