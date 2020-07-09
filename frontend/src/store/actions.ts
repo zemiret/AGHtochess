@@ -1,14 +1,10 @@
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
-import { connect, Message } from "../api";
+import * as api from "../api";
 import { GameState } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 import { MessageType } from "../models/message-type.enum";
 
 export const setUsername = createAction<string>("setUsername");
-
-export const buyUnit = createAsyncThunk("buyUnit", async (_: number) => {
-  return 1;
-});
 
 export const closeWebSocket = createAction("closeWebSocket");
 
@@ -19,7 +15,7 @@ export const showInfoMessage = createAction<InfoMessage>("showInfoMessage");
 export const connectWebSocket = createAsyncThunk(
   "connectWebSocket",
   async (username: string, thunkApi) => {
-    const onMessage = (message: Message) => {
+    const onMessage = (message: api.Message) => {
       switch (message.messageType) {
         case MessageType.INFO:
           thunkApi.dispatch(showInfoMessage(message.payload as InfoMessage));
@@ -34,6 +30,17 @@ export const connectWebSocket = createAsyncThunk(
     const onClosed = () => {
       thunkApi.dispatch(closeWebSocket());
     };
-    return await connect(username, onMessage, onClosed);
+    return await api.connect(username, onMessage, onClosed);
+  },
+);
+
+export const buyUnit = createAsyncThunk("buyUnit", async (id: string) => {
+  return api.buyUnit(id);
+});
+
+export const answerQuestion = createAsyncThunk(
+  "answerQuestion",
+  async ({ questionId, answerId }: { questionId: number; answerId: number }) => {
+    return api.answerQuestion(questionId, answerId);
   },
 );

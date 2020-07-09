@@ -1,18 +1,25 @@
 import React from "react";
 import { Question as QuestionType } from "../models/game-state.model";
 
-type Props = QuestionType;
+interface Props extends QuestionType {
+  answerQuestion: (q: number, a: number) => void;
+}
 
-const Question: React.FunctionComponent<Props> = (question: Props) => {
+const Question: React.FunctionComponent<Props> = ({
+  id: questionId,
+  text,
+  answers,
+  answerQuestion,
+}: Props) => {
   return (
     <div>
       <h2>Question</h2>
-      <h3>{question.text}</h3>
+      <h3>{text}</h3>
       <ul>
-        {question.answers.map(a => {
+        {answers.map(a => {
           return (
             <li key={a.id}>
-              <button>{a.text}</button>
+              <button onClick={() => answerQuestion(questionId, a.id)}>{a.text}</button>
             </li>
           );
         })}
