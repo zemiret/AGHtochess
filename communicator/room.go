@@ -374,8 +374,8 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 	}
 
 	if err := client.SendMessage(newQuestionResultMessage(questionResult, reward)); err != nil {
-		r.Shutdown("Failed to propagate client state")
-		log.Println("Failed to propagate client state for ", client.nickname, err)
+		r.Shutdown("Failed to propagate question result")
+		r.log.Println("Failed to propagate question result", client.nickname, err)
 	}
 }
 
