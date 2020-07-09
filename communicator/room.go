@@ -79,6 +79,7 @@ func newRoom(roomClosing chan<- *Room) *Room {
 		changePhaseChannel:      make(chan GamePhase),
 		alive:                   true,
 		roomClosing:             roomClosing,
+		round: 1,
 	}
 }
 
