@@ -53,3 +53,7 @@ export const placeUnit = createAsyncThunk(
     return api.placeUnit(unitPlacement);
   },
 );
+
+export const unplaceUnit = createAsyncThunk("unplaceUnit", async (unitId: string) => {
+  return api.unplaceUnit(unitId);
+});

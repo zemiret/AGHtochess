@@ -56,3 +56,12 @@ export const placeUnit = (unitPlacement: UnitPlacement): void => {
     }),
   );
 };
+
+export const unplaceUnit = (unitId: string): void => {
+  socket?.send(
+    JSON.stringify({
+      messageType: "UNPLACE_UNIT",
+      payload: { id: unitId },
+    }),
+  );
+};

@@ -5,12 +5,14 @@ import { BOARD_HEIGHT, BOARD_WIDTH } from "../constants";
 
 interface Props extends StoreGameState {
   placeUnit: (unitsPlacement: UnitPlacement) => void;
+  unplaceUnit: (unitId: string) => void;
   selectedUnit: Unit | null;
 }
 
 const Gameboard: React.FunctionComponent<Props> = ({
   unitsPlacement,
   placeUnit,
+  unplaceUnit,
   selectedUnit,
 }: Props) => {
   const range = (n: number): number[] => {
@@ -20,8 +22,16 @@ const Gameboard: React.FunctionComponent<Props> = ({
   unitsPlacement.forEach(up => {
     board[up.x][up.y] = up.unitId;
   });
-  const placeSelected = (x: number, y: number) => {
-    if (!board[x][y] && selectedUnit) {
+
+  const toggleSelected = (x: number, y: number) => {
+    if (x < BOARD_HEIGHT / 2) {
+      // Do not allow placing units not on our half
+      return;
+    }
+
+    if (board[x][y]) {
+      unplaceUnit(board[x][y]);
+    } else if (selectedUnit) {
       placeUnit({ unitId: selectedUnit.id, x, y });
     }
   };
@@ -35,7 +45,7 @@ const Gameboard: React.FunctionComponent<Props> = ({
                 <td
                   key={x * BOARD_WIDTH + y}
                   className="board-cell with-border"
-                  onClick={() => placeSelected(x, y)}
+                  onClick={() => toggleSelected(x, y)}
                 >
                   {!board[x][y] ? `(${x},${y})` : board[x][y]}
                 </td>

@@ -6,7 +6,7 @@ import GameEnd from "./GameEnd";
 import Battle from "./Battle";
 import Question from "./Question";
 import { Dispatch } from "../store";
-import { answerQuestion, placeUnit } from "../store/actions";
+import { answerQuestion, placeUnit, unplaceUnit } from "../store/actions";
 import Gameboard from "./Gameboard";
 
 interface Props {
@@ -29,6 +29,7 @@ const GamePhaseSpecificCenter: React.FunctionComponent<Props> = ({
           placeUnit={(unitsPlacement: UnitPlacement) =>
             dispatch(placeUnit(unitsPlacement))
           }
+          unplaceUnit={(unitId: string) => dispatch(unplaceUnit(unitId))}
         />
       );
     case "BATTLE":
