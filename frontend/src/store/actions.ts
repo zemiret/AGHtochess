@@ -1,6 +1,6 @@
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import * as api from "../api";
-import { GameState } from "../models/game-state.model";
+import { GameState, Unit, UnitPlacement } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 import { MessageType } from "../models/message-type.enum";
 
@@ -12,6 +12,7 @@ export const changeGameState = createAction<GameState>("changeGameState");
 
 export const showInfoMessage = createAction<InfoMessage>("showInfoMessage");
 
+export const selectUnit = createAction<Unit>("selectUnit");
 export const showErrorMessage = createAction<InfoMessage>("showErrorMessage");
 
 export const connectWebSocket = createAsyncThunk(
@@ -49,3 +50,14 @@ export const answerQuestion = createAsyncThunk(
     return api.answerQuestion(questionId, answerId);
   },
 );
+
+export const placeUnit = createAsyncThunk(
+  "placeUnit",
+  async (unitPlacement: UnitPlacement) => {
+    return api.placeUnit(unitPlacement);
+  },
+);
+
+export const unplaceUnit = createAsyncThunk("unplaceUnit", async (unitId: string) => {
+  return api.unplaceUnit(unitId);
+});

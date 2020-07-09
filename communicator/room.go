@@ -16,9 +16,9 @@ const (
 
 var phaseDurations = map[GamePhase]time.Duration{
 	GamePhaseWaiting:  1 * time.Second,
-	GamePhaseStore:    5 * time.Second,
+	GamePhaseStore:    30 * time.Second,
 	GamePhaseBattle:   1 * time.Second,
-	GamePhaseQuestion: 5 * time.Second,
+	GamePhaseQuestion: 10 * time.Second,
 	GamePhaseGameEnd:  1 * time.Second,
 }
 
@@ -86,7 +86,6 @@ func newRoom(roomClosing chan<- *Room) *Room {
 		changePhaseChannel:      make(chan GamePhase),
 		alive:                   true,
 		roomClosing:             roomClosing,
-		round:                   1,
 	}
 }
 
@@ -180,7 +179,10 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 }
 
 func (r *Room) startStorePhase() {
+	r.round++
 	for _, state := range r.playersState {
+		state.UnitsPlacement = []UnitPlacement{}
+
 		units, err := GetStoreUnits(r.round)
 		if err != nil {
 			r.log.Println("Failed fetching units ", err)
@@ -463,6 +465,15 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 		return
 	}
 
+	moved := false
+	for i, existing := range state.UnitsPlacement {
+		if existing.UnitID == placement.UnitID {
+			moved = true
+			state.UnitsPlacement[i] = placement
+			break
+		}
+	}
+
 	swapped := false
 	for i, existing := range state.UnitsPlacement {
 		if existing.X == placement.X && existing.Y == placement.Y {
@@ -472,7 +483,7 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 		}
 	}
 
-	if !swapped {
+	if !swapped && !moved {
 		state.UnitsPlacement = append(state.UnitsPlacement, placement)
 	}
 

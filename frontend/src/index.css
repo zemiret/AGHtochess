@@ -106,6 +106,27 @@ table {
 	height: 100vh;
 }
 
+.unit {
+	cursor: pointer;
+}
+
+.unit--selected {
+	background-color: aquamarine;
+}
+
+.with-border {
+	border: 1px solid black;
+}
+
+.board {
+	margin: 10px;
+}
+
+.board-cell {
+	padding: 5px;
+	cursor: pointer;
+}
+
 .game-panel-row {
 	margin: 0;
 }

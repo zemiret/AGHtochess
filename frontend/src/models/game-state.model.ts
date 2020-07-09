@@ -18,7 +18,7 @@ export interface Unit {
 }
 
 export interface UnitPlacement {
-  unitId: number;
+  unitId: string;
   x: number;
   y: number;
 }

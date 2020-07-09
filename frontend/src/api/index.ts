@@ -1,5 +1,5 @@
 import { MessageType } from "../models/message-type.enum";
-import { GameState } from "../models/game-state.model";
+import { GameState, UnitPlacement } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 
 const url = "ws://localhost:4000/ws";
@@ -44,6 +44,24 @@ export const answerQuestion = (q: number, a: number): void => {
     JSON.stringify({
       messageType: "ANSWER_QUESTION",
       payload: { questionId: q, answerId: a },
+    }),
+  );
+};
+
+export const placeUnit = (unitPlacement: UnitPlacement): void => {
+  socket?.send(
+    JSON.stringify({
+      messageType: "PLACE_UNIT",
+      payload: { id: unitPlacement.unitId, x: unitPlacement.x, y: unitPlacement.y },
+    }),
+  );
+};
+
+export const unplaceUnit = (unitId: string): void => {
+  socket?.send(
+    JSON.stringify({
+      messageType: "UNPLACE_UNIT",
+      payload: { id: unitId },
     }),
   );
 };
