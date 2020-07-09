@@ -14,7 +14,7 @@ const Store: React.FunctionComponent<Props> = ({ store, buyUnit }: Props) => {
       <ul>
         {store.map(unit => (
           <li key={unit.id}>
-            <div className="store-unit">
+            <div className="unit-container">
               <StoreUnit unit={unit} buyUnit={() => buyUnit(unit.id)} />
             </div>
           </li>

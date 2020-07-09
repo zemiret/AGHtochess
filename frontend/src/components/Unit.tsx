@@ -12,11 +12,11 @@ const Unit: React.FunctionComponent<Props> = ({ unit }: Props) => {
   return (
     <Container>
       <Row>
-        <Col xs="4" className="v-flex-align-center">
+        <Col xs="5" className="v-flex-align-center">
           <UnitAvatar unit={unit} />
         </Col>
 
-        <Col xs="8">
+        <Col xs="7">
           <div className="unit-caption">
             <p>{unit.type}</p>
           </div>

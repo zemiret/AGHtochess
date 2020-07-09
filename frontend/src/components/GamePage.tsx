@@ -1,23 +1,25 @@
 import React from "react";
-import { PlayerInfo } from "../models/game-state.model";
+import {PlayerInfo, Unit} from "../models/game-state.model";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import Player from "./Player";
 import GamePhaseSpecificCenter from "./GamePhaseSpecificCenter";
 import { Col, Row } from "reactstrap";
 import GamePhaseSpecificSidebar from "./GamePhaseSpecificSidebar";
+import Backpack from "./Backpack";
 
 interface Props {
   player: PlayerInfo;
   enemy: PlayerInfo;
+  units: Unit[];
 }
 
-const GamePage: React.FunctionComponent<Props> = ({ player, enemy }: Props) => {
+const GamePage: React.FunctionComponent<Props> = ({ player, enemy, units }: Props) => {
   return (
     <div>
       <Row className="game-panel-row">
         <Col xs="3">
-          <p>Elo</p>
+          <Backpack units={units} />
         </Col>
 
         <Col xs="6">
@@ -53,6 +55,7 @@ const GamePage: React.FunctionComponent<Props> = ({ player, enemy }: Props) => {
 const mapStateToProps = ({ gameState }: RootSchema) => ({
   player: gameState!.player,
   enemy: gameState!.enemy,
+  units: gameState!.units,
 });
 
 export default connect(mapStateToProps)(GamePage);
