@@ -13,20 +13,24 @@ const Question: React.FunctionComponent<Props> = ({
 }: Props) => {
   return (
     <div>
-      <h2>Question</h2>
-      <h3>{text}</h3>
-      <ul>
-        {answers &&
-          answers.map(a => {
-            return (
-              <li key={a.id}>
-                <button onClick={() => answerQuestion(questionId, a.id)}>
-                  {a.text}
-                </button>
-              </li>
-            );
-          })}
-      </ul>
+      {answers && (
+        <div>
+          <h2>Question</h2>
+          <h3>{text}</h3>
+          <ul>
+            {answers.map(a => {
+              return (
+                <li key={a.id}>
+                  <button onClick={() => answerQuestion(questionId, a.id)}>
+                    {a.text}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>
+        </div>
+      )}
+      {!answers && "No more questions"}
     </div>
   );
 };

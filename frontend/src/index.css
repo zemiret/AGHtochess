@@ -101,9 +101,10 @@ table {
 }
 
 .board {
-	margin: 10px
+	margin: 10px;
 }
 
 .board-cell {
-	padding: 5px
+	padding: 5px;
+	cursor: pointer;
 }

@@ -60,7 +60,6 @@ const Store: React.FunctionComponent<Props> = ({
         </Col>
       </Row>
       <Row>
-        {unitsPlacement}
         <table className="board with-border">
           {range(BOARD_HEIGHT).map(x => (
             <tr key={x} className="with-border">
