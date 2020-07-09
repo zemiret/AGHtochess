@@ -12,6 +12,8 @@ const (
 	initialHp      = 100
 	initialMoney   = 5000
 	questionReward = 100
+	boardWidth     = 6
+	boardHeight    = 8
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
@@ -172,7 +174,7 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 			Units:               playerState.Units,
 			UnitsPlacement:      playerState.UnitsPlacement,
 			EnemyUnits:          enemyState.Units,
-			EnemyUnitsPlacement: enemyState.UnitsPlacement,
+			EnemyUnitsPlacement: mirrorUnitPlacements(enemyState.UnitsPlacement),
 			BattleStatistics:    battleStatistics,
 		},
 	}
@@ -217,7 +219,7 @@ func (r *Room) startBattlePhase() {
 
 	player2State := r.playersState[clients[1]]
 	player2 := PlayerBattleSetup{
-		UnitPlacement: player2State.UnitsPlacement,
+		UnitPlacement: mirrorUnitPlacements(player2State.UnitsPlacement),
 		Units:         player2State.Units,
 	}
 
@@ -404,12 +406,17 @@ func (r *Room) handleAnswerQuestion(client *Client, answer AnswerQuestionPayload
 	}
 }
 
-
 func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 	if r.phase != GamePhaseStore {
 		client.SendMessage(newErrorMessage("You can only place units in store phase"))
 		return
 	}
+
+	if payload.X < 0 || payload.X >= boardWidth || payload.Y < boardHeight / 2 || payload.Y >= boardHeight {
+		client.SendMessage(newErrorMessage("You can only place units on your side"))
+		return
+	}
+
 	state := r.playersState[client]
 
 	placement := UnitPlacement{
