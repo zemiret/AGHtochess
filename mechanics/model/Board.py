@@ -27,6 +27,3 @@ class Board:
 
     def get_random_alive_token(self) -> Token:
         return choice([token for token in self.tokens if token.unit.alive])
-
-    def get_tokens(self) -> List[Token]:
-        return self.tokens
