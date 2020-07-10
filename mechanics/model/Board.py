@@ -6,8 +6,6 @@ from datetime import datetime
 from model.Token import Token
 from model.Unit import Unit
 
-timestamp_const = 0.025
-
 
 @dataclass(eq=True)
 class Board:
@@ -31,20 +29,5 @@ class Board:
     def get_random_alive_token(self) -> Token:
         return choice([token for token in self.tokens if token.unit.alive])
 
-    def initialize_queue(self):
-        self.attacking_queue.clear()
-        now = datetime.timestamp(datetime.now())
-        self.attacking_queue = [(get_timestamp_for_unit(now, token.unit), token) for token in self.tokens]
-
-    def get_alive_token_from_queue(self) -> Token:
-        self.attacking_queue.sort(key=lambda elem: elem[0])
-        token = self.attacking_queue.pop(0)[1]
-        self.attacking_queue.append((get_timestamp_for_unit(datetime.now(), token.unit), token))
-        return token
-
-    def remove_unit_from_queue(self, token):
-        self.attacking_queue = list(filter(lambda x: x[1] != token, self.attacking_queue))
-
-
-def get_timestamp_for_unit(start, unit):
-    return start + timestamp_const/unit.attackSpeed
+    def get_tokens(self) -> List[Token]:
+        return self.tokens

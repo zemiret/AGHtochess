@@ -1,11 +1,13 @@
 from random import shuffle
 from random import choice, uniform, randint, sample, random
 from typing import Tuple, List
+from datetime import datetime
 
 from model.Board import Board
 from model.Unit import Unit
 
 golden_ratio = (1 + 5 ** 0.5) / 2
+timestamp_const = 0.025
 
 
 def generate_unit(round: int) -> Unit:
@@ -47,14 +49,35 @@ def shuffle_players(players: Tuple[Board, Board]) -> Tuple[Board, Board]:
 def calculate_damage_divider(distance: float, attack_range: float, *, base: float = 2.0) -> float:
     return base ** max(0.0, (distance - attack_range) / attack_range)
 
+def get_timestamp_for_unit(start, unit):
+    return start + timestamp_const/unit.attackSpeed
+
+def initialize_queue(board: Board) -> List[Tuple[float, Token]]:
+    tokens = board.get_tokens()
+    round_start = datetime.timestamp(datetime.now())
+    return [(get_timestamp_for_unit(round_start, token.unit), token) for token in tokens]
+
+def get_token_from_queue(attacking_queue: List[Tuple[float, Token]]) -> Token:
+    attacking_queue.sort(key=lambda elem: elem[0])
+    token = attacking_queue.pop(0)[1]
+    attacking_queue.append((get_timestamp_for_unit(datetime.now(), token.unit), token))
+    return token
+
+def remove_token_from_queue(attacking_queue: List[Tuple[float, Token]], token: Token):
+    attacking_queue = list(filter(lambda x: x[1] != token, attacking_queue))
 
 def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     log = []
 
     attacking_player, defending_player = shuffle_players((board1, board2))
 
+    attacking_queues = {
+        board1: initialize_queue(board1),
+        board2: initialize_queue(board2)    
+    }
+
     while attacking_player.anyone_alive and defending_player.anyone_alive:
-        attacking_token = attacking_player.get_alive_token_from_queue()
+        attacking_token = get_token_from_queue(attacking_queues[attacking_player])
         defending_token = defending_player.get_random_alive_token()
 
         if attacking_token.unit.physical:
@@ -81,7 +104,7 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
         defending_token.unit.hp = max(0, defending_token.unit.hp - damage)
 
         if defending_token.unit.dead:
-            defending_player.remove_unit_from_queue(defending_token)
+            remove_token_from_queue(attacking_queues[defending_player], defending_token)
 
         log.append({
             "action": "kill" if defending_token.unit.dead else "damage",
