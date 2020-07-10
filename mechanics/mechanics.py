@@ -5,15 +5,14 @@ from datetime import datetime
 
 from model.Board import Board
 from model.Unit import Unit
+from model.Token import Token
 
 golden_ratio = (1 + 5 ** 0.5) / 2
 timestamp_const = 0.025
 
 
 def generate_unit(round: int) -> Unit:
-    # profession = choice(['magician', 'tank', 'sniper']) # 'dps'
-    # profession = 'sniper'
-    profession = 'magician'
+    profession = choice(['magician', 'tank', 'sniper']) # 'dps'
 
     def gen(min, max, multiplier: float = 1.0) -> int:
         return int(uniform(min, max) * multiplier ** (round - 1))
@@ -87,9 +86,9 @@ def generate_unit(round: int) -> Unit:
                 price=price)
 
     generate_unit_by_type = {
-        'magician': lambda _: generate_magician(),
-        'tank': lambda _: generate_tank(),
-        'sniper': lambda _: generate_sniper()
+        'magician': lambda: generate_magician(),
+        'tank': lambda: generate_tank(),
+        'sniper': lambda: generate_sniper()
     }
 
     return generate_unit_by_type.get(profession)()
