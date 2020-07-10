@@ -10,10 +10,11 @@ export const closeWebSocket = createAction("closeWebSocket");
 
 export const changeGameState = createAction<GameState>("changeGameState");
 
-export const showInfoMessage = createAction<InfoMessage>("showInfoMessage");
-
 export const selectUnit = createAction<Unit>("selectUnit");
+
+export const showInfoMessage = createAction<InfoMessage>("showInfoMessage");
 export const showErrorMessage = createAction<InfoMessage>("showErrorMessage");
+export const hideMessage = createAction("hideMessage");
 
 export const connectWebSocket = createAsyncThunk(
   "connectWebSocket",
