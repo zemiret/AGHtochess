@@ -11,13 +11,38 @@ timestamp_const = 0.025
 
 
 def generate_unit(round: int) -> Unit:
-    # profession = choice(['magician', 'dps', 'tank', 'sniper'])
-    profession = 'sniper'
+    # profession = choice(['magician', 'tank', 'sniper']) # 'dps'
+    # profession = 'sniper'
+    profession = 'magician'
 
     def gen(min, max, multiplier: float = 1.0) -> int:
         return int(uniform(min, max) * multiplier ** (round - 1))
 
-    if profession == 'sniper':
+    def generate_magician() -> Unit:
+        # TODO change stats
+        attack = gen(5, 50, 1.1)
+        defense = gen(0, 10, 1.1)
+        magic_resist = gen(0, 5, 1.1)
+        critical_chance = min((gen(1 + 0.6, 1 + 0.9, 1.1) - 1), 1) * 100
+        hp = gen(80, 120, 1.1)
+        range = gen(3, 5, 1.1)
+        attack_speed = gen(0, 3, 1.1)
+        type = "MAGICAL"
+
+        price = gen(1, 4, 1.5) * 100
+
+        return Unit(attack=attack,
+                defense=defense,
+                magicResist=magic_resist,
+                criticalChance=critical_chance,
+                hp=hp,
+                range=range,
+                attackSpeed=attack_speed,
+                type=type,
+                price=price)
+
+    def generate_tank() -> Unit:
+        # TODO change stats
         attack = gen(5, 50, 1.1)
         defense = gen(0, 10, 1.1)
         magic_resist = gen(0, 5, 1.1)
@@ -27,9 +52,9 @@ def generate_unit(round: int) -> Unit:
         attack_speed = gen(0, 3, 1.1)
         type = "PHYSICAL"
 
-    price = gen(1, 4, 1.5) * 100
+        price = gen(1, 4, 1.5) * 100
 
-    return Unit(attack=attack,
+        return Unit(attack=attack,
                 defense=defense,
                 magicResist=magic_resist,
                 criticalChance=critical_chance,
@@ -38,6 +63,36 @@ def generate_unit(round: int) -> Unit:
                 attackSpeed=attack_speed,
                 type=type,
                 price=price)
+
+    def generate_sniper() -> Unit:
+        attack = gen(5, 50, 1.1)
+        defense = gen(0, 10, 1.1)
+        magic_resist = gen(0, 5, 1.1)
+        critical_chance = min((gen(1 + 0.6, 1 + 0.9, 1.1) - 1), 1) * 100
+        hp = gen(80, 120, 1.1)
+        range = gen(3, 5, 1.1)
+        attack_speed = gen(0, 3, 1.1)
+        type = "PHYSICAL"
+
+        price = gen(1, 4, 1.5) * 100
+
+        return Unit(attack=attack,
+                defense=defense,
+                magicResist=magic_resist,
+                criticalChance=critical_chance,
+                hp=hp,
+                range=range,
+                attackSpeed=attack_speed,
+                type=type,
+                price=price)
+
+    generate_unit_by_type = {
+        'magician': lambda _: generate_magician(),
+        'tank': lambda _: generate_tank(),
+        'sniper': lambda _: generate_sniper()
+    }
+
+    return generate_unit_by_type.get(profession)()
 
 
 def shuffle_players(players: Tuple[Board, Board]) -> Tuple[Board, Board]:
@@ -74,7 +129,7 @@ def remove_token_from_queue(attacking_queue: List[Tuple[float, Token]], token: T
 def resolve_duel(attacking_token: Token, defending_token: Token) -> int:
     if attacking_token.unit.physical:
         attack = attacking_token.unit.attack
-        if randint(0, 101) < attacking_token.unit.criticalChance:
+        if randint(0, 100) < attacking_token.unit.criticalChance:
             attack *= random() + 1
         else:
             attack = randint(0, attack)
