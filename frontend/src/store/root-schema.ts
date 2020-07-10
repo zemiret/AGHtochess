@@ -8,4 +8,5 @@ export interface RootSchema {
   selectedUnit?: Unit;
   message: string;
   messageType: "success" | "danger";
+  messageVisible: boolean;
 }

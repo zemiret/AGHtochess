@@ -9,6 +9,7 @@ import {
   changeGameState,
   selectUnit,
   showErrorMessage,
+  hideMessage,
 } from "./actions";
 import { InfoMessage } from "../models/info-message.model";
 import { GameState, Unit } from "../models/game-state.model";
@@ -21,6 +22,7 @@ export const initialState: RootSchema = {
   selectedUnit: undefined,
   message: "",
   messageType: "success",
+  messageVisible: false,
 };
 
 export const rootReducer = createReducer(initialState, {
@@ -59,11 +61,17 @@ export const rootReducer = createReducer(initialState, {
     ...state,
     message: action.payload.message,
     messageType: "success",
+    messageVisible: true,
   }),
   [showErrorMessage.type]: (state, action: PayloadAction<InfoMessage>) => ({
     ...state,
     message: action.payload.message,
     messageType: "danger",
+    messageVisible: true,
+  }),
+  [hideMessage.type]: (state, _: PayloadAction) => ({
+    ...state,
+    messageVisible: false,
   }),
   [changeGameState.type]: (state, action: PayloadAction<GameState>) => ({
     ...state,
