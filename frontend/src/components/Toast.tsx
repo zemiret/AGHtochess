@@ -1,24 +1,32 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { Alert } from "reactstrap";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
+import { hideMessage } from "../store/actions";
+import { Dispatch } from "../store";
 
 interface Props {
   color: "success" | "danger";
   text: string;
+  visible: boolean;
+  hide: () => void;
 }
 
-const Toast: React.FunctionComponent<Props> = ({ color, text }: Props) => {
-  const [hidden, setHidden] = useState<boolean>(true);
-
+const Toast: React.FunctionComponent<Props> = ({
+  color,
+  text,
+  visible,
+  hide,
+}: Props) => {
   useEffect(() => {
-    if (text !== "") setHidden(false);
-    const timeout = setInterval(() => setHidden(true), 2000);
-    return () => clearTimeout(timeout);
-  }, [text]);
+    if (visible) {
+      const timeout = setInterval(hide, 2000);
+      return () => clearTimeout(timeout);
+    }
+  }, [text, visible, hide]);
 
   return (
-    <Alert size="lg" className="info-toast" isOpen={!hidden} color={color}>
+    <Alert size="lg" className="info-toast" isOpen={visible} color={color}>
       {text}
     </Alert>
   );
@@ -27,6 +35,13 @@ const Toast: React.FunctionComponent<Props> = ({ color, text }: Props) => {
 const mapStateToProps = (state: RootSchema) => ({
   text: state.message,
   color: state.messageType,
+  visible: state.messageVisible,
 });
 
-export default connect(mapStateToProps)(Toast);
+const mapDispatchToProps = (dispatch: Dispatch) => ({
+  hide: () => {
+    dispatch(hideMessage());
+  },
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(Toast);
