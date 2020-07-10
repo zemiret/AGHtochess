@@ -117,7 +117,7 @@ def initialize_queue(board: Board) -> List[Tuple[float, Token]]:
 def get_token_from_queue(attacking_queue: List[Tuple[float, Token]]) -> Token:
     attacking_queue.sort(key=lambda elem: elem[0])
     token = attacking_queue.pop(0)[1]
-    attacking_queue.append((get_timestamp_for_unit(datetime.now(), token.unit), token))
+    attacking_queue.append((get_timestamp_for_unit(datetime.timestamp(datetime.now()), token.unit), token))
     return token
 
 
@@ -154,21 +154,26 @@ def resolve_duel(attacking_token: Token, defending_token: Token) -> int:
 def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     log = []
 
-    attacking_player, defending_player = shuffle_players((board1, board2))
+    board1_queue = initialize_queue(board1)
+    board2_queue = initialize_queue(board2)
 
-    attacking_queues = {
-        board1: initialize_queue(board1),
-        board2: initialize_queue(board2)    
-    }
+    attacking_player, defending_player = shuffle_players((board1, board2))
+    attacking_queue = board1_queue if attacking_player == board1 else board2_queue
+    defending_queue = board1_queue if defending_player == board1 else board2_queue
+
+    # attacking_queues = {
+    #     board1: initialize_queue(board1),
+    #     board2: initialize_queue(board2)    
+    # }
 
     while attacking_player.anyone_alive and defending_player.anyone_alive:
-        attacking_token = get_token_from_queue(attacking_queues[attacking_player])
+        attacking_token = get_token_from_queue(attacking_queue)
         defending_token = defending_player.get_random_alive_token()
 
         damage = resolve_duel(attacking_token, defending_token)
 
         if defending_token.unit.dead:
-            remove_token_from_queue(attacking_queues[defending_player], defending_token)
+            remove_token_from_queue(defending_queue, defending_token)
 
         log.append({
             "action": "kill" if defending_token.unit.dead else "damage",
@@ -178,6 +183,7 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
         })
 
         attacking_player, defending_player = defending_player, attacking_player
+        attacking_queue, defending_queue = defending_queue, attacking_queue
 
     winner = 1 if board2.anyone_alive else 0
     player_hp_change = randint(-10, -1)

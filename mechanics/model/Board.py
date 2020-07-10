@@ -10,7 +10,6 @@ from model.Unit import Unit
 @dataclass(eq=True)
 class Board:
     tokens: List[Token] = field(default_factory=list)
-    attacking_queue: List[Tuple[float, Token]] = field(default_factory=list)
 
     @classmethod
     def from_dict(cls, d: dict):
