@@ -49,13 +49,16 @@ def shuffle_players(players: Tuple[Board, Board]) -> Tuple[Board, Board]:
 def calculate_damage_divider(distance: float, attack_range: float, *, base: float = 2.0) -> float:
     return base ** max(0.0, (distance - attack_range) / attack_range)
 
+
 def get_timestamp_for_unit(start, unit):
     return start + timestamp_const/unit.attackSpeed
+
 
 def initialize_queue(board: Board) -> List[Tuple[float, Token]]:
     tokens = board.get_tokens()
     round_start = datetime.timestamp(datetime.now())
     return [(get_timestamp_for_unit(round_start, token.unit), token) for token in tokens]
+
 
 def get_token_from_queue(attacking_queue: List[Tuple[float, Token]]) -> Token:
     attacking_queue.sort(key=lambda elem: elem[0])
@@ -63,8 +66,36 @@ def get_token_from_queue(attacking_queue: List[Tuple[float, Token]]) -> Token:
     attacking_queue.append((get_timestamp_for_unit(datetime.now(), token.unit), token))
     return token
 
+
 def remove_token_from_queue(attacking_queue: List[Tuple[float, Token]], token: Token):
     attacking_queue = list(filter(lambda x: x[1] != token, attacking_queue))
+
+
+def resolve_duel(attacking_token: Token, defending_token: Token) -> int:
+    if attacking_token.unit.physical:
+        attack = attacking_token.unit.attack
+        if randint(0, 101) < attacking_token.unit.criticalChance:
+            attack *= random() + 1
+        else:
+            attack = randint(0, attack)
+        defense = randint(0, defending_token.unit.defense)
+    else:
+        attack = attacking_token.unit.attack
+        defense = randint(0, defending_token.unit.magicResist)
+
+    distance = defending_token.distance(attacking_token)
+    attack_range = attacking_token.unit.range
+    if distance <= 0:
+        raise ValueError("Distance between tokens is 0")
+
+    damage_reduction_divider = calculate_damage_divider(distance, attack_range)
+
+    damage = max(0, attack - defense)
+    damage /= damage_reduction_divider
+
+    defending_token.unit.hp = max(0, defending_token.unit.hp - damage)
+    return damage
+
 
 def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     log = []
@@ -80,28 +111,7 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
         attacking_token = get_token_from_queue(attacking_queues[attacking_player])
         defending_token = defending_player.get_random_alive_token()
 
-        if attacking_token.unit.physical:
-            attack = attacking_token.unit.attack
-            if randint(0, 101) < attacking_token.unit.criticalChance:
-                attack *= random() + 1
-            else:
-                attack = randint(0, attack)
-            defense = randint(0, defending_token.unit.defense)
-        else:
-            attack = attacking_token.unit.attack
-            defense = randint(0, defending_token.unit.magicResist)
-
-        distance = defending_token.distance(attacking_token)
-        attack_range = attacking_token.unit.range
-        if distance <= 0:
-            raise ValueError("Distance between tokens is 0")
-
-        damage_reduction_divider = calculate_damage_divider(distance, attack_range)
-
-        damage = max(0, attack - defense)
-        damage /= damage_reduction_divider
-
-        defending_token.unit.hp = max(0, defending_token.unit.hp - damage)
+        damage = resolve_duel(attacking_token, defending_token)
 
         if defending_token.unit.dead:
             remove_token_from_queue(attacking_queues[defending_player], defending_token)
