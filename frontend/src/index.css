@@ -142,6 +142,10 @@ body, html {
 	cursor: pointer;
 }
 
+.enemy-board-cell {
+	background: #d5d5d5;
+}
+
 .game-panel-row {
 	margin: 0;
 	height: 100%;

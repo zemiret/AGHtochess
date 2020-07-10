@@ -26,8 +26,10 @@ const Gameboard: React.FunctionComponent<Props> = ({
     board[up.x][up.y] = up.unitId;
   });
 
+  const isEnemyCell = (y: number) => y < BOARD_HEIGHT / 2;
+
   const toggleSelected = (x: number, y: number) => {
-    if (y < BOARD_HEIGHT / 2) {
+    if (isEnemyCell(y)) {
       // Do not allow placing units not on our half
       return;
     }
@@ -38,6 +40,7 @@ const Gameboard: React.FunctionComponent<Props> = ({
       unplaceUnit(board[x][y]);
     }
   };
+
   return (
     <Container>
       <Row className="h-flex-align-center">
@@ -47,7 +50,10 @@ const Gameboard: React.FunctionComponent<Props> = ({
               {range(BOARD_WIDTH).map(x => (
                 <td
                   key={y * BOARD_WIDTH + x}
-                  className="board-cell with-border"
+                  className={
+                    "board-cell with-border " +
+                    (isEnemyCell(y) ? "enemy-board-cell" : "")
+                  }
                   onClick={() => toggleSelected(x, y)}
                 >
                   {!board[x][y] ? (
