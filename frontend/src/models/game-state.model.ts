@@ -26,6 +26,14 @@ export interface UnitPlacement {
 export interface BattleStatistics {
   result: "WIN" | "LOSS";
   playerHpChange: number;
+  log: Array<BattleAction>;
+}
+
+export interface BattleAction {
+  who: string;
+  whom: string;
+  action: "kill" | "damage";
+  damage: number;
 }
 
 export interface Answer {

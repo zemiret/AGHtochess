@@ -3,6 +3,7 @@ import { Unit as UnitType } from "../models/game-state.model";
 
 interface Props {
   unit: UnitType;
+  size?: number;
 }
 
 interface StatsMap {
@@ -12,7 +13,7 @@ interface StatsMap {
 const statMaxValues: StatsMap = {
   hp: 300,
   attack: 80,
-  defense: 10,
+  defense: 30,
   magicResist: 10,
   range: 10,
   criticalChance: 5,
@@ -26,8 +27,13 @@ const statsToDisplayInside: { [key: string]: Array<string> } = {
   attackSpeed: ["hsla(26, 100%, 50%, 1)", "hsla(26, 100%, 20%, 1)"],
 };
 
-const UnitAvatar: React.FunctionComponent<Props> = ({ unit }: Props) => {
-  const defenseBorderWidth = Math.max(5, (unit.defense / statMaxValues.defense) * 15);
+const defaultSize = 90;
+
+const UnitAvatar: React.FunctionComponent<Props> = ({ unit, size }: Props) => {
+  const dimensions = !!size ? size : defaultSize;
+  const defenseBorderWidth =
+    (Math.max(5, (unit.defense / statMaxValues.defense) * 15) * dimensions) /
+    defaultSize;
   const hpPercentage = unit.hp / statMaxValues.hp;
 
   const statsPercentages: StatsMap = {};
@@ -59,6 +65,8 @@ const UnitAvatar: React.FunctionComponent<Props> = ({ unit }: Props) => {
               ${gradientPhases}
             ), 
             conic-gradient(red 0turn, red ${hpPercentage}turn, gray ${hpPercentage}turn, gray 1turn)`,
+        width: `${dimensions}px`,
+        height: `${dimensions}px`,
       }}
     ></div>
   );
