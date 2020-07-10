@@ -130,9 +130,20 @@ body, html {
 	margin: 10px;
 }
 
+.board-cell .unit-avatar {
+	width: 60px;
+	height: 60px;
+}
+
 .board-cell {
 	padding: 5px;
+	width: 102px;
+	height: 72px;
 	cursor: pointer;
+}
+
+.enemy-board-cell {
+	background: #d5d5d5;
 }
 
 .game-panel-row {

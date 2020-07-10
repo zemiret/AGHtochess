@@ -29,6 +29,7 @@ const GamePhaseSpecificCenter: React.FunctionComponent<Props> = ({
           placeUnit={(unitsPlacement: UnitPlacement) =>
             dispatch(placeUnit(unitsPlacement))
           }
+          units={[...gameState.units, ...gameState.enemyUnits]}
           unplaceUnit={(unitId: string) => dispatch(unplaceUnit(unitId))}
         />
       );
