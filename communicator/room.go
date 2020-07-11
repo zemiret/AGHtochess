@@ -439,11 +439,9 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 		return
 	}
 
-	moved := false
 	for i, existing := range state.UnitsPlacement {
-		if existing.UnitID == placement.UnitID {
-			moved = true
-			state.UnitsPlacement[i] = placement
+		if existing.UnitID == payload.ID {
+			state.UnitsPlacement = append(state.UnitsPlacement[:i], state.UnitsPlacement[i+1:]...)
 			break
 		}
 	}
@@ -457,7 +455,7 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 		}
 	}
 
-	if !swapped && !moved {
+	if !swapped {
 		state.UnitsPlacement = append(state.UnitsPlacement, placement)
 	}
 
