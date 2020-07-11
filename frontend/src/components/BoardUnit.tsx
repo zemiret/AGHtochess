@@ -1,8 +1,7 @@
 import React, { useState } from "react";
 import { Unit as UnitType } from "../models/game-state.model";
-import { Col, Container, Row } from "reactstrap";
+import { Col, Container, Popover, PopoverBody, Row } from "reactstrap";
 import UnitAvatar from "./UnitAvatar";
-import { Popover, PopoverBody } from "reactstrap";
 import UnitStats from "./UnitStats";
 
 interface Props {
@@ -11,6 +10,7 @@ interface Props {
 
 const BoardUnit: React.FunctionComponent<Props> = ({ unit }: Props) => {
   const [hover, setHover] = useState<boolean>(false);
+  const [unitId] = useState<string>(unit.id);
 
   return (
     <Container>
@@ -20,16 +20,14 @@ const BoardUnit: React.FunctionComponent<Props> = ({ unit }: Props) => {
           onMouseEnter={() => setHover(true)}
           onMouseLeave={() => setHover(false)}
         >
-          <div id={`unit-${unit.id}`}>
+          <div id={`unit-${unitId}`}>
             <UnitAvatar unit={unit} />
           </div>
           <Popover
             placement="left"
             isOpen={hover}
-            target={`unit-${unit.id}`}
-            onClick={() => {
-              return;
-            }}
+            trigger="hover"
+            target={`unit-${unitId}`}
           >
             <PopoverBody>
               <UnitStats unit={unit} />
