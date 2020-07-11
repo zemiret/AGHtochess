@@ -13,6 +13,7 @@ interface Props extends StoreGameState {
 
 const Gameboard: React.FunctionComponent<Props> = ({
   unitsPlacement,
+  enemyUnitsPlacement,
   placeUnit,
   unplaceUnit,
   selectedUnit,
@@ -22,7 +23,7 @@ const Gameboard: React.FunctionComponent<Props> = ({
     return Array.from(Array(n).keys());
   };
   const board = range(BOARD_HEIGHT).map(_ => range(BOARD_WIDTH).map(_ => ""));
-  unitsPlacement.forEach(up => {
+  unitsPlacement.concat(enemyUnitsPlacement).forEach(up => {
     board[up.x][up.y] = up.unitId;
   });
 
