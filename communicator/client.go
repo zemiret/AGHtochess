@@ -49,6 +49,7 @@ type Client struct {
 	send chan []byte
 
 	nickname string
+	gameType string
 }
 
 type InboundMessage struct {
@@ -150,6 +151,11 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	gameType := r.URL.Query().Get("gameType")
+	if gameType == "" {
+		return
+	}
+
 	conn, err := upgrader.Upgrade(w, r, nil)
 	if err != nil {
 		log.Println(err)
@@ -158,7 +164,7 @@ func serveWs(hub *Hub, w http.ResponseWriter, r *http.Request) {
 
 	log.Println("Client connected: ", nickname)
 
-	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), nickname: nickname}
+	client := &Client{hub: hub, conn: conn, send: make(chan []byte, 256), nickname: nickname, gameType: gameType}
 	client.hub.register <- client
 
 	// Allow collection of memory referenced by the caller by doing all work in

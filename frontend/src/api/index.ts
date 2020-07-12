@@ -9,19 +9,20 @@ export interface Message {
   payload: GameState | InfoMessage;
 }
 
-const loginUrl = (username: string): string => {
-  return `${url}?nickname=${username}`;
+const socketUrl = (username: string, gameType: string): string => {
+  return `${url}?nickname=${username}&gameType=${gameType}`;
 };
 
 let socket: WebSocket | undefined;
 
 export const connect = (
   username: string,
+  gameType: string,
   onMessage: (message: Message) => void,
   onClosed: () => void,
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
-    socket = new WebSocket(loginUrl(username));
+    socket = new WebSocket(socketUrl(username, gameType));
     socket.onopen = (): void => {
       resolve();
     };

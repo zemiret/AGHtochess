@@ -78,6 +78,16 @@ export interface GameEndGameState extends CommonGameState {
   gameResult: "WIN" | "LOSS";
 }
 
+export enum GameType {
+  DUEL = "DUEL",
+  ROYALE = "ROYALE",
+}
+
+export interface WebsocketOptions {
+  username: string;
+  gameType: string;
+}
+
 export type GameState =
   | StoreGameState
   | BattleGameState
