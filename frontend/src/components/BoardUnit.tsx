@@ -12,7 +12,7 @@ const BoardUnit: React.FunctionComponent<Props> = ({ unit }: Props) => {
     <Container>
       <Row>
         <Col className="v-flex-align-center">
-          <PopoverUnitAvatar size={60} unit={unit} />
+          <PopoverUnitAvatar size={58} unit={unit} />
         </Col>
       </Row>
     </Container>
