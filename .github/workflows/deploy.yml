@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - master
+  workflow_dispatch:
 
 jobs:
   build:
@@ -25,6 +26,5 @@ jobs:
           docker context create aghtochess --docker "host=ssh://aghtochess@aghtochess.mionskowski.pl,key=$HOME/.ssh/id_rsa"
           docker context use aghtochess
       - name: Deploy 
-        if: steps.frontend-changed.outputs.changed == 'true'
         run: |
           docker-compose -f docker-compose.yml.production --context aghtochess up --build -d
