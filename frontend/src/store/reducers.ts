@@ -1,4 +1,3 @@
-import { RootSchema } from "./root-schema";
 import { createReducer, PayloadAction } from "@reduxjs/toolkit";
 import {
   buyUnit,
@@ -10,25 +9,21 @@ import {
   selectUnit,
   showErrorMessage,
   hideMessage,
+  changeView,
 } from "./actions";
 import { InfoMessage } from "../models/info-message.model";
 import { GameState, Unit } from "../models/game-state.model";
-
-export const initialState: RootSchema = {
-  gameState: undefined,
-  state: "login",
-  username: "",
-  socketState: "closed",
-  selectedUnit: undefined,
-  message: "",
-  messageType: "success",
-  messageVisible: false,
-};
+import { statsReducer } from "./stats/reducers";
+import { initialState } from "./root-schema";
 
 export const rootReducer = createReducer(initialState, {
   [setUsername.type]: (state, action: PayloadAction<string>) => ({
     ...state,
     username: action.payload,
+  }),
+  [changeView.type]: (state, action: PayloadAction<string>) => ({
+    ...state,
+    state: action.payload
   }),
   [selectUnit.type]: (state, action: PayloadAction<Unit>) => ({
     ...state,
@@ -78,4 +73,5 @@ export const rootReducer = createReducer(initialState, {
     gameState: action.payload,
     state: "game",
   }),
+  ...statsReducer
 });

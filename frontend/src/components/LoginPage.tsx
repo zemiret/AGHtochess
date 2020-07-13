@@ -2,19 +2,21 @@ import React, { useState } from "react";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import { Dispatch } from "../store";
-import { connectWebSocket, setUsername } from "../store/actions";
+import { connectWebSocket, setUsername, changeView } from "../store/actions";
 import { Jumbotron, Container, Form, Input, Button, FormGroup, Row } from "reactstrap";
 
 interface Props {
   username: string;
   connecting: boolean;
   login: (username: string) => void;
+  changeView: (username: string) => void;
 }
 
 const LoginPage: React.FunctionComponent<Props> = ({
   username: defaultUsername,
   connecting,
   login,
+  changeView
 }: Props) => {
   const [username, setUsername] = useState<string>(defaultUsername);
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
@@ -25,6 +27,10 @@ const LoginPage: React.FunctionComponent<Props> = ({
     e.preventDefault();
     login(username);
   };
+
+  const handleStatsClicked = () => {
+    changeView(username)
+  }
 
   return (
     <Container>
@@ -53,6 +59,11 @@ const LoginPage: React.FunctionComponent<Props> = ({
                   Connecting
                 </Button>
               )}
+              {!connecting && (
+                <Button color="info" onClick={handleStatsClicked}>
+                  Stats
+                </Button>
+              )}
             </Row>
           </FormGroup>
         </Form>
@@ -71,6 +82,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setUsername(username));
     dispatch(connectWebSocket(username));
   },
+  changeView: (username: string) => {
+    dispatch(setUsername(username));
+    dispatch(changeView("stats"));
+  }
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);

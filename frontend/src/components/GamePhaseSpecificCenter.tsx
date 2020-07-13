@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { GameState, Unit, UnitPlacement } from "../models/game-state.model";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
@@ -8,6 +8,7 @@ import Question from "./Question";
 import { Dispatch } from "../store";
 import { answerQuestion, placeUnit, unplaceUnit } from "../store/actions";
 import Gameboard from "./Gameboard";
+import { gameWon, roundPlayed, roundWon } from "../store/stats/actions";
 
 interface Props {
   gameState: GameState;
@@ -20,6 +21,17 @@ const GamePhaseSpecificCenter: React.FunctionComponent<Props> = ({
   dispatch,
   selectedUnit,
 }: Props) => {
+  useEffect(() => {
+    if(gameState.phase === "GAME_END" && gameState.gameResult === "WIN") {
+      dispatch(gameWon())
+    }
+    if(gameState.phase === "STORE") {
+      dispatch(roundPlayed())
+    }
+    if(gameState.phase === "BATTLE" && gameState.battleStatistics.result === "WIN") {
+      dispatch(roundWon())
+    }
+  }, [ gameState.phase ]);
   switch (gameState.phase) {
     case "STORE":
       return (
