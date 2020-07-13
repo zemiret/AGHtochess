@@ -26,7 +26,7 @@ def generate_unit(round: int) -> Unit:
                     criticalChance = 0,
                     hp = gen(80, 120, 1.1),
                     range = gen(3, 5, 1.1),
-                    attackSpeed = gen(0, 3, 1.1),
+                    attackSpeed = gen(1, 3, 1.1),
                     type = "MAGICAL",
                     price = gen(1, 4) * 100)
 
@@ -39,7 +39,7 @@ def generate_unit(round: int) -> Unit:
                     criticalChance = min((gen(1 + 0.6, 1 + 0.9, 1.1) - 1), 1) * 100,
                     hp = gen(80, 120, 1.1),
                     range = gen(3, 5, 1.1),
-                    attackSpeed = gen(0, 3, 1.1),
+                    attackSpeed = gen(1, 3, 1.1),
                     type = "PHYSICAL",
                     price = gen(1, 4) * 100)
 
@@ -51,7 +51,7 @@ def generate_unit(round: int) -> Unit:
                     criticalChance = min((gen(1 + 0.6, 1 + 0.9, 1.1) - 1), 1) * 100,
                     hp = gen(80, 120, 1.1),
                     range = gen(3, 5, 1.1),
-                    attackSpeed = gen(0, 3, 1.1),
+                    attackSpeed = gen(1, 3, 1.1),
                     type = "PHYSICAL",
                     price = gen(1, 4) * 100)
 
