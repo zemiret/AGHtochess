@@ -16,8 +16,6 @@ services:
       - LETSENCRYPT_EMAIL=aghtochess@maciekmm.net
     ports:
       - "4000:4000"
-    links:
-      - mechanics
     networks:
       - proxy-tier
   mechanics:
