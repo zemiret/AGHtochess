@@ -1,0 +1,30 @@
+name: Deploy to production
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    name: Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Create remote context
+        id: create-context
+        env:
+          ssh_key: ${{ secrets.SSH_KEY }}
+        run: |
+          mkdir $HOME/.ssh/
+          chmod 700 $HOME/.ssh/
+          echo "$ssh_key" > $HOME/.ssh/id_rsa
+          chmod 600 $HOME/.ssh/id_rsa
+          ssh-keyscan aghtochess.mionskowski.pl >> ~/.ssh/known_hosts
+          docker context create aghtochess --docker "host=ssh://aghtochess@aghtochess.mionskowski.pl,key=$HOME/.ssh/id_rsa"
+          docker context use aghtochess
+      - name: Deploy 
+        if: steps.frontend-changed.outputs.changed == 'true'
+        run: |
+          docker-compose -f docker-compose.yml.production --context aghtochess up --build -d
