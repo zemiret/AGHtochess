@@ -11,6 +11,8 @@ RUN yarn install --production
 
 COPY . ./
 
+ARG REACT_APP_API_HOST
+
 RUN yarn build
 
 FROM nginx:stable-alpine

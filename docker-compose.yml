@@ -13,6 +13,9 @@ services:
     ports:
       - "5000:80"
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        - REACT_APP_API_HOST=ws://localhost:8000
     ports:
       - "8080:80"
