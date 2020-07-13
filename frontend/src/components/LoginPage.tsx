@@ -4,11 +4,12 @@ import { connect } from "react-redux";
 import { Dispatch } from "../store";
 import { connectWebSocket, setUsername } from "../store/actions";
 import { Jumbotron, Container, Form, Input, Button, FormGroup, Row } from "reactstrap";
+import { GameType, WebsocketOptions } from "../models/game-state.model";
 
 interface Props {
   username: string;
   connecting: boolean;
-  login: (username: string) => void;
+  login: (wsOptions: WebsocketOptions) => void;
 }
 
 const LoginPage: React.FunctionComponent<Props> = ({
@@ -17,13 +18,19 @@ const LoginPage: React.FunctionComponent<Props> = ({
   login,
 }: Props) => {
   const [username, setUsername] = useState<string>(defaultUsername);
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+  const [gameType, setGameType] = useState<string>(GameType.ROYALE);
+
+  const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setUsername(e.target.value);
+  };
+
+  const handleGameTypeChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setGameType(e.target.value);
   };
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
-    login(username);
+    login({ username, gameType });
   };
 
   return (
@@ -39,10 +46,20 @@ const LoginPage: React.FunctionComponent<Props> = ({
                 className="mr-2"
                 type="text"
                 value={username}
-                onChange={handleChange}
+                onChange={handleUsernameChange}
                 placeholder="Username"
                 required={true}
               />
+              <Input
+                type="select"
+                value={gameType}
+                onChange={handleGameTypeChange}
+                placeholder="Game type"
+                required={true}
+              >
+                <option>{GameType.DUEL}</option>
+                <option>{GameType.ROYALE}</option>
+              </Input>
               {!connecting && (
                 <Button color="primary" type="submit">
                   Play
@@ -67,9 +84,9 @@ const mapStateToProps = (state: RootSchema) => ({
 });
 
 const mapDispatchToProps = (dispatch: Dispatch) => ({
-  login: (username: string) => {
-    dispatch(setUsername(username));
-    dispatch(connectWebSocket(username));
+  login: (wsOptions: WebsocketOptions) => {
+    dispatch(setUsername(wsOptions.username));
+    dispatch(connectWebSocket(wsOptions));
   },
 });
 

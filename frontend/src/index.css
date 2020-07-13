@@ -222,3 +222,7 @@ body, html {
 	left: 50%;
 	transform: translate(-50%, 0);
 }
+
+.player-waiting-caption {
+	font-size: 48px;
+}

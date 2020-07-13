@@ -4,6 +4,7 @@ type MessageType string
 type GamePhase string
 type GameResult string
 type QuestionResult string
+type GameType string
 
 const (
 	MessageTypeStateChange    MessageType = "STATE_CHANGE"
@@ -16,17 +17,20 @@ const (
 	MessageTypeUnplaceUnit    MessageType = "UNPLACE_UNIT"
 	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
 
-	GamePhaseWaiting  GamePhase = "WAITING_FOR_PLAYERS"
-	GamePhaseStore    GamePhase = "STORE"
-	GamePhaseBattle   GamePhase = "BATTLE"
-	GamePhaseQuestion GamePhase = "QUESTION"
-	GamePhaseGameEnd  GamePhase = "GAME_END"
+	GamePhaseWaiting         GamePhase = "WAITING_FOR_PLAYERS"
+	GamePhaseStore           GamePhase = "STORE"
+	GamePhaseBattle          GamePhase = "BATTLE"
+	GamePhaseQuestion        GamePhase = "QUESTION"
+	GamePhaseGameEnd         GamePhase = "GAME_END"
 
 	GameResultWin  GameResult = "WIN"
 	GameResultLoss GameResult = "LOSS"
 
 	QuestionResultCorrect   QuestionResult = "CORRECT"
 	QuestionResultIncorrect QuestionResult = "INCORRECT"
+
+	GameTypeDuel   = "DUEL"
+	GameTypeRoyale = "ROYALE"
 )
 
 type Message struct {
@@ -62,7 +66,7 @@ type PlayerStatePayload struct {
 	Round               int               `json:"round"`
 	GameResult          *GameResult       `json:"gameResult,omitempty"`
 	Player              Player            `json:"player"`
-	Enemy               Player            `json:"enemy"`
+	Enemy               *Player            `json:"enemy"`
 	Question            *PublicQuestion   `json:"question,omitempty"`
 	Store               []Unit            `json:"store"`
 	Units               []Unit            `json:"units"`

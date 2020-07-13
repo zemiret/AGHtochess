@@ -51,7 +51,7 @@ export interface CommonGameState {
   phaseEndsAt: number;
   round: number;
   player: PlayerInfo;
-  enemy: PlayerInfo;
+  enemy?: PlayerInfo;
   units: Unit[];
   enemyUnits: Unit[];
   unitsPlacement: UnitPlacement[];
@@ -76,6 +76,16 @@ export interface QuestionGameState extends CommonGameState {
 export interface GameEndGameState extends CommonGameState {
   phase: "GAME_END";
   gameResult: "WIN" | "LOSS";
+}
+
+export enum GameType {
+  DUEL = "DUEL",
+  ROYALE = "ROYALE",
+}
+
+export interface WebsocketOptions {
+  username: string;
+  gameType: string;
 }
 
 export type GameState =
