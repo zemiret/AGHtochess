@@ -564,23 +564,30 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 		return
 	}
 
+	var existingPlacement *UnitPlacement
 	for i, existing := range state.UnitsPlacement {
 		if existing.UnitID == payload.ID {
+			existingPlacement = &existing
 			state.UnitsPlacement = append(state.UnitsPlacement[:i], state.UnitsPlacement[i+1:]...)
 			break
 		}
 	}
 
-	swapped := false
+	swappedFromBackpack := false
 	for i, existing := range state.UnitsPlacement {
 		if existing.X == placement.X && existing.Y == placement.Y {
-			swapped = true
-			state.UnitsPlacement[i] = placement
+			if existingPlacement != nil {
+				state.UnitsPlacement[i].X = existingPlacement.X
+				state.UnitsPlacement[i].Y = existingPlacement.Y
+			} else {
+				state.UnitsPlacement[i] = placement
+				swappedFromBackpack = true
+			}
 			break
 		}
 	}
 
-	if !swapped {
+	if !swappedFromBackpack {
 		state.UnitsPlacement = append(state.UnitsPlacement, placement)
 	}
 
