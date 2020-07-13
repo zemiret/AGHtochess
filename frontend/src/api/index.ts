@@ -2,7 +2,7 @@ import { MessageType } from "../models/message-type.enum";
 import { GameState, UnitPlacement } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 
-const url = "ws://localhost:4000/ws";
+const url = `${process.env.REACT_APP_API_HOST}/ws`;
 
 export interface Message {
   messageType: MessageType;
