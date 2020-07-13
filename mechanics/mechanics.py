@@ -75,8 +75,7 @@ def calculate_damage_divider(distance: float, attack_range: float, *, base: floa
 
 
 def get_timestamp_for_unit(start, unit):
-    return start + timestamp_const/(unit.attackSpeed if unit.attackSpeed != 0 \
-                                    else 1)
+    return start + timestamp_const/unit.attackSpeed
 
 
 def initialize_queue(board: Board) -> List[Tuple[float, Token]]:

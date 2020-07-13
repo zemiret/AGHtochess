@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+const (
+	battleRoyaleRoomCapacity = 8
+)
+
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
 type Hub struct {
@@ -41,8 +45,8 @@ func newHub() *Hub {
 		clients:           make(map[*Client]*Room),
 		roomClosing:       roomClosing,
 		clientClosing:     clientClosing,
-		duelWaitingRoom:   newDuelRoom(roomClosing),
-		royaleWaitingRoom: newRoyaleRoom(roomClosing, clientClosing),
+		duelWaitingRoom:   newRoom(roomClosing, clientClosing, 2),
+		royaleWaitingRoom: newRoom(roomClosing, clientClosing, battleRoyaleRoomCapacity),
 	}
 }
 
@@ -69,9 +73,9 @@ func (h *Hub) run() {
 				go roomForClient.Start()
 
 				if client.gameType == GameTypeDuel {
-					h.duelWaitingRoom = newDuelRoom(h.roomClosing)
+					h.duelWaitingRoom = newRoom(h.roomClosing, h.clientClosing, 2)
 				} else if client.gameType == GameTypeRoyale {
-					h.royaleWaitingRoom = newRoyaleRoom(h.roomClosing, h.clientClosing)
+					h.royaleWaitingRoom = newRoom(h.roomClosing, h.clientClosing, battleRoyaleRoomCapacity)
 				}
 			}
 		case closingRoom := <-h.roomClosing:
@@ -142,6 +146,10 @@ func (h *Hub) run() {
 }
 
 func (h *Hub) closeClient(client *Client) {
+	if _, ok := h.clients[client]; !ok {
+		return
+	}
+
 	delete(h.clients, client)
 	closeFun := func(client *Client) func() {
 		return func() {

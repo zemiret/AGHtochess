@@ -1,4 +1,4 @@
-import { GameState, BattleGameState } from "../models/game-state.model";
+import { GameState } from "../models/game-state.model";
 import { Dispatch } from "../store";
 import React from "react";
 import Store from "./Store";
@@ -20,12 +20,11 @@ const GamePhaseSpecificSidebar: React.FunctionComponent<Props> = ({
     case "STORE":
       return <Store {...gameState} buyUnit={(id: string) => dispatch(buyUnit(id))} />;
     case "BATTLE":
-      const battleGameState = gameState as BattleGameState;
       return (
         <>
-          {battleGameState?.battleStatistics?.log && (
+          {gameState.battleStatistics.log && (
             <BattleLog
-              log={battleGameState.battleStatistics.log}
+              log={gameState.battleStatistics.log}
               units={gameState.units}
               enemyUnits={gameState.enemyUnits}
             />
@@ -33,7 +32,7 @@ const GamePhaseSpecificSidebar: React.FunctionComponent<Props> = ({
         </>
       );
     default:
-      return <p />;
+      return null;
   }
 };
 
