@@ -573,23 +573,19 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 		}
 	}
 
-	swappedFromBackpack := false
 	for i, existing := range state.UnitsPlacement {
 		if existing.X == placement.X && existing.Y == placement.Y {
 			if existingPlacement != nil {
 				state.UnitsPlacement[i].X = existingPlacement.X
 				state.UnitsPlacement[i].Y = existingPlacement.Y
 			} else {
-				state.UnitsPlacement[i] = placement
-				swappedFromBackpack = true
+				state.UnitsPlacement = append(state.UnitsPlacement[:i], state.UnitsPlacement[i+1:]...)
 			}
 			break
 		}
 	}
 
-	if !swappedFromBackpack {
-		state.UnitsPlacement = append(state.UnitsPlacement, placement)
-	}
+	state.UnitsPlacement = append(state.UnitsPlacement, placement)
 
 	for _, player := range []*Client{ client, r.getEnemy(client) } {
 		if player == nil {
