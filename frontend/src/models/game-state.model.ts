@@ -51,7 +51,7 @@ export interface CommonGameState {
   phaseEndsAt: number;
   round: number;
   player: PlayerInfo;
-  enemy: PlayerInfo;
+  enemy?: PlayerInfo;
   units: Unit[];
   enemyUnits: Unit[];
   unitsPlacement: UnitPlacement[];

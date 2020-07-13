@@ -169,8 +169,8 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 	enemy := r.getEnemy(client)
 
 	var enemyPlayer *Player
-	var enemyUnits []Unit
-	var enemyUnitsPlacement []UnitPlacement
+	enemyUnits := []Unit{}
+	enemyUnitsPlacement := []UnitPlacement{}
 
 	if enemy != nil {
 		enemyState := r.playersState[enemy]
@@ -218,7 +218,9 @@ func (r *Room) rerollPlayersMatching() {
 }
 
 func (r *Room) startStorePhase() {
+	r.rerollPlayersMatching()
 	r.round++
+
 	for _, state := range r.playersState {
 		state.UnitsPlacement = []UnitPlacement{}
 
@@ -249,9 +251,9 @@ func (r *Room) startBattlePhase() {
 		finished bool
 	}
 	var alreadyMatched []*Client
-	var playerPairs []PlayerPair
+	var playerPairs []*PlayerPair
 	for client := range r.playersState {
-		playerPair := PlayerPair{
+		playerPair := &PlayerPair{
 			players: []*Client{client, r.getEnemy(client)},
 		}
 		if clientInSlice(client, alreadyMatched) || playerPair.players[1] == nil {
@@ -333,6 +335,24 @@ func (r *Room) startBattlePhase() {
 }
 
 func (r *Room) finishGameForPlayer(c *Client) {
+	r.log.Printf("Finishing game for: %v\n", c.nickname)
+
+	// I am disconnecting, so my enemy loses his opponent (me)
+	enemy := r.getEnemy(c)
+	if enemy != nil {
+		r.playersState[enemy].enemy = nil
+		if err := enemy.SendMessage(newErrorMessage("Enemy disconnected")); err != nil {
+			r.log.Println("Error sending disconnect message message: ", err)
+		}
+
+		if err := enemy.SendMessage(r.generateClientState(enemy, nil, nil)); err != nil {
+			r.Shutdown("Failed to propagate client state")
+			r.log.Println("Failed to propagate client state for ", enemy.nickname, err)
+			return
+		}
+	}
+
+
 	r.sendGameEndState(c, r.playersState[c])
 
 	r.log.Printf("Finishing game for %v\n", c.nickname)
@@ -341,6 +361,8 @@ func (r *Room) finishGameForPlayer(c *Client) {
 	}
 	r.clients = removeClientFromSlice(r.clients, findClientInSlice(c, r.clients))
 	delete(r.playersState, c)
+
+	r.log.Printf("Sending clientClosing for %v\n", c.nickname)
 	r.clientClosing <- c
 }
 
@@ -361,7 +383,6 @@ func (r *Room) startQuestionPhase() {
 		}
 	}
 
-	r.rerollPlayersMatching()
 	r.schedulePhase(phaseDurations[GamePhaseQuestion], GamePhaseStore)
 }
 
@@ -597,7 +618,6 @@ func (r *Room) handleUnplaceUnit(client *Client, payload UnplaceUnitPayload) {
 
 func (r *Room) Start() {
 	r.log.Println("Starting room")
-	r.rerollPlayersMatching()
 	// should send battle beginning phase to clients
 	r.schedulePhase(phaseDurations[GamePhaseWaiting], GamePhaseStore)
 

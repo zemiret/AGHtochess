@@ -22,14 +22,18 @@ const GamePhaseSpecificSidebar: React.FunctionComponent<Props> = ({
     case "BATTLE":
       const battleGameState = gameState as BattleGameState;
       return (
-        <BattleLog
-          log={battleGameState.battleStatistics.log}
-          units={gameState.units}
-          enemyUnits={gameState.enemyUnits}
-        />
+        <>
+          {battleGameState?.battleStatistics?.log && (
+            <BattleLog
+              log={battleGameState.battleStatistics.log}
+              units={gameState.units}
+              enemyUnits={gameState.enemyUnits}
+            />
+          )}
+        </>
       );
     default:
-      return <p></p>;
+      return <p />;
   }
 };
 

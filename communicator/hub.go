@@ -40,6 +40,7 @@ func newHub() *Hub {
 		unregister:        make(chan *Client),
 		clients:           make(map[*Client]*Room),
 		roomClosing:       roomClosing,
+		clientClosing:     clientClosing,
 		duelWaitingRoom:   newDuelRoom(roomClosing),
 		royaleWaitingRoom: newRoyaleRoom(roomClosing, clientClosing),
 	}
