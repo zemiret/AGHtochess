@@ -17,29 +17,38 @@ const Backpack: React.FunctionComponent<Props> = ({
   selectedUnit,
   unplaceUnit,
 }: Props) => {
-  const drop = useDrop<{ type: string; id: string }, void, {}>({
+  const [{ hovered }, drop] = useDrop<
+    { type: string; id: string },
+    void,
+    { hovered: boolean }
+  >({
     accept: "boardUnit",
     drop: (item, _monitor) => {
       unplaceUnit(item.id);
     },
-  })[1];
+    collect: monitor => ({
+      hovered: monitor.isOver(),
+    }),
+  });
 
   return (
     <div className="backpack" ref={drop}>
-      <Caption text="Units" />
-      <ul>
-        {units.map(unit => (
-          <li
-            key={unit.id}
-            className={unit.id === selectedUnit?.id ? "unit--selected" : "unit"}
-            onClick={() => selectUnit(unit)}
-          >
-            <div className="unit-container">
-              <BackpackUnit unit={unit} />
-            </div>
-          </li>
-        ))}
-      </ul>
+      <div className={hovered ? "backpack-overlay" : ""}>
+        <Caption text="Units" />
+        <ul>
+          {units.map(unit => (
+            <li
+              key={unit.id}
+              className={unit.id === selectedUnit?.id ? "unit--selected" : "unit"}
+              onClick={() => selectUnit(unit)}
+            >
+              <div className="unit-container">
+                <BackpackUnit unit={unit} />
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 };

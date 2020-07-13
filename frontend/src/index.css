@@ -48,6 +48,11 @@ table {
 
 body, html {
 	height: 100%;
+	user-select: none; /* supported by Chrome and Opera */
+  -webkit-user-select: none; /* Safari */
+  -khtml-user-select: none; /* Konqueror HTML */
+  -moz-user-select: none; /* Firefox */
+  -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
 #root {
@@ -201,6 +206,11 @@ body, html {
   border-bottom: 1px solid #efefef;
 }
 
+.backpack-overlay .unit-container {
+	border-bottom: none;
+	padding-bottom: 6px;
+}
+
 .unit-avatar {
 	width: 90px;
 	height: 90px;
@@ -231,6 +241,14 @@ body, html {
 	height: 100%;
 }
 
-.backpack-hovered {
-	background-color: red;
+.backpack-overlay {
+	display: block;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(127,255,212,0.5);
+  z-index: 16;
 }
