@@ -21,7 +21,7 @@ jobs:
         run: |
           echo "$ssh_key" > ./deploy-key
           chmod 600 ./deploy-key
-          docker context create aghtochess --docker "host=ssh://aghtochess@aghtochess.mionskowski.pl,key=$(pwd)/deploy_key"
+          docker context create aghtochess --docker "host=ssh://aghtochess@aghtochess.mionskowski.pl,key=$(pwd)/deploy-key"
       - name: Build and deploy
         id: deploy
         run: |
