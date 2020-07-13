@@ -16,6 +16,7 @@ const PopoverUnitAvatar: React.FunctionComponent<Props> = ({ unit, size }: Props
       .toString()
       .replace(".", ""),
   );
+  const [unitId] = useState<string>(unit.id);
 
   return (
     <div
@@ -25,13 +26,14 @@ const PopoverUnitAvatar: React.FunctionComponent<Props> = ({ unit, size }: Props
         display: "inline-block",
       }}
     >
-      <div id={`unit-${unit.id}-${randomValue}`}>
+      <div id={`unit-${unitId}-${randomValue}`}>
         <UnitAvatar unit={unit} size={size} />
       </div>
       <Popover
         placement="left"
         isOpen={hover}
-        target={`unit-${unit.id}-${randomValue}`}
+        trigger="hover"
+        target={`unit-${unitId}-${randomValue}`}
         onClick={() => {
           return;
         }}
