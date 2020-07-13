@@ -6,7 +6,7 @@ Live deploy at [https://aghtochess.mionskowski.pl/](https://aghtochess.mionskows
 In order to deploy the application locally run:
 
 ```bash
-docker-compose up -d
+docker-compose up -d --build
 ```
 
 and navigate to `localhost:8080`
