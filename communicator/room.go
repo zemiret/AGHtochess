@@ -9,11 +9,14 @@ import (
 )
 
 const (
-	initialHp                = 100
-	initialMoney             = 5000
-	questionReward           = 100
-	boardWidth               = 6
-	boardHeight              = 8
+	initialHp      = 100
+	initialMoney   = 5000
+	questionReward = 100
+	boardWidth     = 6
+	boardHeight    = 8
+
+	logActionTime = 100 * time.Millisecond
+	roundEndScreenTime = 5 * time.Second
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
@@ -144,7 +147,7 @@ func (r *Room) Shutdown(reason string) {
 	}
 }
 
-func (r * Room) ShutdownOrFinish(client *Client, reason string) {
+func (r *Room) ShutdownOrFinish(client *Client, reason string) {
 	if r.duelMode() {
 		r.Shutdown(reason)
 	} else {
@@ -171,8 +174,8 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 	enemy := r.getEnemy(client)
 
 	var enemyPlayer *Player
-	enemyUnits := []Unit{}
-	enemyUnitsPlacement := []UnitPlacement{}
+	var enemyUnits []Unit
+	var enemyUnitsPlacement []UnitPlacement
 
 	if enemy != nil {
 		enemyState := r.playersState[enemy]
@@ -258,6 +261,9 @@ func (r *Room) startBattlePhase() {
 	}
 	var alreadyMatched []*Client
 	var playerPairs []*PlayerPair
+
+	battleDuration := phaseDurations[GamePhaseBattle]
+
 	for client := range r.playersState {
 		playerPair := &PlayerPair{
 			players: [2]*Client{client, r.getEnemy(client)},
@@ -288,6 +294,11 @@ func (r *Room) startBattlePhase() {
 			r.Shutdown("Failed fetching battle result")
 			r.log.Println("Failed fetching battle result", err)
 			return
+		}
+
+		duration := calculateBattleDuration(battleResult)
+		if duration > battleDuration {
+			battleDuration = duration
 		}
 
 		for i, c := range playerPair.players {
@@ -323,9 +334,9 @@ func (r *Room) startBattlePhase() {
 	// Duel case
 	if len(playerPairs) == 1 {
 		if playerPairs[0].finished {
-			r.schedulePhase(phaseDurations[GamePhaseBattle], GamePhaseGameEnd)
+			r.schedulePhase(battleDuration, GamePhaseGameEnd)
 		} else {
-			r.schedulePhase(phaseDurations[GamePhaseBattle], GamePhaseQuestion)
+			r.schedulePhase(battleDuration, GamePhaseQuestion)
 		}
 		return
 	}
@@ -337,7 +348,7 @@ func (r *Room) startBattlePhase() {
 			r.finishGameForPlayer(loser, true)
 		}
 	}
-	r.schedulePhase(phaseDurations[GamePhaseBattle], GamePhaseQuestion)
+	r.schedulePhase(battleDuration, GamePhaseQuestion)
 }
 
 func (r *Room) finishGameForPlayer(c *Client, sendState bool) {
@@ -585,7 +596,7 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 
 	state.UnitsPlacement = append(state.UnitsPlacement, placement)
 
-	for _, player := range []*Client{ client, r.getEnemy(client) } {
+	for _, player := range []*Client{client, r.getEnemy(client)} {
 		if player == nil {
 			continue
 		}
@@ -627,7 +638,7 @@ func (r *Room) handleUnplaceUnit(client *Client, payload UnplaceUnitPayload) {
 		}
 	}
 
-	for _, player := range []*Client{ client, r.getEnemy(client) } {
+	for _, player := range []*Client{client, r.getEnemy(client)} {
 		if player == nil {
 			continue
 		}
@@ -696,4 +707,8 @@ func clientInSlice(client *Client, arr []*Client) bool {
 func removeClientFromSlice(s []*Client, i int) []*Client {
 	s[i] = s[len(s)-1]
 	return s[:len(s)-1]
+}
+
+func calculateBattleDuration(battle *PlayerBattleResult) time.Duration {
+	return time.Duration(len(battle.Log)) * logActionTime + roundEndScreenTime
 }
