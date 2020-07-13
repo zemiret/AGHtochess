@@ -1,7 +1,7 @@
 import React from "react";
 import { Unit } from "../models/game-state.model";
 import Caption from "./Caption";
-import UnitCmp from "./Unit";
+import BackpackUnit from "./BackpackUnit";
 
 export interface Props {
   units: Unit[];
@@ -25,7 +25,7 @@ const Backpack: React.FunctionComponent<Props> = ({
             onClick={() => selectUnit(unit)}
           >
             <div className="unit-container">
-              <UnitCmp unit={unit} />
+              <BackpackUnit unit={unit} />
             </div>
           </li>
         ))}

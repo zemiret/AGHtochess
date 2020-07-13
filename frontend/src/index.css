@@ -142,6 +142,10 @@ body, html {
 	cursor: pointer;
 }
 
+.board-cell-hovered {
+	background-color: aquamarine;
+}
+
 .enemy-board-cell {
 	background: #d5d5d5;
 }
