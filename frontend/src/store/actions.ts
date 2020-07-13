@@ -1,21 +1,13 @@
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import * as api from "../api";
-import {
-  GameState,
-  Unit,
-  UnitPlacement,
-  WebsocketOptions,
-} from "../models/game-state.model";
+import { GameState, UnitPlacement, WebsocketOptions } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 import { MessageType } from "../models/message-type.enum";
 
 export const setUsername = createAction<string>("setUsername");
-export const setGameType = createAction<string>("setGameType");
 export const closeWebSocket = createAction("closeWebSocket");
 
 export const changeGameState = createAction<GameState>("changeGameState");
-
-export const selectUnit = createAction<Unit>("selectUnit");
 
 export const showInfoMessage = createAction<InfoMessage>("showInfoMessage");
 export const showErrorMessage = createAction<InfoMessage>("showErrorMessage");

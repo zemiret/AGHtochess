@@ -1,5 +1,5 @@
 import React from "react";
-import { PlayerInfo, Unit } from "../models/game-state.model";
+import { PlayerInfo, Unit, UnitPlacement } from "../models/game-state.model";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import Player from "./Player";
@@ -9,7 +9,7 @@ import { Col, Row } from "reactstrap";
 import GamePhaseSpecificSidebar from "./GamePhaseSpecificSidebar";
 import Backpack from "./Backpack";
 import { Dispatch } from "../store";
-import { selectUnit } from "../store/actions";
+import { unplaceUnit } from "../store/actions";
 import WaitingForPlayer from "./WaitingForPlayer";
 
 interface Props {
@@ -19,7 +19,7 @@ interface Props {
   round: number;
   phaseEndsAt: number;
   units: Unit[];
-  selectedUnit?: Unit;
+  unitsPlacement: UnitPlacement[];
   dispatch: Dispatch;
 }
 
@@ -27,19 +27,19 @@ const GamePage: React.FunctionComponent<Props> = ({
   player,
   enemy,
   units,
-  dispatch,
-  selectedUnit,
+  unitsPlacement,
   phase,
   round,
   phaseEndsAt,
+  dispatch,
 }: Props) => {
+  const placedUnitIds = unitsPlacement.map(u => u.unitId);
   return (
     <Row className="game-panel-row">
       <Col className="sidebar" xs="3">
         <Backpack
-          units={units}
-          selectedUnit={selectedUnit}
-          selectUnit={(unit: Unit) => dispatch(selectUnit(unit))}
+          units={units.filter(unit => placedUnitIds.indexOf(unit.id) === -1)}
+          unplaceUnit={(unitId: string) => dispatch(unplaceUnit(unitId))}
         />
       </Col>
 
@@ -73,14 +73,14 @@ const GamePage: React.FunctionComponent<Props> = ({
   );
 };
 
-const mapStateToProps = ({ gameState, selectedUnit }: RootSchema) => ({
+const mapStateToProps = ({ gameState }: RootSchema) => ({
   player: gameState!.player,
   enemy: gameState!.enemy,
   phase: gameState!.phase,
   round: gameState!.round,
   phaseEndsAt: gameState!.phaseEndsAt,
   units: gameState!.units,
-  selectedUnit,
+  unitsPlacement: gameState!.unitsPlacement,
 });
 
 export default connect(mapStateToProps)(GamePage);

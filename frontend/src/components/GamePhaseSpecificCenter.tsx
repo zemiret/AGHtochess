@@ -1,36 +1,32 @@
 import React from "react";
-import { GameState, Unit, UnitPlacement } from "../models/game-state.model";
+import { GameState, UnitPlacement } from "../models/game-state.model";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import GameEnd from "./GameEnd";
 import Battle from "./Battle";
 import Question from "./Question";
 import { Dispatch } from "../store";
-import { answerQuestion, placeUnit, unplaceUnit } from "../store/actions";
+import { answerQuestion, placeUnit } from "../store/actions";
 import Gameboard from "./Gameboard";
 
 interface Props {
   gameState: GameState;
-  selectedUnit?: Unit;
   dispatch: Dispatch;
 }
 
 const GamePhaseSpecificCenter: React.FunctionComponent<Props> = ({
   gameState,
   dispatch,
-  selectedUnit,
 }: Props) => {
   switch (gameState.phase) {
     case "STORE":
       return (
         <Gameboard
           {...gameState}
-          selectedUnit={selectedUnit}
           placeUnit={(unitsPlacement: UnitPlacement) =>
             dispatch(placeUnit(unitsPlacement))
           }
           units={[...gameState.units, ...gameState.enemyUnits]}
-          unplaceUnit={(unitId: string) => dispatch(unplaceUnit(unitId))}
         />
       );
     case "BATTLE":
@@ -53,7 +49,6 @@ const GamePhaseSpecificCenter: React.FunctionComponent<Props> = ({
 
 const mapStateToProps = (state: RootSchema) => ({
   gameState: state.gameState!,
-  selectedUnit: state.selectedUnit,
 });
 
 export default connect(mapStateToProps)(GamePhaseSpecificCenter);

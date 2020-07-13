@@ -3,13 +3,21 @@ import { Unit as UnitType } from "../models/game-state.model";
 import UnitAvatar from "./UnitAvatar";
 import { Popover, PopoverBody } from "reactstrap";
 import UnitStats from "./UnitStats";
+import { DragElementWrapper, DragSourceOptions } from "react-dnd";
 
 interface Props {
   unit: UnitType;
   size?: number;
+  dragRef?: DragElementWrapper<DragSourceOptions>;
+  isDragging?: boolean;
 }
 
-const PopoverUnitAvatar: React.FunctionComponent<Props> = ({ unit, size }: Props) => {
+const PopoverUnitAvatar: React.FunctionComponent<Props> = ({
+  unit,
+  size,
+  dragRef,
+  isDragging,
+}: Props) => {
   const [hover, setHover] = useState<boolean>(false);
   const [randomValue] = useState<string>(
     Math.random()
@@ -27,11 +35,11 @@ const PopoverUnitAvatar: React.FunctionComponent<Props> = ({ unit, size }: Props
       }}
     >
       <div id={`unit-${unitId}-${randomValue}`}>
-        <UnitAvatar unit={unit} size={size} />
+        <UnitAvatar unit={unit} size={size} dragRef={dragRef} />
       </div>
       <Popover
         placement="left"
-        isOpen={hover}
+        isOpen={!isDragging && hover}
         trigger="hover"
         target={`unit-${unitId}-${randomValue}`}
         onClick={() => {

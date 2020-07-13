@@ -1,9 +1,11 @@
 import React from "react";
 import { Unit as UnitType } from "../models/game-state.model";
+import { DragElementWrapper, DragSourceOptions } from "react-dnd";
 
 interface Props {
   unit: UnitType;
   size?: number;
+  dragRef?: DragElementWrapper<DragSourceOptions>;
 }
 
 interface StatsMap {
@@ -29,7 +31,7 @@ const statsToDisplayInside: { [key: string]: Array<string> } = {
 
 const defaultSize = 90;
 
-const UnitAvatar: React.FunctionComponent<Props> = ({ unit, size }: Props) => {
+const UnitAvatar: React.FunctionComponent<Props> = ({ unit, size, dragRef }: Props) => {
   const dimensions = !!size ? size : defaultSize;
   const defenseBorderWidth =
     (Math.max(5, (unit.defense / statMaxValues.defense) * 15) * dimensions) /
@@ -68,7 +70,8 @@ const UnitAvatar: React.FunctionComponent<Props> = ({ unit, size }: Props) => {
         width: `${dimensions}px`,
         height: `${dimensions}px`,
       }}
-    ></div>
+      ref={dragRef}
+    />
   );
 };
 
