@@ -9,18 +9,26 @@ interface Props {
 }
 
 const BoardUnit: React.FunctionComponent<Props> = ({ unit }: Props) => {
-  const drag = useDrag({
+  const [{ isDragging }, drag] = useDrag({
     item: {
       type: "boardUnit",
       id: unit.id,
     },
-  })[1];
+    collect: monitor => ({
+      isDragging: monitor.isDragging(),
+    }),
+  });
 
   return (
     <Container>
       <Row>
         <Col className="v-flex-align-center">
-          <PopoverUnitAvatar dragRef={drag} size={58} unit={unit} />
+          <PopoverUnitAvatar
+            dragRef={drag}
+            isDragging={isDragging}
+            size={58}
+            unit={unit}
+          />
         </Col>
       </Row>
     </Container>

@@ -9,12 +9,14 @@ interface Props {
   unit: UnitType;
   size?: number;
   dragRef?: DragElementWrapper<DragSourceOptions>;
+  isDragging?: boolean;
 }
 
 const PopoverUnitAvatar: React.FunctionComponent<Props> = ({
   unit,
   size,
   dragRef,
+  isDragging,
 }: Props) => {
   const [hover, setHover] = useState<boolean>(false);
   const [randomValue] = useState<string>(
@@ -37,7 +39,7 @@ const PopoverUnitAvatar: React.FunctionComponent<Props> = ({
       </div>
       <Popover
         placement="left"
-        isOpen={hover}
+        isOpen={!isDragging && hover}
         trigger="hover"
         target={`unit-${unitId}-${randomValue}`}
         onClick={() => {
