@@ -6,13 +6,14 @@ services:
       - GAME_MECHANICS_HOST=http://mechanics
     ports:
       - "4000:4000"
-    links:
-      - mechanics
   mechanics:
     build: ./mechanics
     ports:
       - "5000:80"
   frontend:
-    build: ./frontend
+    build:
+      context: ./frontend
+      args:
+        - REACT_APP_API_HOST=ws://localhost:8000
     ports:
       - "8080:80"

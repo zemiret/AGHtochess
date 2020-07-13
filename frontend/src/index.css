@@ -252,3 +252,7 @@ body, html {
   background-color: rgba(127,255,212,0.5);
   z-index: 16;
 }
+
+.player-waiting-caption {
+	font-size: 48px;
+}

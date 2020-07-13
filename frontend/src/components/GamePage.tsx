@@ -10,10 +10,11 @@ import GamePhaseSpecificSidebar from "./GamePhaseSpecificSidebar";
 import Backpack from "./Backpack";
 import { Dispatch } from "../store";
 import { unplaceUnit } from "../store/actions";
+import WaitingForPlayer from "./WaitingForPlayer";
 
 interface Props {
   player: PlayerInfo;
-  enemy: PlayerInfo;
+  enemy?: PlayerInfo;
   phase: string;
   round: number;
   phaseEndsAt: number;
@@ -46,7 +47,8 @@ const GamePage: React.FunctionComponent<Props> = ({
         <div className="game-center-container">
           <Row>
             <Col className="h-flex-align-center top-bar">
-              <Player {...enemy} isEnemy={true} />
+              {enemy && <Player {...enemy} isEnemy={true} />}
+              {!enemy && <WaitingForPlayer />}
               <Timer phase={phase} phaseEndsAt={phaseEndsAt} round={round} />
             </Col>
           </Row>

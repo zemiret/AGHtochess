@@ -1,11 +1,10 @@
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import * as api from "../api";
-import { GameState, UnitPlacement } from "../models/game-state.model";
+import { GameState, UnitPlacement, WebsocketOptions } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 import { MessageType } from "../models/message-type.enum";
 
 export const setUsername = createAction<string>("setUsername");
-
 export const closeWebSocket = createAction("closeWebSocket");
 
 export const changeGameState = createAction<GameState>("changeGameState");
@@ -16,7 +15,7 @@ export const hideMessage = createAction("hideMessage");
 
 export const connectWebSocket = createAsyncThunk(
   "connectWebSocket",
-  async (username: string, thunkApi) => {
+  async (options: WebsocketOptions, thunkApi) => {
     const onMessage = (message: api.Message) => {
       switch (message.messageType) {
         case MessageType.INFO:
@@ -35,7 +34,7 @@ export const connectWebSocket = createAsyncThunk(
     const onClosed = () => {
       thunkApi.dispatch(closeWebSocket());
     };
-    return await api.connect(username, onMessage, onClosed);
+    return await api.connect(options.username, options.gameType, onMessage, onClosed);
   },
 );
 

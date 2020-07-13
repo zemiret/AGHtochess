@@ -2,26 +2,27 @@ import { MessageType } from "../models/message-type.enum";
 import { GameState, UnitPlacement } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 
-const url = "ws://localhost:4000/ws";
+const url = `${process.env.REACT_APP_API_HOST}/ws`;
 
 export interface Message {
   messageType: MessageType;
   payload: GameState | InfoMessage;
 }
 
-const loginUrl = (username: string): string => {
-  return `${url}?nickname=${username}`;
+const socketUrl = (username: string, gameType: string): string => {
+  return `${url}?nickname=${username}&gameType=${gameType}`;
 };
 
 let socket: WebSocket | undefined;
 
 export const connect = (
   username: string,
+  gameType: string,
   onMessage: (message: Message) => void,
   onClosed: () => void,
 ): Promise<void> => {
   return new Promise((resolve, reject) => {
-    socket = new WebSocket(loginUrl(username));
+    socket = new WebSocket(socketUrl(username, gameType));
     socket.onopen = (): void => {
       resolve();
     };
