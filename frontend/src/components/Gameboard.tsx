@@ -6,7 +6,6 @@ import GameboardCell from "./GameboardCell";
 
 interface Props extends StoreGameState {
   placeUnit: (unitsPlacement: UnitPlacement) => void;
-  selectedUnit?: Unit;
   units: Unit[];
 }
 
