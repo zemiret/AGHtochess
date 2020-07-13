@@ -14,7 +14,7 @@ const (
 	questionReward           = 100
 	boardWidth               = 6
 	boardHeight              = 8
-	battleRoyaleRoomCapacity = 4
+	battleRoyaleRoomCapacity = 8
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
