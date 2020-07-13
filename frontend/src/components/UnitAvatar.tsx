@@ -71,7 +71,7 @@ const UnitAvatar: React.FunctionComponent<Props> = ({ unit, size, dragRef }: Pro
         height: `${dimensions}px`,
       }}
       ref={dragRef}
-    ></div>
+    />
   );
 };
 

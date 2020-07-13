@@ -119,8 +119,12 @@ body, html {
 	height: 100vh;
 }
 
-.unit {
-	cursor: pointer;
+.backpack .unit:hover {
+	background-color: #efefef;
+}
+
+.backpack .unit:active {
+	background-color: transparent;
 }
 
 .unit--selected {
@@ -206,6 +210,10 @@ body, html {
   border-bottom: 1px solid #efefef;
 }
 
+.store .unit-container:hover, .store .unit-container:active {
+	background-color: #efefef;
+}
+
 .backpack-overlay .unit-container {
 	border-bottom: none;
 	padding-bottom: 6px;
@@ -256,3 +264,9 @@ body, html {
 .player-waiting-caption {
 	font-size: 48px;
 }
+
+.backpack .unit-avatar,
+.board-cell .unit-avatar {
+	cursor: pointer;
+}
+

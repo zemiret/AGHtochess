@@ -18,7 +18,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
   login,
 }: Props) => {
   const [username, setUsername] = useState<string>(defaultUsername);
-  const [gameType, setGameType] = useState<string>(GameType.ROYALE);
+  const [gameType, setGameType] = useState<string>(GameType.DUEL);
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
     setUsername(e.target.value);
@@ -53,6 +53,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
               <Input
                 type="select"
                 value={gameType}
+                className="mr-2"
                 onChange={handleGameTypeChange}
                 placeholder="Game type"
                 required={true}

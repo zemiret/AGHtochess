@@ -9,7 +9,7 @@ interface Props extends StoreGameState {
 
 const Store: React.FunctionComponent<Props> = ({ store, buyUnit }: Props) => {
   return (
-    <div>
+    <div className="store">
       <Caption text="Store" />
       <ul>
         {store.map(unit => (
