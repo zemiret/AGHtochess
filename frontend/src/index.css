@@ -226,3 +226,11 @@ body, html {
 	left: 50%;
 	transform: translate(-50%, 0);
 }
+
+.backpack {
+	height: 100%;
+}
+
+.backpack-hovered {
+	background-color: red;
+}
