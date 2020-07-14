@@ -17,13 +17,16 @@ jobs:
         id: create-context
         env:
           ssh_key: ${{ secrets.SSH_KEY }}
+          ssh_host: aghtochess.mionskowski.pl
+          ssh_user: aghtochess
         run: |
           mkdir $HOME/.ssh/
           chmod 700 $HOME/.ssh/
           echo "$ssh_key" > $HOME/.ssh/id_rsa
           chmod 600 $HOME/.ssh/id_rsa
-          ssh-keyscan aghtochess.mionskowski.pl >> ~/.ssh/known_hosts
-          docker context create aghtochess --docker "host=ssh://aghtochess@aghtochess.mionskowski.pl,key=$HOME/.ssh/id_rsa"
+          ssh-keyscan $ssh_host >> ~/.ssh/known_hosts
+          ssh -i $HOME/.ssh/id_rsa -nNT -L "$(pwd)"/docker.sock:/var/run/docker.sock $ssh_user@$ssh_host &
+          docker context create aghtochess --docker "host=unix://$(pwd)/docker.sock"
           docker context use aghtochess
       - name: Deploy 
         run: |
