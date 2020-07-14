@@ -188,7 +188,7 @@ body, html {
 	font-weight: bold;
 }
 
-.store-unit-buy-row {
+.unit-action-row {
 	display: flex;
 	justify-content: space-around;
 }
