@@ -15,4 +15,3 @@ from model.Unit import Unit
 def test_eq(token1, token2, expected):
     assert token1.distance(token2) - token2.distance(token1) == approx(0, abs=1e-10)
     assert token1.distance(token2) == approx(expected, abs=1e-10)
-

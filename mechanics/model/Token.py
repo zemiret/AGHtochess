@@ -1,8 +1,8 @@
 from dataclasses import dataclass
+from math import sqrt
 from typing import Tuple
 
 from model.Unit import Unit
-from math import sqrt
 
 
 @dataclass(eq=True)
