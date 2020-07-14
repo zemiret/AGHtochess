@@ -10,11 +10,11 @@ interface Props {
 
 const StoreUnit: React.FunctionComponent<Props> = ({ unit, buyUnit }: Props) => {
   return (
-    <div>
+    <>
       <Unit unit={unit} />
       <span className="v-spacer-sm" />
 
-      <div className="store-unit-buy-row v-flex-align-center">
+      <div className="unit-action-row v-flex-align-center">
         <div>
           <span className="strong">{unit.price}</span> €cts
         </div>
@@ -22,7 +22,7 @@ const StoreUnit: React.FunctionComponent<Props> = ({ unit, buyUnit }: Props) => 
           Buy
         </Button>
       </div>
-    </div>
+    </>
   );
 };
 

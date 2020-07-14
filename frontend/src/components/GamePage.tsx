@@ -9,7 +9,7 @@ import { Col, Row } from "reactstrap";
 import GamePhaseSpecificSidebar from "./GamePhaseSpecificSidebar";
 import Backpack from "./Backpack";
 import { Dispatch } from "../store";
-import { unplaceUnit } from "../store/actions";
+import { sellUnit, unplaceUnit } from "../store/actions";
 import WaitingForPlayer from "./WaitingForPlayer";
 
 interface Props {
@@ -40,6 +40,7 @@ const GamePage: React.FunctionComponent<Props> = ({
         <Backpack
           units={units.filter(unit => placedUnitIds.indexOf(unit.id) === -1)}
           unplaceUnit={(unitId: string) => dispatch(unplaceUnit(unitId))}
+          sellUnit={(unitId: string) => dispatch(sellUnit(unitId))}
         />
       </Col>
 

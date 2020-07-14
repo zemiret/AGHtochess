@@ -13,6 +13,7 @@ const (
 	MessageTypeQuestionResult MessageType = "QUESTION_RESULT"
 
 	MessageTypeBuyUnit        MessageType = "BUY_UNIT"
+	MessageTypeSellUnit       MessageType = "SELL_UNIT"
 	MessageTypePlaceUnit      MessageType = "PLACE_UNIT"
 	MessageTypeUnplaceUnit    MessageType = "UNPLACE_UNIT"
 	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
@@ -125,6 +126,10 @@ type BattleStatistics struct {
 }
 
 type BuyUnitPayload struct {
+	ID string `json:"id"`
+}
+
+type SellUnitPayload struct {
 	ID string `json:"id"`
 }
 

@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"log"
+	"math"
 	"math/rand"
 	"os"
 	"time"
@@ -17,6 +18,7 @@ const (
 
 	logActionTime = 200 * time.Millisecond
 	logStaleTime  = 2 * time.Second
+	unitSellPriceMultiplier = 0.5
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
@@ -52,6 +54,7 @@ type Room struct {
 	round int
 
 	BuyUnitChannel        chan BuyUnitMessage
+	SellUnitChannel       chan SellUnitMessage
 	PlaceUnitChannel      chan PlaceUnitMessage
 	UnplaceUnitChannel    chan UnplaceUnitMessage
 	AnswerQuestionChannel chan AnswerQuestionMessage
@@ -69,6 +72,11 @@ type Room struct {
 type BuyUnitMessage struct {
 	Client         *Client         `json:"-"`
 	BuyUnitPayload *BuyUnitPayload `json:"payload"`
+}
+
+type SellUnitMessage struct {
+	Client          *Client          `json:"-"`
+	SellUnitPayload *SellUnitPayload `json:"payload"`
 }
 
 type AnswerQuestionMessage struct {
@@ -94,6 +102,7 @@ func newRoom(roomClosing chan<- *Room, clientClosing chan<- *Client, capacity in
 		clients:                 []*Client{},
 		phase:                   GamePhaseWaiting,
 		BuyUnitChannel:          make(chan BuyUnitMessage),
+		SellUnitChannel:         make(chan SellUnitMessage),
 		AnswerQuestionChannel:   make(chan AnswerQuestionMessage),
 		PlaceUnitChannel:        make(chan PlaceUnitMessage),
 		UnplaceUnitChannel:      make(chan UnplaceUnitMessage),
@@ -470,7 +479,7 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 	}
 }
 
-func (r *Room) handleBuyUnit(c *Client, order BuyUnitPayload) {
+func (r *Room) handleBuyUnit(c *Client, payload BuyUnitPayload) {
 	if r.phase != GamePhaseStore {
 		c.SendMessage(newErrorMessage("You can only buy units in store phase"))
 		return
@@ -481,7 +490,7 @@ func (r *Room) handleBuyUnit(c *Client, order BuyUnitPayload) {
 	var unitToBuy *Unit
 	var unitIndex int
 	for i, unitInStore := range state.Store {
-		if unitInStore.ID == order.ID {
+		if unitInStore.ID == payload.ID {
 			unitToBuy = &unitInStore
 			unitIndex = i
 			break
@@ -510,6 +519,49 @@ func (r *Room) handleBuyUnit(c *Client, order BuyUnitPayload) {
 	}
 
 	if err := c.SendMessage(newInfoMessage("Unit bought")); err != nil {
+		r.statePropagationFail(c, err)
+		if r.duelMode() {
+			return
+		}
+	}
+}
+
+func (r *Room) handleSellUnit(c *Client, payload SellUnitPayload) {
+	state := r.playersState[c]
+
+	var unitToSell *Unit
+	var unitIndex int
+	for i, unitInBackpack := range state.Units {
+		if unitInBackpack.ID == payload.ID {
+			unitToSell = &unitInBackpack
+			unitIndex = i
+			break
+		}
+	}
+
+	if unitToSell == nil {
+		c.SendMessage(newErrorMessage("Unit not in backpack"))
+		return
+	}
+
+	for i, unitPlacement := range state.UnitsPlacement {
+		if unitPlacement.UnitID == payload.ID {
+			state.UnitsPlacement = append(state.UnitsPlacement[:i], state.UnitsPlacement[i+1:]...)
+			break
+		}
+	}
+
+	state.Player.Money += int(math.Ceil(float64(unitToSell.Price) * unitSellPriceMultiplier))
+	state.Units = append(state.Units[:unitIndex], state.Units[unitIndex+1:]...)
+
+	if err := c.SendMessage(r.generateClientState(c)); err != nil {
+		r.statePropagationFail(c, err)
+		if r.duelMode() {
+			return
+		}
+	}
+
+	if err := c.SendMessage(newInfoMessage("Unit sold")); err != nil {
 		r.statePropagationFail(c, err)
 		if r.duelMode() {
 			return
@@ -691,6 +743,12 @@ func (r *Room) Start() {
 			r.ShutdownOrFinish(client, "Client disconnected")
 		case phase := <-r.changePhaseChannel:
 			r.handlePhaseChange(phase)
+		case message := <-r.SellUnitChannel:
+			if message.SellUnitPayload == nil {
+				message.Client.SendMessage(newErrorMessage("Missing payload"))
+				continue
+			}
+			r.handleSellUnit(message.Client, *message.SellUnitPayload)
 		case message := <-r.BuyUnitChannel:
 			if message.BuyUnitPayload == nil {
 				message.Client.SendMessage(newErrorMessage("Missing payload"))
