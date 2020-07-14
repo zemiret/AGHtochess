@@ -44,7 +44,7 @@ const GameboardCell: React.FunctionComponent<Props> = ({
         (hovered ? "board-cell-hovered" : "")
       }
     >
-      {unit ? <BoardUnit unit={unit} /> : <Container />}
+      {unit ? <BoardUnit unit={unit} draggable={!isEnemyCell} /> : <Container />}
     </td>
   );
 };

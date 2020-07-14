@@ -60,7 +60,7 @@ const UnitAvatar: React.FunctionComponent<Props> = ({ unit, size, dragRef }: Pro
 
   return (
     <div
-      className="unit-avatar"
+      className={"unit-avatar" + (dragRef ? " unit-avatar-draggable" : "")}
       style={{
         borderWidth: defenseBorderWidth + "px",
         backgroundImage: `conic-gradient(
