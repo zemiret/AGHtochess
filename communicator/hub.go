@@ -113,6 +113,14 @@ func (h *Hub) run() {
 					}
 					buyUnitMessage.Client = inboundMessage.Client
 					clientRoom.BuyUnitChannel <- buyUnitMessage
+				case MessageTypeSellUnit:
+					var sellUnitMessage SellUnitMessage
+					if err := json.Unmarshal(inboundMessage.Message, &sellUnitMessage); err != nil {
+						h.log.Println("Invalid message", err)
+						continue
+					}
+					sellUnitMessage.Client = inboundMessage.Client
+					clientRoom.SellUnitChannel <- sellUnitMessage
 				case MessageTypeAnswerQuestion:
 					var answerQuestionMessage AnswerQuestionMessage
 					if err := json.Unmarshal(inboundMessage.Message, &answerQuestionMessage); err != nil {

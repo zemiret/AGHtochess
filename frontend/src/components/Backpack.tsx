@@ -7,9 +7,14 @@ import BackpackUnit from "./BackpackUnit";
 export interface Props {
   units: Unit[];
   unplaceUnit: (unitId: string) => void;
+  sellUnit: (unitId: string) => void;
 }
 
-const Backpack: React.FunctionComponent<Props> = ({ units, unplaceUnit }: Props) => {
+const Backpack: React.FunctionComponent<Props> = ({
+  units,
+  unplaceUnit,
+  sellUnit,
+}: Props) => {
   const [{ hovered }, drop] = useDrop<
     { type: string; id: string },
     void,
@@ -32,7 +37,7 @@ const Backpack: React.FunctionComponent<Props> = ({ units, unplaceUnit }: Props)
           {units.map(unit => (
             <li key={unit.id} className="unit">
               <div className="unit-container">
-                <BackpackUnit unit={unit} />
+                <BackpackUnit unit={unit} sellUnit={() => sellUnit(unit.id)} />
               </div>
             </li>
           ))}

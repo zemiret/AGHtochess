@@ -42,6 +42,10 @@ export const buyUnit = createAsyncThunk("buyUnit", async (id: string) => {
   return api.buyUnit(id);
 });
 
+export const sellUnit = createAsyncThunk("sellUnit", async (id: string) => {
+  return api.sellUnit(id);
+});
+
 export const answerQuestion = createAsyncThunk(
   "answerQuestion",
   async ({ questionId, answerId }: { questionId: number; answerId: number }) => {

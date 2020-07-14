@@ -13,15 +13,16 @@ const (
 	MessageTypeQuestionResult MessageType = "QUESTION_RESULT"
 
 	MessageTypeBuyUnit        MessageType = "BUY_UNIT"
+	MessageTypeSellUnit       MessageType = "SELL_UNIT"
 	MessageTypePlaceUnit      MessageType = "PLACE_UNIT"
 	MessageTypeUnplaceUnit    MessageType = "UNPLACE_UNIT"
 	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
 
-	GamePhaseWaiting         GamePhase = "WAITING_FOR_PLAYERS"
-	GamePhaseStore           GamePhase = "STORE"
-	GamePhaseBattle          GamePhase = "BATTLE"
-	GamePhaseQuestion        GamePhase = "QUESTION"
-	GamePhaseGameEnd         GamePhase = "GAME_END"
+	GamePhaseWaiting  GamePhase = "WAITING_FOR_PLAYERS"
+	GamePhaseStore    GamePhase = "STORE"
+	GamePhaseBattle   GamePhase = "BATTLE"
+	GamePhaseQuestion GamePhase = "QUESTION"
+	GamePhaseGameEnd  GamePhase = "GAME_END"
 
 	GameResultWin  GameResult = "WIN"
 	GameResultLoss GameResult = "LOSS"
@@ -66,7 +67,7 @@ type PlayerStatePayload struct {
 	Round               int               `json:"round"`
 	GameResult          *GameResult       `json:"gameResult,omitempty"`
 	Player              Player            `json:"player"`
-	Enemy               *Player            `json:"enemy"`
+	Enemy               *Player           `json:"enemy"`
 	Question            *PublicQuestion   `json:"question,omitempty"`
 	Store               []Unit            `json:"store"`
 	Units               []Unit            `json:"units"`
@@ -124,6 +125,10 @@ type BattleStatistics struct {
 }
 
 type BuyUnitPayload struct {
+	ID string `json:"id"`
+}
+
+type SellUnitPayload struct {
 	ID string `json:"id"`
 }
 
