@@ -1,11 +1,11 @@
 import React from "react";
-import { StoreGameState, Unit, UnitPlacement } from "../models/game-state.model";
+import { CommonGameState, Unit, UnitPlacement } from "../models/game-state.model";
 import { Container, Row } from "reactstrap";
 import { BOARD_HEIGHT, BOARD_WIDTH } from "../constants";
 import GameboardCell from "./GameboardCell";
 
-interface Props extends StoreGameState {
-  placeUnit: (unitsPlacement: UnitPlacement) => void;
+interface Props extends CommonGameState {
+  placeUnit?: (unitsPlacement: UnitPlacement) => void;
   units: Unit[];
 }
 

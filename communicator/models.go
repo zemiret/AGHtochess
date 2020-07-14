@@ -18,11 +18,12 @@ const (
 	MessageTypeUnplaceUnit    MessageType = "UNPLACE_UNIT"
 	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
 
-	GamePhaseWaiting  GamePhase = "WAITING_FOR_PLAYERS"
-	GamePhaseStore    GamePhase = "STORE"
-	GamePhaseBattle   GamePhase = "BATTLE"
-	GamePhaseQuestion GamePhase = "QUESTION"
-	GamePhaseGameEnd  GamePhase = "GAME_END"
+	GamePhaseWaiting      GamePhase = "WAITING_FOR_PLAYERS"
+	GamePhaseStore        GamePhase = "STORE"
+	GamePhaseBattle       GamePhase = "BATTLE"
+	GamePhaseBattleResult GamePhase = "BATTLE_RESULT"
+	GamePhaseQuestion     GamePhase = "QUESTION"
+	GamePhaseGameEnd      GamePhase = "GAME_END"
 
 	GameResultWin  GameResult = "WIN"
 	GameResultLoss GameResult = "LOSS"

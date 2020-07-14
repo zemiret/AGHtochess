@@ -65,7 +65,12 @@ export interface StoreGameState extends CommonGameState {
 
 export interface BattleGameState extends CommonGameState {
   phase: "BATTLE";
-  battleStatistics: BattleStatistics;
+  battleStatistics?: BattleStatistics;
+}
+
+export interface BattleResultGameState extends CommonGameState {
+  phase: "BATTLE_RESULT";
+  battleStatistics?: BattleStatistics;
 }
 
 export interface QuestionGameState extends CommonGameState {
@@ -91,5 +96,6 @@ export interface WebsocketOptions {
 export type GameState =
   | StoreGameState
   | BattleGameState
+  | BattleResultGameState
   | QuestionGameState
   | GameEndGameState;

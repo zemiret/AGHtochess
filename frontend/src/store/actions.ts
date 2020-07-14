@@ -3,6 +3,7 @@ import * as api from "../api";
 import { GameState, UnitPlacement, WebsocketOptions } from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 import { MessageType } from "../models/message-type.enum";
+import { DamageUnit } from "../models/damage-unit.model";
 
 export const setUsername = createAction<string>("setUsername");
 export const closeWebSocket = createAction("closeWebSocket");
@@ -12,6 +13,8 @@ export const changeGameState = createAction<GameState>("changeGameState");
 export const showInfoMessage = createAction<InfoMessage>("showInfoMessage");
 export const showErrorMessage = createAction<InfoMessage>("showErrorMessage");
 export const hideMessage = createAction("hideMessage");
+
+export const damageUnit = createAction<DamageUnit>("damageUnit");
 
 export const connectWebSocket = createAsyncThunk(
   "connectWebSocket",

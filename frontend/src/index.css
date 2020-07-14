@@ -127,10 +127,6 @@ body, html {
 	background-color: transparent;
 }
 
-.unit--selected {
-	background-color: aquamarine;
-}
-
 .with-border {
 	border: 1px solid black;
 }
@@ -229,6 +225,7 @@ body, html {
 	background-clip: content-box, border-box;
 	box-shadow: inset 0 0 20px #000;
 	display: inline-block;
+	transition: all 500ms ease-in-out;
 }
 
 .sidebar {

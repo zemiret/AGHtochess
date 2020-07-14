@@ -3,7 +3,7 @@ import { BattleStatistics } from "../models/game-state.model";
 
 type Props = BattleStatistics;
 
-const Battle: React.FunctionComponent<Props> = (props: Props) => {
+const BattleResult: React.FunctionComponent<Props> = (props: Props) => {
   return (
     <div>
       <h3>Battle Result: {props.result}</h3>
@@ -12,4 +12,4 @@ const Battle: React.FunctionComponent<Props> = (props: Props) => {
   );
 };
 
-export default Battle;
+export default BattleResult;
