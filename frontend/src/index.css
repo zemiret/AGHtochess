@@ -148,7 +148,6 @@ body, html {
 	padding: 5px;
 	width: 102px;
 	height: 72px;
-	cursor: pointer;
 }
 
 .board-cell-hovered {
@@ -265,8 +264,8 @@ body, html {
 	font-size: 48px;
 }
 
-.backpack .unit-avatar,
-.board-cell .unit-avatar {
-	cursor: pointer;
+.unit-avatar-draggable {
+	cursor: move;
+	cursor: grab;
 }
 

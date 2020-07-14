@@ -6,9 +6,10 @@ import { useDrag } from "react-dnd";
 
 interface Props {
   unit: UnitType;
+  draggable: boolean;
 }
 
-const BoardUnit: React.FunctionComponent<Props> = ({ unit }: Props) => {
+const BoardUnit: React.FunctionComponent<Props> = ({ unit, draggable }: Props) => {
   const [{ isDragging }, drag] = useDrag({
     item: {
       type: "boardUnit",
@@ -24,7 +25,7 @@ const BoardUnit: React.FunctionComponent<Props> = ({ unit }: Props) => {
       <Row>
         <Col className="v-flex-align-center">
           <PopoverUnitAvatar
-            dragRef={drag}
+            dragRef={draggable ? drag : undefined}
             isDragging={isDragging}
             size={58}
             unit={unit}
