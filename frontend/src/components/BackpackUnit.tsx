@@ -18,7 +18,7 @@ const BackpackUnit: React.FunctionComponent<Props> = ({ unit, sellUnit }: Props)
     },
   })[1];
 
-  const sellingPrice = unit.price * UNIT_SELL_PRICE_MULTIPLIER;
+  const sellingPrice = Math.ceil(unit.price * UNIT_SELL_PRICE_MULTIPLIER);
 
   return (
     <>
