@@ -224,8 +224,6 @@ func (r *Room) startStorePhase() {
 	r.round++
 
 	for _, state := range r.playersState {
-		state.UnitsPlacement = []UnitPlacement{}
-
 		units, err := GetStoreUnits(r.round)
 		if err != nil {
 			r.log.Println("Failed fetching units ", err)
