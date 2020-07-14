@@ -203,10 +203,16 @@ func (r *Room) generateClientState(client *Client) *Message {
 		publicQuestion = &playerState.Question.PublicQuestion
 	}
 
+	// haaa ckathon? :>
+	phase := r.phase
+	if playerState.GameResult != nil {
+		phase = GamePhaseGameEnd
+	}
+
 	return &Message{
 		MessageType: MessageTypeStateChange,
 		Payload: &PlayerStatePayload{
-			Phase:               r.phase,
+			Phase:               phase,
 			PhaseEndsAt:         r.phaseEndsAt.Unix(),
 			Round:               r.round,
 			GameResult:          playerState.GameResult,
@@ -457,9 +463,8 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 	for client, state := range r.playersState {
 		state.Question = nil
 		state.Store = []Unit{}
-		state.GameResult = nil
 
-		if state.Player.Hp <= 0 {
+		if !r.duelMode() && state.Player.Hp <= 0 {
 			r.finishGameForPlayer(client, true)
 		}
 	}
