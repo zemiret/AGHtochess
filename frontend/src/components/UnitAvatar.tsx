@@ -6,6 +6,7 @@ interface Props {
   unit: UnitType;
   size?: number;
   dragRef?: DragElementWrapper<DragSourceOptions>;
+  shouldDisappear?: boolean;
 }
 
 interface StatsMap {
@@ -31,7 +32,12 @@ const statsToDisplayInside: { [key: string]: Array<string> } = {
 
 const defaultSize = 90;
 
-const UnitAvatar: React.FunctionComponent<Props> = ({ unit, size, dragRef }: Props) => {
+const UnitAvatar: React.FunctionComponent<Props> = ({
+  unit,
+  size,
+  shouldDisappear,
+  dragRef,
+}: Props) => {
   const dimensions = !!size ? size : defaultSize;
   const defenseBorderWidth =
     (Math.max(5, (unit.defense / statMaxValues.defense) * 15) * dimensions) /
@@ -69,6 +75,7 @@ const UnitAvatar: React.FunctionComponent<Props> = ({ unit, size, dragRef }: Pro
             conic-gradient(red 0turn, red ${hpPercentage}turn, gray ${hpPercentage}turn, gray 1turn)`,
         width: `${dimensions}px`,
         height: `${dimensions}px`,
+        opacity: !shouldDisappear || unit.hp > 0 ? 1 : 0,
       }}
       ref={dragRef}
     />

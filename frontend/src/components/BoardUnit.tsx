@@ -29,6 +29,7 @@ const BoardUnit: React.FunctionComponent<Props> = ({ unit, draggable }: Props) =
             isDragging={isDragging}
             size={58}
             unit={unit}
+            shouldDisappear={true}
           />
         </Col>
       </Row>

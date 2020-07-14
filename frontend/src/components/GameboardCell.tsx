@@ -9,7 +9,7 @@ interface Props {
   isEnemyCell: boolean;
   x: number;
   y: number;
-  placeUnit: (unitsPlacement: UnitPlacement) => void;
+  placeUnit?: (unitsPlacement: UnitPlacement) => void;
 }
 
 const GameboardCell: React.FunctionComponent<Props> = ({
@@ -28,7 +28,9 @@ const GameboardCell: React.FunctionComponent<Props> = ({
     drop: (item, _monitor) => {
       if (isEnemyCell) return;
 
-      placeUnit({ unitId: item.id, x, y });
+      if (placeUnit) {
+        placeUnit({ unitId: item.id, x, y });
+      }
     },
     collect: monitor => ({
       hovered: !isEnemyCell && monitor.isOver(),

@@ -13,7 +13,7 @@ const UnitStats: React.FunctionComponent<Props> = ({ unit }: Props) => {
         <p>{unit.type}</p>
       </div>
 
-      <UnitStat text="HP" value={unit.hp} />
+      <UnitStat text="HP" value={Math.ceil(unit.hp)} />
       <UnitStat text="Attack" value={unit.attack} />
       <UnitStat text="Defense" value={unit.defense} />
       <UnitStat text="Magic resistance" value={unit.magicResist} />

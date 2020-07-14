@@ -15,25 +15,28 @@ const (
 	boardWidth     = 6
 	boardHeight    = 8
 
-	logActionTime = 100 * time.Millisecond
-	roundEndScreenTime = 5 * time.Second
+	logActionTime = 200 * time.Millisecond
+	logStaleTime  = 2 * time.Second
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
-	GamePhaseWaiting:  1 * time.Second,
-	GamePhaseStore:    30 * time.Second,
-	GamePhaseBattle:   1 * time.Second,
-	GamePhaseQuestion: 10 * time.Second,
-	GamePhaseGameEnd:  1 * time.Second,
+	GamePhaseWaiting:      1 * time.Second,
+	GamePhaseStore:        15 * time.Second,
+	GamePhaseBattle:       1 * time.Second,
+	GamePhaseBattleResult: 4 * time.Second,
+	GamePhaseQuestion:     10 * time.Second,
+	GamePhaseGameEnd:      1 * time.Second,
 }
 
 type PlayerState struct {
-	Player         Player          `json:"player"`
-	Question       *Question       `json:"question"`
-	Store          []Unit          `json:"store"`
-	Units          []Unit          `json:"units"`
-	UnitsPlacement []UnitPlacement `json:"unitsPlacement"`
-	enemy          *Client         `json:"-"`
+	Player           Player            `json:"player"`
+	Question         *Question         `json:"question"`
+	Store            []Unit            `json:"store"`
+	Units            []Unit            `json:"units"`
+	UnitsPlacement   []UnitPlacement   `json:"unitsPlacement"`
+	BattleStatistics *BattleStatistics `json:"battleStatistics,omitempty"`
+	GameResult       *GameResult       `json:"gameResult,omitempty"`
+	enemy            *Client           `json:"-"`
 }
 
 type Room struct {
@@ -43,8 +46,8 @@ type Room struct {
 	playersState map[*Client]*PlayerState
 	clients      []*Client
 
-	phase        GamePhase
-	phaseStarted time.Time
+	phase       GamePhase
+	phaseEndsAt time.Time
 
 	round int
 
@@ -160,6 +163,8 @@ func (r *Room) duelMode() bool {
 }
 
 func (r *Room) schedulePhase(after time.Duration, phase GamePhase) {
+	r.log.Printf("Scheduling %s after %s\n", phase, after)
+	r.phaseEndsAt = time.Now().Add(after)
 	r.phaseChangeTimer = time.AfterFunc(after, func() {
 		r.changePhaseChannel <- phase
 	})
@@ -169,13 +174,13 @@ func (r *Room) getEnemy(client *Client) *Client {
 	return r.playersState[client].enemy
 }
 
-func (r *Room) generateClientState(client *Client, gameResult *GameResult, battleStatistics *BattleStatistics) *Message {
+func (r *Room) generateClientState(client *Client) *Message {
 	playerState := r.playersState[client]
 	enemy := r.getEnemy(client)
 
 	var enemyPlayer *Player
-	var enemyUnits []Unit
-	var enemyUnitsPlacement []UnitPlacement
+	var enemyUnits = []Unit{}
+	var enemyUnitsPlacement = []UnitPlacement{}
 
 	if enemy != nil {
 		enemyState := r.playersState[enemy]
@@ -193,9 +198,9 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 		MessageType: MessageTypeStateChange,
 		Payload: &PlayerStatePayload{
 			Phase:               r.phase,
-			PhaseEndsAt:         r.phaseStarted.Add(phaseDurations[r.phase]).Unix(),
+			PhaseEndsAt:         r.phaseEndsAt.Unix(),
 			Round:               r.round,
-			GameResult:          gameResult,
+			GameResult:          playerState.GameResult,
 			Player:              playerState.Player,
 			Enemy:               enemyPlayer,
 			Question:            publicQuestion,
@@ -204,7 +209,7 @@ func (r *Room) generateClientState(client *Client, gameResult *GameResult, battl
 			UnitsPlacement:      playerState.UnitsPlacement,
 			EnemyUnits:          enemyUnits,
 			EnemyUnitsPlacement: enemyUnitsPlacement,
-			BattleStatistics:    battleStatistics,
+			BattleStatistics:    playerState.BattleStatistics,
 		},
 	}
 }
@@ -236,8 +241,10 @@ func (r *Room) startStorePhase() {
 		state.Store = units
 	}
 
+	r.schedulePhase(phaseDurations[GamePhaseStore], GamePhaseBattle)
+
 	for c := range r.playersState {
-		if err := c.SendMessage(r.generateClientState(c, nil, nil)); err != nil {
+		if err := c.SendMessage(r.generateClientState(c)); err != nil {
 			r.statePropagationFail(c, err)
 			if r.duelMode() {
 				return
@@ -245,7 +252,6 @@ func (r *Room) startStorePhase() {
 		}
 	}
 
-	r.schedulePhase(phaseDurations[GamePhaseStore], GamePhaseBattle)
 }
 
 func (r *Room) statePropagationFail(client *Client, err error) {
@@ -257,7 +263,6 @@ func (r *Room) startBattlePhase() {
 	type PlayerPair struct {
 		players  [2]*Client
 		loserIdx int
-		finished bool
 	}
 	var alreadyMatched []*Client
 	var playerPairs []*PlayerPair
@@ -305,9 +310,6 @@ func (r *Room) startBattlePhase() {
 			if i != battleResult.Winner {
 				playerPair.loserIdx = i
 				r.playersState[c].Player.Hp += battleResult.PlayerHpChange
-				if r.playersState[c].Player.Hp <= 0 {
-					playerPair.finished = true
-				}
 			}
 		}
 
@@ -322,33 +324,46 @@ func (r *Room) startBattlePhase() {
 				battleStatistics.PlayerHpChange = battleResult.PlayerHpChange
 			}
 
-			if err := c.SendMessage(r.generateClientState(c, nil, &battleStatistics)); err != nil {
-				r.statePropagationFail(c, err)
-				if r.duelMode() {
-					return
-				}
+			r.playersState[c].BattleStatistics = &battleStatistics
+		}
+	}
+
+	var newClients []*Client
+	for _, client := range r.clients {
+		if r.playersState[client].Player.Hp > 0 {
+			newClients = append(newClients, client)
+		}
+	}
+	r.clients = newClients
+
+	r.schedulePhase(battleDuration, GamePhaseBattleResult)
+
+	for c := range r.playersState {
+		if err := c.SendMessage(r.generateClientState(c)); err != nil {
+			r.statePropagationFail(c, err)
+			if r.duelMode() {
+				return
 			}
 		}
 	}
+}
 
-	// Duel case
-	if len(playerPairs) == 1 {
-		if playerPairs[0].finished {
-			r.schedulePhase(battleDuration, GamePhaseGameEnd)
-		} else {
-			r.schedulePhase(battleDuration, GamePhaseQuestion)
-		}
-		return
+func (r *Room) startBattleResultPhase() {
+	if len(r.clients) > 1 {
+		r.schedulePhase(phaseDurations[GamePhaseBattleResult], GamePhaseQuestion)
+	} else {
+		r.schedulePhase(phaseDurations[GamePhaseBattleResult], GamePhaseGameEnd)
 	}
 
-	// Battle royale case - remove losers
-	for _, playerPair := range playerPairs {
-		if playerPair.finished {
-			loser := playerPair.players[playerPair.loserIdx]
-			r.finishGameForPlayer(loser, true)
+	for c, state := range r.playersState {
+		if err := c.SendMessage(r.generateClientState(c)); err != nil {
+			r.statePropagationFail(c, err)
+			if r.duelMode() {
+				return
+			}
 		}
+		state.BattleStatistics = nil
 	}
-	r.schedulePhase(battleDuration, GamePhaseQuestion)
 }
 
 func (r *Room) finishGameForPlayer(c *Client, sendState bool) {
@@ -362,7 +377,7 @@ func (r *Room) finishGameForPlayer(c *Client, sendState bool) {
 			r.log.Println("Error sending disconnect message message: ", err)
 		}
 
-		if err := enemy.SendMessage(r.generateClientState(enemy, nil, nil)); err != nil {
+		if err := enemy.SendMessage(r.generateClientState(enemy)); err != nil {
 			r.statePropagationFail(enemy, err)
 			if r.duelMode() {
 				return
@@ -391,17 +406,17 @@ func (r *Room) startQuestionPhase() {
 		return
 	}
 
+	r.schedulePhase(phaseDurations[GamePhaseQuestion], GamePhaseStore)
+
 	for c, state := range r.playersState {
 		state.Question = question
-		if err := c.SendMessage(r.generateClientState(c, nil, nil)); err != nil {
+		if err := c.SendMessage(r.generateClientState(c)); err != nil {
 			r.statePropagationFail(c, err)
 			if r.duelMode() {
 				return
 			}
 		}
 	}
-
-	r.schedulePhase(phaseDurations[GamePhaseQuestion], GamePhaseStore)
 }
 
 func (r *Room) startGameEndPhase() {
@@ -418,7 +433,8 @@ func (r *Room) sendGameEndState(c *Client, state *PlayerState) {
 	} else {
 		gameResult = GameResultLoss
 	}
-	if err := c.SendMessage(r.generateClientState(c, &gameResult, nil)); err != nil {
+	state.GameResult = &gameResult
+	if err := c.SendMessage(r.generateClientState(c)); err != nil {
 		r.statePropagationFail(c, err)
 		if r.duelMode() {
 			return
@@ -428,13 +444,25 @@ func (r *Room) sendGameEndState(c *Client, state *PlayerState) {
 
 func (r *Room) handlePhaseChange(phase GamePhase) {
 	r.log.Println("Starting new phase ", phase)
+
+	for client, state := range r.playersState {
+		state.Question = nil
+		state.Store = []Unit{}
+		state.GameResult = nil
+
+		if state.Player.Hp <= 0 {
+			r.finishGameForPlayer(client, true)
+		}
+	}
+
 	r.phase = phase
-	r.phaseStarted = time.Now()
 	switch phase {
 	case GamePhaseStore:
 		r.startStorePhase()
 	case GamePhaseBattle:
 		r.startBattlePhase()
+	case GamePhaseBattleResult:
+		r.startBattleResultPhase()
 	case GamePhaseQuestion:
 		r.startQuestionPhase()
 	case GamePhaseGameEnd:
@@ -474,7 +502,7 @@ func (r *Room) handleBuyUnit(c *Client, order BuyUnitPayload) {
 	state.Store = append(state.Store[:unitIndex], state.Store[unitIndex+1:]...)
 	state.Units = append(state.Units, *unitToBuy)
 
-	if err := c.SendMessage(r.generateClientState(c, nil, nil)); err != nil {
+	if err := c.SendMessage(r.generateClientState(c)); err != nil {
 		r.statePropagationFail(c, err)
 		if r.duelMode() {
 			return
@@ -513,7 +541,7 @@ func (r *Room) handleAnswerQuestion(c *Client, answer AnswerQuestionPayload) {
 
 	state.Question = nil
 
-	if err := c.SendMessage(r.generateClientState(c, nil, nil)); err != nil {
+	if err := c.SendMessage(r.generateClientState(c)); err != nil {
 		r.statePropagationFail(c, err)
 		if r.duelMode() {
 			return
@@ -601,7 +629,7 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 			continue
 		}
 
-		if err := player.SendMessage(r.generateClientState(player, nil, nil)); err != nil {
+		if err := player.SendMessage(r.generateClientState(player)); err != nil {
 			r.statePropagationFail(player, err)
 			if r.duelMode() {
 				return
@@ -643,7 +671,7 @@ func (r *Room) handleUnplaceUnit(client *Client, payload UnplaceUnitPayload) {
 			continue
 		}
 
-		if err := player.SendMessage(r.generateClientState(player, nil, nil)); err != nil {
+		if err := player.SendMessage(r.generateClientState(player)); err != nil {
 			r.statePropagationFail(player, err)
 			if r.duelMode() {
 				return
@@ -705,10 +733,13 @@ func clientInSlice(client *Client, arr []*Client) bool {
 }
 
 func removeClientFromSlice(s []*Client, i int) []*Client {
+	if i == -1 {
+		return s
+	}
 	s[i] = s[len(s)-1]
 	return s[:len(s)-1]
 }
 
 func calculateBattleDuration(battle *PlayerBattleResult) time.Duration {
-	return time.Duration(len(battle.Log)) * logActionTime + roundEndScreenTime
+	return time.Duration(len(battle.Log))*logActionTime + logStaleTime
 }
