@@ -505,6 +505,13 @@ func (r *Room) handleSellUnit(c *Client, payload SellUnitPayload) {
 		return
 	}
 
+	for i, unitPlacement := range state.UnitsPlacement {
+		if unitPlacement.UnitID == payload.ID {
+			state.UnitsPlacement = append(state.UnitsPlacement[:i], state.UnitsPlacement[i+1:]...)
+			break
+		}
+	}
+
 	state.Player.Money += int(math.Ceil(float64(unitToSell.Price) * unitSellPriceMultiplier))
 	state.Units = append(state.Units[:unitIndex], state.Units[unitIndex+1:]...)
 
