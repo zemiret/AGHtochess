@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from queue import PriorityQueue
+import heapq
 from random import randint, uniform
-from typing import Optional, List
+from typing import Optional, List, Tuple
 
 from model.Board import Board
 from model.Token import Token
@@ -18,7 +18,7 @@ class PrioritizedItem:
 class Battle:
     player1: Board
     player2: Board
-    initiative_queue: PriorityQueue
+    initiative_queue: List[PrioritizedItem]
 
     log: List[dict]
     winner: Optional[Board] = None
@@ -27,20 +27,20 @@ class Battle:
         self.player1 = player1
         self.player2 = player2
         self.log = []
-        self.initiative_queue = PriorityQueue()
+        self.initiative_queue = []
         self._initialize_queue()
 
     def _initialize_queue(self):
         for board in self.player1, self.player2:
             for token in board.alive_tokens:
                 entry = PrioritizedItem(-token.unit.attackSpeed, token, board)
-                self.initiative_queue.put(entry)
+                heapq.heappush(self.initiative_queue, entry)
 
     def _get_entry_from_queue(self) -> PrioritizedItem:
-        entry = self.initiative_queue.get()
+        entry = heapq.heappop(self.initiative_queue)
 
         if entry.score == 0:
-            self.initiative_queue.queue.clear()
+            self.initiative_queue.clear()
             self._initialize_queue()
             return self._get_entry_from_queue()
 
@@ -58,9 +58,12 @@ class Battle:
 
             damage = self._resolve_duel(attacking_token, defending_token)
 
-            if defending_token.unit.alive:
-                entry = PrioritizedItem(score + 1, attacking_token, attacking_player)
-                self.initiative_queue.put(entry)
+            if defending_token.unit.dead:
+                self.initiative_queue = [e for e in self.initiative_queue if e.token != defending_token]
+                heapq.heapify(self.initiative_queue)
+
+            entry = PrioritizedItem(score + 1, attacking_token, attacking_player)
+            heapq.heappush(self.initiative_queue, entry)
 
             self.log.append({
                 "action": "kill" if defending_token.unit.dead else "damage",
