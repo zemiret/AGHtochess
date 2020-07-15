@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
 import heapq
 from random import randint, uniform
-from typing import Optional, List, Tuple
+from typing import Optional, List, Tuple, Dict
 
 from model.Board import Board
 from model.Token import Token
@@ -19,6 +19,7 @@ class Battle:
     player1: Board
     player2: Board
     initiative_queue: List[PrioritizedItem]
+    distance_to_opponents: Dict
 
     log: List[dict]
     winner: Optional[Board] = None
@@ -27,8 +28,19 @@ class Battle:
         self.player1 = player1
         self.player2 = player2
         self.log = []
+        self.distance_to_opponents = {}
+        self._calculate_distance_to_opponents()
         self.initiative_queue = []
         self._initialize_queue()
+
+    def _calculate_distance_for_one_player(self, attacker, defender):
+        for token in attacker.tokens:
+            self.distance_to_opponents[token.unit.id] = [(token.distance(enemy_token), enemy_token) for enemy_token in defender.tokens]
+            self.distance_to_opponents[token.unit.id].sort(key=lambda x: x[0])
+
+    def _calculate_distance_to_opponents(self):
+        self._calculate_distance_for_one_player(self.player1, self.player2)
+        self._calculate_distance_for_one_player(self.player2, self.player1)
 
     def _initialize_queue(self):
         for board in self.player1, self.player2:
@@ -46,6 +58,13 @@ class Battle:
 
         return entry
 
+    def _get_nearest_defending_token(self, attacking_token) -> Token:
+        while True:
+            distance, token = self.distance_to_opponents[attacking_token.unit.id][0]
+            if token.unit.alive:
+                return token
+            self.distance_to_opponents[attacking_token.unit.id].pop(0)
+
     def resolve(self) -> None:
         while self.player1.anyone_alive and self.player2.anyone_alive:
             entry = self._get_entry_from_queue()
@@ -54,7 +73,7 @@ class Battle:
             attacking_player = entry.player
 
             defending_player = self.player2 if attacking_player is self.player1 else self.player1
-            defending_token = defending_player.get_random_alive_token()
+            defending_token = self._get_nearest_defending_token(attacking_token)
 
             damage = self._resolve_duel(attacking_token, defending_token)
 
