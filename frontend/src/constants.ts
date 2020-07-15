@@ -1,3 +1,5 @@
+import { QuestionDifficulty } from "./models/game-state.model";
+
 export const MAX_PLAYER_HP = 100;
 export const BOARD_WIDTH = 6;
 export const BOARD_HEIGHT = 8;
@@ -11,3 +13,9 @@ export const STAT_COLORS: { [key: string]: string } = Object.freeze({
   range: "hsla(120, 50%, 50%, 1)",
   criticalChance: "hsla(26, 100%, 50%, 1)",
 });
+
+export const QUESTION_DIFFICULTY_MULTIPLIERS = {
+  [QuestionDifficulty.EASY]: 0.7,
+  [QuestionDifficulty.MEDIUM]: 0.5,
+  [QuestionDifficulty.HARD]: 0.3,
+};
