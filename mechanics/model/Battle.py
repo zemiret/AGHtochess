@@ -38,7 +38,6 @@ class Battle:
 
     def _get_entry_from_queue(self) -> PrioritizedItem:
         entry = self.initiative_queue.get()
-
         if entry.score == 0:
             self.initiative_queue.queue.clear()
             self._initialize_queue()

@@ -23,8 +23,8 @@ def generate_unit(round: int) -> Unit:
                     range=gen(3, 6, 1),
                     attackSpeed=gen(3, 4, 1.1),
                     type="MAGICAL",
-                    price=gen(1, 4) * 100)
-                
+                    price=int(uniform(round, 3 * round)* 100))
+
     def generate_magicial_tank() -> Unit:
         return Unit(attack=gen(15, 22, 1.1),
                     defense=gen(25, 40, 1.1),
@@ -34,7 +34,7 @@ def generate_unit(round: int) -> Unit:
                     range=gen(3, 4, 1),
                     attackSpeed=gen(2, 3, 1.1),
                     type="MAGICAL",
-                    price=gen(1, 4) * 100)
+                    price=int(uniform(round, 3 * round) * 100))
 
     def generate_tank() -> Unit:
         return Unit(attack=gen(10, 20, 1.1),
@@ -45,7 +45,7 @@ def generate_unit(round: int) -> Unit:
                     range=gen(2, 3, 1),
                     attackSpeed=gen(1, 2, 1.1),
                     type="PHYSICAL",
-                    price=gen(1, 4) * 100)
+                    price=int(uniform(round, 3 * round)* 100))
 
     def generate_sniper() -> Unit:
         return Unit(attack=gen(30, 60, 1.1),
@@ -56,7 +56,7 @@ def generate_unit(round: int) -> Unit:
                     range=gen(6, 10, 1),
                     attackSpeed=gen(4, 5, 1.1),
                     type="PHYSICAL",
-                    price=gen(1, 4) * 100)
+                    price=int(uniform(round, 3 * round)* 100))
 
     generate_unit_by_type = {
         'magician': generate_magician,
@@ -73,7 +73,7 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     battle.resolve()
 
     winner_number = 1 if battle.winner is board2 else 0
-    player_hp_change = -10 * len(battle.winner.alive_tokens)
+    player_hp_change = -3 * len(battle.winner.alive_tokens + 1)
     log = battle.log
 
     return winner_number, player_hp_change, log
