@@ -1,62 +1,2214 @@
 [
   {
-    "id": 1,
-    "text": "JS: 2 + 2 = ?",
-    "difficulty": "EASY",
+    "id": 0,
+    "text": "Rozważając pamięć WIRTUALNĄ, następujące stwierdzenie jest prawdziwe:",
     "answers": [
       {
-        "id": 1,
-        "text": "22"
+        "id": 5,
+        "text": "Aktualna wersja każdej strony jest przechowywana w pamięci masowej (np. na dysku)."
+      },
+      {
+        "id": 4,
+        "text": "Dana strona może być w tym samym momencie w pamięci dyskowej i w pamięci operacyjnej."
+      },
+      {
+        "id": 0,
+        "text": "Ramki są przechowywane na dysku."
       },
       {
         "id": 2,
-        "text": "4"
+        "text": "Dana ramka może być jednocześnie na dysku i w pamięci operacyjnej."
+      },
+      {
+        "id": 1,
+        "text": "Ilość stron i ilość ramek musi być zawsze równa."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 1,
+    "text": "Rozważając pamięć WIRTUALNĄ, następujące stwierdzenie jest prawdziwe:",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Może zdarzyć się, że w pamięci operacyjnej (RAM) są załadowane (zajęte) wszystkie ramki."
+      },
+      {
+        "id": 1,
+        "text": "Ilość stron w systemie nie może być większa od ilości ramek."
+      },
+      {
+        "id": 0,
+        "text": "Na danej stronie może być kilka ramek."
       },
       {
         "id": 3,
-        "text": "20"
+        "text": "Ta sama ramka może być załadowana do dwóch różnych stron."
+      },
+      {
+        "id": 2,
+        "text": "Strona może zawierać ramkę lub może być pusta."
       }
     ],
-    "correctAnswer": 2
+    "difficulty": "HARD",
+    "correctAnswer": 4
   },
   {
     "id": 2,
-    "text": "JS: '2' + 2 = ?",
-    "difficulty": "MEDIUM",
+    "text": "Jeśli pamięć WIRTUALNA i pamięć SEGMENTOWANA występują razem i współpracują, to można stwierdzić, że (wybrać poprawną):",
     "answers": [
       {
-        "id": 1,
-        "text": "22"
+        "id": 2,
+        "text": "Dana strona może należeć do kilku segmentów."
       },
       {
-        "id": 2,
-        "text": "4"
+        "id": 1,
+        "text": "Wskazane jest, żeby pamięć segmentowana była podzielona na dużą liczbę ''małych'' segmentów."
+      },
+      {
+        "id": 5,
+        "text": "Tzw. ''zjawisko FRAGMENTACJI pamięci'' nie występuje."
       },
       {
         "id": 3,
-        "text": "20"
+        "text": "Adres wirtualny jest przekształcany na adres segmentowany."
+      },
+      {
+        "id": 4,
+        "text": "Tablica segmentów nie jest potrzebna — zastępuje ją tablica stron."
       }
     ],
-    "correctAnswer": 1
+    "difficulty": "HARD",
+    "correctAnswer": 5
   },
   {
     "id": 3,
-    "text": "JS: '2' + '2' - 2 = ?",
-    "difficulty": "HARD",
+    "text": "Jeśli pamięć WIRTUALNA i pamięć SEGMENTOWANA występują razem i współpracują, to można stwierdzić, że (wybrać poprawną):",
     "answers": [
       {
-        "id": 1,
-        "text": "22"
-      },
-      {
-        "id": 2,
-        "text": "4"
+        "id": 5,
+        "text": "Ilość stron musi być wielokrotnością ilości segmentów."
       },
       {
         "id": 3,
-        "text": "20"
+        "text": "Adres wirtualny jest przekształcany na adres segmentowany."
+      },
+      {
+        "id": 0,
+        "text": "Każda strona ma swoją tablicę segmentów."
+      },
+      {
+        "id": 1,
+        "text": "Wskazane jest, żeby pamięć wirtualna była podzielona na dużą ilość ''małych'' stron."
+      },
+      {
+        "id": 4,
+        "text": "Tablica stron nie jest potrzebna, zastępuje ją tablica segmentów."
       }
     ],
+    "difficulty": "HARD",
+    "correctAnswer": 1
+  },
+  {
+    "id": 4,
+    "text": "Moduł przemieszczalny ''object'', który jest przetwarzany przez program łączący (''linker''), jako swoją część musi zawierać (wybrać poprawną):",
+    "answers": [
+      {
+        "id": 5,
+        "text": "Tablicę stron danego modułu, ale tylko w przypadku gdy występuje pamięć wirtualna."
+      },
+      {
+        "id": 0,
+        "text": "Tablicę symboli danego modułu dostępnych z zewnątrz."
+      },
+      {
+        "id": 2,
+        "text": "Tablicę segmentów, ale tylko w przypadku gdy występuje pamięć segmentowana."
+      },
+      {
+        "id": 3,
+        "text": "Tablicę symboli modułu, który będzie wołany z danego modułu."
+      },
+      {
+        "id": 4,
+        "text": "Listę procesów korzystających z danego modułu."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 0
+  },
+  {
+    "id": 5,
+    "text": "W czasie działania programu łączącego (''linker'') może być realizowana operacja (wybrać poprawną):",
+    "answers": [
+      {
+        "id": 5,
+        "text": "Generacja kodu binarnego nieprzemieszczalnego (absolutnego)."
+      },
+      {
+        "id": 3,
+        "text": "Wypełnianie tablicy ramek pamięci."
+      },
+      {
+        "id": 2,
+        "text": "Wypełnianie tablicy segmentów dostępnych z danego modułu."
+      },
+      {
+        "id": 4,
+        "text": "Dołączanie procedur z bibliotek systemowych."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 6,
+    "text": "Rozważając system operacyjny z pamięcią segmentowaną i proces łączenia (linkowania) dynamicznego można powiedzieć, że (wybrać poprawną stwierdzenie):",
+    "answers": [
+      {
+        "id": 3,
+        "text": "Dostęp do obiektu zewnętrznego jest realizowany za pomocą segmentu łączności (np. L(S, j))."
+      },
+      {
+        "id": 1,
+        "text": "Przetwarzany w tym samym czasie (przyłączany) przez kilka procedur obiekt zewnętrzny nie może być dzielony przez kilka procedur (dla każdej procedury tworzona jest oddzielna kopia tego obiektu)."
+      },
+      {
+        "id": 2,
+        "text": "Dostęp do obiektu lokalnego jest realizowany za pomocą segmentu łączności (np. L(S, j))."
+      },
+      {
+        "id": 5,
+        "text": "Obiekt remanentny nie jest nigdy kasowany (nigdy w czasie działania danego systemu operacyjnego)."
+      },
+      {
+        "id": 4,
+        "text": "Obiekty lokalne i obiekty zewnętrzne związane wywołaniem danej procedury są kasowane przy wyjściu z danej procedury."
+      }
+    ],
+    "difficulty": "HARD",
     "correctAnswer": 3
+  },
+  {
+    "id": 7,
+    "text": "Rozważając system operacyjny z pamięcią segmentowaną i proces łączenia (linkowania) dynamicznego można powiedzieć, że (wybrać poprawną stwierdzenie):",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Obiekt remanentny nie jest nigdy kasowany (nigdy w czasie działania danego systemu operacyjnego)."
+      },
+      {
+        "id": 1,
+        "text": "Dostęp do obiektów lokalnych (i same obiekty lokalne) związany z wywołaniem danej procedury jest kasowany przy wyjściu z tej procedury."
+      },
+      {
+        "id": 2,
+        "text": "Dostęp do obiektu lokalnego jest realizowany za pomocą segmentu łączności (np. L(S, j))."
+      },
+      {
+        "id": 0,
+        "text": "Dostęp do obiektów remanentnych (i same obiekty) związany z wywołaniem danej procedury jest kasowany przy wyjściu z tej procedury."
+      },
+      {
+        "id": 5,
+        "text": "Obiekt remanentny jest przechowywany na stosie w ramce danej procedury, w której był utworzony."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 1
+  },
+  {
+    "id": 8,
+    "text": "Rozważając (tak jak to podano na wykładzie) wywołanie procedury (procedury wołanej) w czasie wykonywania danej procedury (procedury wołającej) można stwierdzić, że (wybrać poprawną odpowiedź):",
+    "answers": [
+      {
+        "id": 0,
+        "text": "Parametry aktualne są umieszczane we wspólnym segmencie łączności tych procedur."
+      },
+      {
+        "id": 5,
+        "text": "Rejestr procesora R3 identyfikujący na stosie ramkę procedury wołającej jest chowany w ramce procedury wołanej."
+      },
+      {
+        "id": 2,
+        "text": "liczba określająca ilość parametrów aktualnych jest umieszczana na stosie w ramce procedury wołanej."
+      },
+      {
+        "id": 4,
+        "text": "Rejestr procesora R0 identyfikujący segment wykonywanej procedury wołającej jest chowany na stosie w ramce procedury wołającej."
+      },
+      {
+        "id": 1,
+        "text": "Parametry aktualne są umieszczane na stosie w ramce procedury wołanej."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 5
+  },
+  {
+    "id": 9,
+    "text": "Rozważając (tak jak to podano na wykładzie) wywołanie procedury (procedury wołanej) w czasie wykonywania danej procedury (procedury wołającej) można stwierdzić, że (wybrać poprawną odpowiedź):",
+    "answers": [
+      {
+        "id": 2,
+        "text": "liczba określająca ilość parametrów aktualnych jest umieszczana na stosie w ramce procedury wołającej."
+      },
+      {
+        "id": 4,
+        "text": "Rejestr procesora R0 identyfikujący segment wykonywanej procedury wołającej jest chowany na stosie w ramce procedury wołającej."
+      },
+      {
+        "id": 5,
+        "text": "Rejestr procesora R3 identyfikujący ramkę procedury wołającej jest chowany w ramce procedury wołającej."
+      },
+      {
+        "id": 0,
+        "text": "Parametry aktualne są umieszczane w segmencie łączności, który łączy te procedury."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 10,
+    "text": "Zaznacz prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "System operacyjny Windows NT ma budowę zgodną z architekturą mikrojądra."
+      },
+      {
+        "id": 4,
+        "text": "Moduł HAL (Hardware Abstraction Layer) w systemie Windows NT ma bezpośredni dostęp do sprzętu i zapewnia warstwie jądra interfejs niezależny od architektury sprzętowej."
+      },
+      {
+        "id": 2,
+        "text": "Jednym z zadań Menadżera Obiektów w Module Wykonawczym systemu Windows jest przechowywanie i zarządzanie obiektami jądra takimi jak obiekty dyspozytora i obiekty sterujące."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 11,
+    "text": "Zaznacz prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 4,
+        "text": "System V Release 4 zawiera mechanizm klas szeregowania, który umożliwia stosowanie różnych algorytmów szeregowania dostępu do procesora dla różnych rodzajów procesów (np. z podziałem czasów lub czasu rzeczywistego)."
+      },
+      {
+        "id": 3,
+        "text": "Strony modułu wykonawczego (egzekutora) w systemie Windows NT nie mogą być usuwane z pamięci operacyjnej do obszaru wymiany."
+      },
+      {
+        "id": 0,
+        "text": "Jądro systemu Linux jest zgodne z architekturą mikrojądra."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 12,
+    "text": "Zaznacz *nieprawdziwe* zdanie:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Moduł Windows Management Instrumentation między innymi umożliwia sterownikom urządzeń publikowanie informacji wydajnościowych oraz konfiguracyjnych."
+      },
+      {
+        "id": 2,
+        "text": "W Systemie V wersji 4 procesy z podziałem czasu i procesy czasu rzeczywistego są szeregowane przy pomocy tego samego algorytmu szeregowania."
+      },
+      {
+        "id": 0,
+        "text": "Moduł jądra w systemie Windows odpowiada za szeregowanie zadań, harmonogram realizacji wątków, obsługę sytuacji wyjątkowych i synchronizację pracy wieloprocesorowej."
+      },
+      {
+        "id": 4,
+        "text": "W jądrze systemu Linux ten sam typ struktury systemowej jest stosowany do reprezentacji zarówno procesów, jak i wątków."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 13,
+    "text": "Zaznacz prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Przełączanie kontekstu między wątkami jądra jest szybkie, ponieważ nie trzeba zmieniać odwzorowań pamięci ani trybu pracy systemu."
+      },
+      {
+        "id": 4,
+        "text": "W planowaniu niewywłaszczeniowym jest możliwe przejście procesu ze stanu Aktywny do stanu Gotowy."
+      },
+      {
+        "id": 0,
+        "text": "Model wielowątkowości 1:N wymaga użycia jednego planisty — planisty procesów systemowych, nie jest potrzebny planista wątków użytkownika."
+      },
+      {
+        "id": 3,
+        "text": "Program to wykonujący się proces."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 1
+  },
+  {
+    "id": 14,
+    "text": "Zaznacz prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Model wielowątkowości 1:1 wymaga użycia dwóch planistów — procesów/wątków systemowych i wątków użytkownika."
+      },
+      {
+        "id": 2,
+        "text": "Jeśli wątki użytkownika nie mają wsparcia systemowego, to przejście jednego z nich do stanu czekania na dostęp do zasobu uniemożliwia wykonywanie innych wątków związanych z tym procesem."
+      },
+      {
+        "id": 3,
+        "text": "Każdy wątek jądra jest związany z odpowiadającym mu procesem lekkim."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 15,
+    "text": "Zaznacz prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Dzięki użyciu procesów lekkich proces działający w systemie wieloprocesorowym może uzyskać rzeczywistą równoległość wykonania, gdyż każdy proces lekki może być uruchamiany na oddzielnym procesorze."
+      },
+      {
+        "id": 1,
+        "text": "W modelu wielowątkowości 1:1 dopuszcza się stworzenie jedynie jednego wątku w ramach procesu, model ten dotyczy jedynie tzw. procesów ciężkich."
+      },
+      {
+        "id": 3,
+        "text": "Przełączanie kontekstu między wątkami jądra jest kosztowne czasowo, gdyż trzeba zmieniać odwzorowania pamięci i dokonywać zmian trybu pracy systemu."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 16,
+    "text": "Zaznacz *nieprawdziwe* zdanie:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Czas oczekiwania procesu to czas, jaki spędza on w kolejce procesów gotowych, oczekując na wykonanie."
+      },
+      {
+        "id": 4,
+        "text": "Algorytm rotacyjny jest przydatny do szeregowania procesów wsadowych, nie powinien być używany dla procesów interakcyjnych."
+      },
+      {
+        "id": 3,
+        "text": "W popularnych systemach operacyjnych (jak Unix lub Windows) stosowany jest powszechnie algorytm wielopoziomowego planowania kolejek ze sprzężeniem zwrotnym, w którym procesy są zaliczane do odpowiednich kolejek na podstawie posiadanych priorytetów."
+      },
+      {
+        "id": 2,
+        "text": "Algorytm wielopoziomowego planowania kolejek ze sprzężeniem zwrotnym zakłada możliwość migracji procesów pomiędzy kolejkami."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 17,
+    "text": "Zaznacz *nieprawdziwe* zdanie:",
+    "answers": [
+      {
+        "id": 0,
+        "text": "Algorytm FCFS nadaje się do szeregowania procesów wsadowych, natomiast nie jest on zalecany do szeregowania procesów interakcyjnych."
+      },
+      {
+        "id": 3,
+        "text": "Taśmy śladów mogą być wykorzystywane do takiego skonfigurowania symulatora systemu planowania, by odpowiadał on zachowaniu rzeczywistego systemu, w którym taśmy śladów były przygotowywane."
+      },
+      {
+        "id": 2,
+        "text": "Algorytm planowania loteryjnego umożliwia uwzględnienie zależności pomiędzy procesami (np. jeden proces czeka, aż inny proces wykona daną akcję)."
+      },
+      {
+        "id": 4,
+        "text": "Planowanie gwarantowane zapewnia, że gotowy do wykonania proces o wyższym priorytecie zawsze wykona się przed procesem o niższym priorytecie."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 18,
+    "text": "Zaznacz *nieprawdziwe* zdanie:",
+    "answers": [
+      {
+        "id": 0,
+        "text": "Jedna z metod przybliżania algorytmu SJF wykorzystuje koncepcję szacowania długości następnej fazy procesora na podstawie poprzednich długości faz procesora (fazy ostatniej oraz miary opisującej średnią długość poprzednich faz, która z większą wagą uwzględnia fazy późniejsze)."
+      },
+      {
+        "id": 4,
+        "text": "Algorytm rotacyjny może być w wersji z wywłaszczeniem lub bez wywłaszczeń."
+      },
+      {
+        "id": 1,
+        "text": "Czas cyklu przetwarzania to czas upływający między nadejściem procesu do systemu i zakończeniem wykonywania się procesu."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 19,
+    "text": "Zaznacz prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Semafor nie nadaje się do zdeterminowania kolejności wykonywanych operacji w grupie współbieżnych procesów."
+      },
+      {
+        "id": 4,
+        "text": "Aby rozwiązanie problemu sekcji krytycznej było rozwiązaniem poprawnym, powinno spełniać warunki wzajemnego wykluczenia, postępu i ograniczonego czekania."
+      },
+      {
+        "id": 3,
+        "text": "Realizacja semafora z aktywnym czekaniem polega na tym, że proces zostaje uśpiony, ale aktywnie oczekuje na obudzenie przez odpowiedni sygnał."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 20,
+    "text": "Zaznacz prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Do zaimplementowania semafora zliczającego można użyć dwa semafory binarne oraz zmienną współdzieloną przez procesy wykorzystujące tak zaimplementowany semafor."
+      },
+      {
+        "id": 2,
+        "text": "Przed wejściem do sekcji krytycznej synchronizowanej przy użyciu semaforów proces powinien zasygnalizować ten fakt, wykonując operację Sygnalizuj(V)."
+      },
+      {
+        "id": 1,
+        "text": "Warunek postępu brzmi: Proces może przebywać w sekcji krytycznej tylko do czasu zgłoszenia zapotrzebowania wejścia przez następny proces."
+      },
+      {
+        "id": 3,
+        "text": "Monitor nie może być użyty do synchronizacji dostępu do sekcji krytycznej."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 21,
+    "text": "Zaznacz prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Przed wejściem do sekcji krytycznej należy wykonać operację semaforową V() a po wyjściu z sekcji krytycznej — operację P()."
+      },
+      {
+        "id": 2,
+        "text": "Zaletą oczekiwania w trybie aktywnego czekania jest możliwość uniknięcia konieczności kosztownego przejścia do trybu uprzywilejowanego (systemowego)."
+      },
+      {
+        "id": 4,
+        "text": "Algorytm rozwiązujący problem sekcji krytycznej dla wielu procesów (algorytm piekarni) wykorzystuje dwie tablice, z których jedna przechowuje numery przydzielona procesom czekającym na wejście do sekcji, a druga informacje, że dany proces został wybrany do wejścia do sekcji krytycznej."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 22,
+    "text": "Wybierz prawdziwe stwierdzenie dotyczące szeregowania wieloprocesorowego:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Przy podejściu zwanym współdzieleniem obciążenia (Load Sharing) dla każdego procesora jest stosowana oddzielna kolejka procesów."
+      },
+      {
+        "id": 3,
+        "text": "Szeregowanie grupowe (Gang scheduling) zakłada, że dąży się, by wątki z tego samego procesu były jednocześnie wykonywane na różnych procesorach."
+      },
+      {
+        "id": 4,
+        "text": "W podejściu zwanym rezerwacją procesorów procesor jest rezerwowany dla danego procesu i tylko wątki wchodzące w jego skład mogą być na nim wykonywane."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 3
+  },
+  {
+    "id": 23,
+    "text": "Wybierz prawdziwe stwierdzenie dotyczące szeregowania wieloprocesorowego:",
+    "answers": [
+      {
+        "id": 0,
+        "text": "Istotną zaletą podejścia zwanego Współdzieleniem Obciążenia (Load Sharing) jest fakt, że wątki wchodzące w skład tego samego procesu jednocześnie uzyskują dostęp do procesora, co zwiększa ciągłość wykonania procesu."
+      },
+      {
+        "id": 4,
+        "text": "Zaletą podejścia Współdzielenie Obciążenia jest, że wywłaszczalne wątki rzadko mogą być wznawiane na tym samym procesorze."
+      },
+      {
+        "id": 3,
+        "text": "Szeregowanie grupowe (Gang Scheduling) jest bardzo korzystne, w przypadku, gdy zachodzą silne związki synchronizacyjne między wątkami w aplikacji."
+      },
+      {
+        "id": 2,
+        "text": "Przy podejściu zwanym Współdzielenie obciążenia (Load Sharing) dla każdego procesora jest stosowana oddzielna kolejka procesów."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 3
+  },
+  {
+    "id": 24,
+    "text": "Zaznacz *nieprawdziwe* zdanie:",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Szeregowanie grupowe polega na tym, że wszystkie wątki wchodzące w skład procesu są wykonywane na jednym wybranym procesorze."
+      },
+      {
+        "id": 1,
+        "text": "Szeregowanie grupowe polega na tym, że wątki tego samego procesu są jednocześnie wykonywane na wielu procesorach."
+      },
+      {
+        "id": 3,
+        "text": "Przy szeregowaniu wątków w środowisku wieloprocesorowym Współdzielenie Obciążenia charakteryzuje się tym, że jest stosowana globalna kolejka gotowych do wykonania wątków."
+      },
+      {
+        "id": 4,
+        "text": "Przy szeregowaniu wątków w środowisku wieloprocesorowym o znacznej liczbie procesorów oraz zastosowaniu podejścia Współdzielenie Obciążenia dostęp do kolejki gotowych wątków może się stać wąskim gardłem rozwiązania."
+      },
+      {
+        "id": 0,
+        "text": "Wątki wchodzące w skład jednego procesu zwykle współpracują, zatem ich równoległe wykonywanie może zwiększać szybkość wykonania procesu."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 25,
+    "text": "Ktore z ponizszych stwierdzen dotyczacych gramatyk atrybutywnych jest prawdziwe? ",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Jesli wszystkie atrybuty w gramatyce atrybutywnej opartej o gramatyke LL(1) zawsze posiadaja reguly przypisane do tych produkcji, w ktorych \"wlasciciele atrybutow\"stanowia lewe strony produkcji, to potrafimy wyliczyc wartosci tych atrybutow rownoczesnie z parsingiem typu top-down wykorzystujac mechanizm drugiego stosu przeznaczonego dla atrybutow oraz mechanizm symboli akcji."
+      },
+      {
+        "id": 1,
+        "text": "Gramatyki atrybutywne wykorzystywane sa do przeprowadzania analizy leksykalnej."
+      },
+      {
+        "id": 5,
+        "text": "Kazda atrybutywna gramatyka zupelna jest dobrze zdefiniowana."
+      },
+      {
+        "id": 3,
+        "text": "Jesli w gramatyce atrybutywnej istnieja nie tylko atrybuty posiadajace reguly przypisane do tych produkcji, w ktorych \"wlasciciele atrybutow\"stanowia lewe strony produkcji, ale takze atrybuty posiadajace reguly przypisane do tych produkcji, w ktorych \"wlasciciele atrybutow\"pojawiaja sie w prawych stronach produkcji, to pod pewnymi warunkami dotyczacymi regul obliczania tych ostatnich atrybutow (tzw. gramatyki L-atrybutywne) mozna wyliczyc wartosci wszystkich atrybutow rownoczesnie z parsingiem typu bottom-up, ale kosztem pewnej modyfikacji bazowej gramatyki bezkontekstowej polegajacej na wprowadzeniu dodatkowych nieterminali i zwiazanych z nimi produkcji pustych."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 3
+  },
+  {
+    "id": 27,
+    "text": "Rozwaza sie dwie gramatyki G1 i G2: \n    G1: \tS -> for id = E to E do S | repeat S until E | id = E\n   \tE -> E + V | V \n    \tV -> id|(E)|id(E)|-V\n    G2: \tS -> for id = E to E do S | repeat S until E | id = E\n    \tE -> E + V | V\n    \tV -> id|(E)|id(E)|-E\nGramatyki poddajemy odpowiednim przeksztalceniom chcac zbudowac na ich podstawie parsery LL(1). Ktore stwierdzenia jest prawdziwe?",
+    "answers": [
+      {
+        "id": 3,
+        "text": "Po przeksztalceniach zadna z gramatyk nie bedzie klasy LL(1)."
+      },
+      {
+        "id": 1,
+        "text": "Po przeksztalceniach tylko gramatyka G1 bedzie klasy LL(1)."
+      },
+      {
+        "id": 0,
+        "text": "Po przeksztalceniach obie gramatyki beda klasy LL(1)."
+      },
+      {
+        "id": 2,
+        "text": "Po przeksztalceniach tylko gramatyka G2 bedzie klasy LL(1)."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 1
+  },
+  {
+    "id": 30,
+    "text": "Wybierz stwierdzenia prawdziwe dla gramatyk atrybutywnych:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Kazda gramatyka L-atrybutywna jest zarazem gramatyka S-atrybutywna."
+      },
+      {
+        "id": 3,
+        "text": "Dla gramatyk L-atrybutywnych opartych o gramatyki LL(1) mozliwe jest obliczanie atrybutow podczas parsingu zstepujacego prowadzonego metoda wykorzystujaca zbior funkcji rekurencyjnych zbudowanych na podstawie tabeli parsera LL(1)."
+      },
+      {
+        "id": 4,
+        "text": "Dla gramatyk L-atrybutywnych opartych o gramatyki LL(1) nie jest mozliwe obliczanie atrybutow podczas parsingu LL(1) prowadzonego metoda nierekurencyjna (automatowa) przy uzyciu dodatkowego stosu atrybutow oraz mechanizmu symboli akcji."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 3
+  },
+  {
+    "id": 31,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe?",
+    "answers": [
+      {
+        "id": 8,
+        "text": "Przy budowaniu tablicy parsera LALR(1) wykorzystywane sa zbiory FOLLOW1 wyznaczane dla symboli nieterminalnych gramatyki."
+      },
+      {
+        "id": 6,
+        "text": "Przy budowaniu tablicy parsera top-down (LL(1)) nie mozemy skorzystac z gramatyki zawierajacej produkcje puste (Eps-produkcje)."
+      },
+      {
+        "id": 1,
+        "text": "Klasa gramatyk, ktore mozna analizowac uzywajact"
+      },
+      {
+        "id": 2,
+        "text": "Parser LL moze wykrywac bledy tak wczesnie, jak to jest mozliwe, podczas przegladania wejscia od lewej do prawej strony."
+      },
+      {
+        "id": 5,
+        "text": "Klasa gramatyk LL(1) jest wlasciwym podzbiorem klasy gramatyk SLR(1)."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 32,
+    "text": "Ktore z ponizszych stwierdzen dotyczacych gramatyk atrybutywnych jest prawdziwe? (kol2-1E-zad4)",
+    "answers": [
+      {
+        "id": 3,
+        "text": "Jesli w gramatyce atrybutywnej istnieja nie tylko atrybuty posiadajace reguly przypisane do tych produkcji, w ktorych \"wlasciciele atrybutow\"stanowia lewe strony produkcji, ale takze atrybuty posiadajace reguly przypisane do tych produkcji, w ktorych \"wlasciciele atrybutow\"pojawiaja sie w prawych stronach produkcji, to pod pewnymi warunkami dotyczacymi regul obliczania tych ostatnich atrybutow (tzw. gramatyki L-atrybutywne) mozna wyliczyc wartosci wszystkich atrybutow rownoczesnie z parsingiem typu top-down, ale kosztem koniecznej modyfikacji bazowej gramatyki bezkontekstowej polegajacej na wprowadzeniu dodatkowych nieterminali oraz produkcji pustych."
+      },
+      {
+        "id": 1,
+        "text": "Gramatyki atrybutywne wykorzystywane sa do przeprowadzania analizy semantycznej i generacji kodu posredniego."
+      },
+      {
+        "id": 5,
+        "text": "Kazda atrybutywna gramatyka zupelna jest dobrze zdefiniowana."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 1
+  },
+  {
+    "id": 33,
+    "text": "Ktore z ponizszych stwierdzen dotyczacych gramatyk atrybutywnych jest prawdziwe (kol2-1G-zad4)",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Jesli wszystkie atrybuty w gramatyce atrybutywnej zawsze posiadaja reguly przypisane do tych produkcji, w ktorych \"wlasciciele atrybutow\"stanowia lewe strony produkcji, to potrafimy wyliczyc wartosci tych atrybutow rownoczesnie z parsingiem typu top-down wykorzystujac mechanizm drugiego stosu przeznaczonego dla atrybutow oraz mechanizm symboli akcji."
+      },
+      {
+        "id": 0,
+        "text": "Gramatyka atrybutywna to system bazujacy na gramatyce bezkontekstowej, w ktorym symbolom gramatyki przypisuje sie atrybuty, a produkcjom reguly wyliczania tych atrybutow"
+      },
+      {
+        "id": 1,
+        "text": "Gramatyki atrybutywne wykorzystywane sa do przeprowadzania analizy leksykalnej"
+      },
+      {
+        "id": 5,
+        "text": "Kazda atrybutywna gramatyka zupelna jest dobrze zdefiniowana."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 0
+  },
+  {
+    "id": 40,
+    "text": "[#1\n16] Ktore z ponizszych stwierdzen jest prawdziwe? (kol2-1E-zad3)",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Jesli budujemy parser bottom-up (typu LR) dla gramatyki niejednoznacznej usuwajac konflikty, to tablica takiego parsera ma rozmiar wiekszy od rozmiaru tablicy parsera bottom-up dla gramatyki jednoznacznej (dla tego samego jezyka) stanowiacej przeksztalcenie gramatyki niejednoznacznej."
+      },
+      {
+        "id": 1,
+        "text": "Istnieja gramatyki, dla ktorych rozmiar tablicy parsera SLR jest identyczny jak rozmiar tablicy parsera LALR."
+      },
+      {
+        "id": 3,
+        "text": "Budujemy parser bottom-up (typu LR) dla gramatyki niejednoznacznej usuwajac konflikty. Mozliwe konflikty w takich parserach, to konflikty typu: shift-shift, shift-reduce, reduce-reduce."
+      },
+      {
+        "id": 0,
+        "text": "Istnieja gramatyki, dla ktorych rozmiar tablicy parsera LR jest mniejszy niz rozmiar tablicy parsera LALR."
+      },
+      {
+        "id": 4,
+        "text": "Usuwanie konfliktow w parserach top-down w celu zbudowania deterministycznego parsera dla gramatyki niejednoznacznej nie jest praktykowane, gdyz na ogol nie jestesmy w stanie uwzglednic dodatkowych wymagan stawianych drzewom rozbioru bedacym wynikiem parsingu przez definicje jezyka programowania."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 1
+  },
+  {
+    "id": 41,
+    "text": "Rozwaza sie dwie gramatyki G1 i G2: (kolos2-1G-zad1)\nS -> while E do S | do S while E | id=E\nE -> E+V | V\nV -> id | (E) | id(E) | -E\n---\nS -> while E do S | do S while E | id=E\nE -> E+V | V\nV -> id | (E) | id(E) | -V\nGramatyki poddajemy odpowiednim przeksztalceniom chcac  zbudowac na ich podstawie parsery LL(1). Ktore stwierdzenia jest prawdziwe?",
+    "answers": [
+      {
+        "id": 0,
+        "text": "Po przeksztalceniach obie gramatyki beda klasy LL(1)"
+      },
+      {
+        "id": 2,
+        "text": "Po przeksztalceniach tylko gramatyka G2 bedzie klasy LL(1)"
+      },
+      {
+        "id": 1,
+        "text": "Po przeksztalceniach tylko gramatyka G1 bedzie klasy LL(1)"
+      },
+      {
+        "id": 3,
+        "text": "Po przeksztalceniach zadna z gramatyk nie bedzie klasy LL(1)"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 42,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe? (kol2-1G-zad3)",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Jesli budujemy parser bottom-up dla gramatyki niejednoznacznej usuwajac konflikty, to tablica takiego parsera ma rozmiar nie wiekszy od rozmiaru tablicy parsera bottom-up gramatyki jednoznacznej (dla tego samego jezyka) stanowiacej przeksztalcenie gramatyki niejednoznacznej. "
+      },
+      {
+        "id": 4,
+        "text": "Usuwanie konfliktow w parserach bottom-up (typu LR) w celu zbudowania deterministycznego parsera dla gramatyki niejednoznacznej nie jest praktykowane, gdyz na ogol nie jestesmy w stanie uwzglednic dodatkowych wymagan stawianych drzewom rozbioru bedacym wynikiem parsingu przez definicje jezyka programowania"
+      },
+      {
+        "id": 1,
+        "text": "Istnieja gramatyki, dla ktorych rozmiar tablicy parsera SLR jest mniejszy niz rozmiar tablicy parsera LALR"
+      },
+      {
+        "id": 3,
+        "text": "Budujemy parser bottom-up (typu LR) dla gramatyki niejednoznacznej usuwajac konflikty. Mozliwe konflikty w takich parserach, to konflikty typu: shift-reduce, reduce-reduce."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 3
+  },
+  {
+    "id": 43,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe?  (kol1-1A-zad1) ",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Uzycie tego samego identyfikatora kategorii w dwoch roznych definicjach typu wyliczeniowego to przyklad bledu semantycznego."
+      },
+      {
+        "id": 3,
+        "text": "Niedozwolony skok do wnetrza ciala petli programowej nalezy do kategorii bledow syntaktycznych."
+      },
+      {
+        "id": 7,
+        "text": "Przykladem bledu leksykalnego jest niewykorzystanie ani jednego komentarza w tekscie zrodlowym programu."
+      },
+      {
+        "id": 5,
+        "text": "Uzycie instrukcji break lub continue poza cialem petli lub instrukcji break poza cialem instrukcji wyboru to przyklad bledu syntaktycznego."
+      },
+      {
+        "id": 8,
+        "text": "Wykorzystanie “petli nieskonczonej” to przyklad bledu semantycznego w programie komputerowym."
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 4
+  },
+  {
+    "id": 44,
+    "text": "Eliminujac niejednoznacznosc gramatyki poprzez konwersje do innej gramatyki musimy zachowac: (kol1-1A-zad3)",
+    "answers": [
+      {
+        "id": 3,
+        "text": "wyprowadzenia oryginalnej gramatyki dla kazdego jednoznacznego slowa wejsciowego"
+      },
+      {
+        "id": 4,
+        "text": "wyprowadzenie oryginalnej gramatyki dla kazdego slowa wejsciowego"
+      },
+      {
+        "id": 1,
+        "text": "drzewo wyprowadzenia oryginalnej gramatyki  dla kazdego jednoznacznego slowa wejsciowego"
+      },
+      {
+        "id": 2,
+        "text": "zbior slow generowanych przez oryginalna gramatyke"
+      },
+      {
+        "id": 0,
+        "text": "pewne drzewo wyprowadzenia oryginalnej gramatyki dla kazdego slowa wejsciowego"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 2
+  },
+  {
+    "id": 49,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe?  (kol1-1B-zad1) ",
+    "answers": [
+      {
+        "id": 8,
+        "text": "Wykorzystanie “petli nieskonczonej” to przyklad bledu semantycznego w programie komputerowym."
+      },
+      {
+        "id": 2,
+        "text": "Bledem syntaktycznym w programie komputerowym jest uzycie w wyrazeniu niezadeklarowanego wczesniej identyfikatora."
+      },
+      {
+        "id": 7,
+        "text": "Przykladem bledu leksykalnego jest niewykorzystanie ani jednego komentarza w tekscie zrodlowym programu."
+      },
+      {
+        "id": 4,
+        "text": "Uzycie tego samego identyfikatora kategorii w dwoch roznych definicjach typu wyliczeniowego to przyklad bledu syntaktycznego."
+      },
+      {
+        "id": 0,
+        "text": "Przykladem bledu leksykalnego w programie komputerowym jest uzycie niedozwolonego znaku w identyfikatorze."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 0
+  },
+  {
+    "id": 57,
+    "text": "Dana jest gramatyka uzupelniona (kol1-1B-zad5) \n\tE’ -> E\n\tE -> E - V\n\tE -> V\n\tV -> a ( E )\n\tV -> a\noraz jej tablica parsera typu LR: (...)\nPrefiksami zywotnymi sa wyrazenia:",
+    "answers": [
+      {
+        "id": 6,
+        "text": "-Va"
+      },
+      {
+        "id": 9,
+        "text": "a(V)"
+      },
+      {
+        "id": 2,
+        "text": "E-E"
+      },
+      {
+        "id": 0,
+        "text": "E"
+      },
+      {
+        "id": 7,
+        "text": "a-a"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 0
+  },
+  {
+    "id": 58,
+    "text": "Wybierz stwierdzenia prawdziwe dla gramatyk atrybutywnych: (kol2-1B-zad3)",
+    "answers": [
+      {
+        "id": 6,
+        "text": "Translacja bottom-up dla gramatyk L-atrybutywnych opartych o gramatyki LL(1) (a takze o niektore gramatyki LR(1) niebedace gramatykami LL(1)) moze byc prowadzona rownolegle z parsingiem. Gramatyka wymaga jednak wczesniejszych modyfikacji polegajacych na wprowadzeniu dodatkowych nieterminali i zwiazanych z nimi produkcji pustych. Obliczanie atrybutow nastepuje bezposrednio przed redukcjami w zmodyfikowanej gramatyce."
+      },
+      {
+        "id": 0,
+        "text": "Gramatyka atrybutywna jest gramatyka typu S, gdy kazdy syntetyzowany atrybut symbolu wystepujacego w prawej stronie produkcji zalezy tylko od atrybutow symboli pojawiajacych sie z lewej strony tego symbolu w prawej stronie produkcji oraz dziedziczonych atrybutow symbolu wystepujacego w lewej stronie produkcji."
+      },
+      {
+        "id": 3,
+        "text": "Dla gramatyk L-atrybutywnych opartych o gramatyki LL(1) nie jest mozliwe obliczanie atrybutow podczas parsingu LL(1) prowadzonego metoda predykcyjna (automatowa) przy uzyciu dodatkowego stosu atrybutow."
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 6
+  },
+  {
+    "id": 59,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe? (kol2-1B-zad4)",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Jezeli dana gramatyka jest zarowno gramatyka typu SLR(1), jak i LALR(1), to tablica parsera konstruowana metoda LALR(1) dla tej gramatyki ma wiekszy rozmiar od tablicy budowanej metoda SLR(1) dla tej samej gramatyki."
+      },
+      {
+        "id": 5,
+        "text": "Klasa gramatyk SLR(1) jest wlasciwym nadzbiorem klasy gramatyk LL(1)."
+      },
+      {
+        "id": 6,
+        "text": "Przy budowaniu tablicy parsera top-down (LL(1)) wykorzystywane sa zbiory FIRST1 i FOLLOW1 wyznaczane dla symboli nieterminalnych gramatyki."
+      },
+      {
+        "id": 0,
+        "text": "Kazda gramatyka LR(1) jest rownoczesnie gramatyka SLR(1)."
+      },
+      {
+        "id": 8,
+        "text": "Przy budowaniu tablicy parsera top-down (LL(1)), a takze przy budowaniu tablicy parsera bottom-up (LR(1)) nie mozemy skorzystac z gramatyki zawierajacej produkcje puste (Eps-Prod)."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 6
+  },
+  {
+    "id": 74,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe?(kol1-1E-zad1)",
+    "answers": [
+      {
+        "id": 1,
+        "text": "bledem syntaktycznym w programie komputerowym jest opuszczenie nawiasu zamykajacego, jesli wczesniej uzyto nawiasu otwierajacego."
+      },
+      {
+        "id": 0,
+        "text": "Przykladem bledu syntaktycznego w programie komputerowym jest uzycie niedozwolonego znaku w identyfikatorze."
+      },
+      {
+        "id": 7,
+        "text": "Przykladem bledu leksykalnego jest niewykorzystanie ani jednego komentarza w tekscie zrodlowym programu."
+      },
+      {
+        "id": 8,
+        "text": "Wykorzystanie “petli nieskonczonej” to przyklad bledu semantycznego w programie komputerowym."
+      },
+      {
+        "id": 4,
+        "text": "Uzycie tego samego identyfikatora kategorii w dwoch roznych definicjach typu wyliczeniowego to przyklad bledu syntaktycznego."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 1
+  },
+  {
+    "id": 76,
+    "text": "Wybierz prawdziwe stwierdzenia:(kol1-1E-zad3)",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Dla kazdej gramatyki jednoznacznej mozna skonstruowac deterministyczny parser LR(1) lub LL(k)"
+      },
+      {
+        "id": 6,
+        "text": "Jednoznaczna gramatyka posiadajaca lewostronna rekurencje moze byc gramatyka LL(k) dla pewnego ‘k’."
+      },
+      {
+        "id": 2,
+        "text": "Dla kazdego bezkontekstowego jezyka zdeterminowanego istnieje gramatyka LR(1)"
+      },
+      {
+        "id": 0,
+        "text": "Tworzenie parsera jest sensowna procedura tylko w odniesieniu do gramatyki jednoznacznej, nie ma sensu konstruowanie parsera dla gramatyki niejednoznacznej."
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 2
+  },
+  {
+    "id": 82,
+    "text": "Ktore z powyzszych stwierdzen jest prawdziwe?(kol1-1F-zad1)",
+    "answers": [
+      {
+        "id": 8,
+        "text": "Wykorzystanie “petli nieskonczonej” to przyklad bledu semantycznego w programie komputerowym."
+      },
+      {
+        "id": 1,
+        "text": "Bledem syntaktycznym w programie komputerowym jest opuszczenie nawiasu zamykajacego, jesli wczesniej uzyto nawiasu otwierajacego."
+      },
+      {
+        "id": 5,
+        "text": "Uzycie instrukcji ‘break’ lub ‘continue’ poza cialem petli lub instrukcji ‘break’ poza cialem instrukcji wyboru to przyklad bledu syntaktycznego."
+      },
+      {
+        "id": 7,
+        "text": "Przykladem bledu leksykalnego jest niewykorzystanie ani jednego komentarza w tekscie zrodlowym programu."
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 1
+  },
+  {
+    "id": 93,
+    "text": "\tba   baac   abc   aa   bbaac   c   ca   bac   cbb\n\t5     5         3       1    5            4   2    5      4",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Specyfikacja skanera jest redundantna, tzn mozna usunac pewna regule nie zmieniajac zachowania skanera na zadnym slowie."
+      },
+      {
+        "id": 1,
+        "text": "Kazde niepuste slowo nad alfabetem E=(a,b,c) moze zostac wedlug powyzszej specyfikacji skanera podzielone na tokeny."
+      },
+      {
+        "id": 0,
+        "text": "Slowa ‘babcabcaabbaacccabaccbb’ nie da sie podzielic na tokeny wedlug powyzszej specyfikacji."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 0
+  },
+  {
+    "id": 94,
+    "text": "Wybierz stwierdzenia prawdziwe dla gramatyk atrybutywnych: (kol2-1H-zad3)",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Kazda gramatyka L-atrybutywna jest zarazem gramatyka S-atrybutywna."
+      },
+      {
+        "id": 2,
+        "text": "Gramatyki L-atrybutywne bazujace na gramatykach LL(1) umozliwiaja bez zadnych przeksztalcen bazowej gramatyki bezkontekstowej obliczanie atrybutow rownolegle z parsingiem bottom-up."
+      },
+      {
+        "id": 0,
+        "text": "Gramatyka atrybutywna jest gramatyka typu L, gdy kazdy dziedziczony atrybut pewnego symbolu wystepujacego w prawej stronie produkcji zalezy tylko od atrybutow symboli pojawiajacych sie z lewej strony tego symbolu w prawej stronie produkcji oraz dziedziczonych atrybutow symbolu wystepujacego w lewej stronie produkcji."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 0
+  },
+  {
+    "id": 95,
+    "text": "kcjami w zmodyfikowanej gramatyce.\nKtore z ponizszych stwierdzen jest prawdziwe? (kol2-1H-zad4)",
+    "answers": [
+      {
+        "id": 7,
+        "text": "Przy budowaniu tablicy parsera top-down LL(1) wykorzystywane sa zbiory FIRST1 i FOLLOW1 wyznaczane dla symboli nieterminalnych gramatyki."
+      },
+      {
+        "id": 5,
+        "text": "Klasa gramatyk LL(1) jest wlasciwym nadzbiorem klasy gramatyk SLR(1)."
+      },
+      {
+        "id": 6,
+        "text": "Przy budowaniu tablicy parsera top-down (LL(1)), a takze przy budowaniu tablicy parsera bottom-up (LR(1)) nie mozemy skorzystac z gramatyki zawierajacej produkcje puste (Eps-produkcje)."
+      },
+      {
+        "id": 4,
+        "text": "Jezeli dana gramatyka jest zarowno gramatyka typu SLR(1), jak i LALR(1), to tablica parsera konstruowana metoda LALR(1) dla tej gramatyki ma rozmiar wiekszy, niz tablica budowana metoda SLR(1) dla tej samej gramatyki."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 7
+  },
+  {
+    "id": 101,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe?",
+    "answers": [
+      {
+        "id": 3,
+        "text": "Budujemy parser bottom-up (typu LR) dla gramatyki niejednoznacznej usuwajac konflikty. Mozliwe konflikty w takich parserach to konflikty typu: shift-reduce, reduce-reduce"
+      },
+      {
+        "id": 4,
+        "text": "Usuwanie konfliktow w parserach bottom-up (typu LR) w celu zbudowania deterministycznego parsera dla gramatyki niejednoznacznej nie jest praktykowane, gdyz na ogol nie jestesmy w stanie uwzglednic dodatkowych wymagan stawianych drzewom rozbioru bedacym wynikiem parsingu przez definicje jezyka programowania"
+      },
+      {
+        "id": 2,
+        "text": "Jesli budujemy parser bottom-up dla gramatyki niejednoznacznej usuwajac konflikty, to tablica takiego parsera ma rozmiar nie wiekszy od rozmiaru tablicy parsera bottom-up dla gramatyki jednoznacznej (dla tego samego jezyka) stanowiacej przeksztalcenie gramatyki niejednoznacznej"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 3
+  },
+  {
+    "id": 102,
+    "text": "Dla optymalizacji kodu posredniego metoda analizy przeplywu prawdziwe sa nastepujace stwierdzenia:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Wierzcholkami grafu obliczen sa bloki podstawowe"
+      },
+      {
+        "id": 0,
+        "text": "Kazdy blok podstawowy jest pojedyncza instrukcja kodu trojadresowego, rozna od instrukcji skoku, wywolania podprogramu lub powrotu z podprogramu"
+      },
+      {
+        "id": 3,
+        "text": "Graf obliczen jest to acykliczny graf skierowany, tworzony na podstawie trojadresowego kodu posredniego"
+      },
+      {
+        "id": 4,
+        "text": "Glowna role w tworzeniu struktury grafu obliczen poprzez przeksztalcanie strumienia instrukcji trojadresowych, tworzacych kod posredni, pelnia instrukcje skokow, wywolania podprogramu lub powrotu z podprogramu"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 1
+  },
+  {
+    "id": 103,
+    "text": "Wskaz zdanie prawdziwe, dotyczace LR(1):",
+    "answers": [
+      {
+        "id": 0,
+        "text": "na prawo od osnowy tylko terminale"
+      },
+      {
+        "id": 1,
+        "text": "parser shift-reduce potrafi rozpoznac osnowe znajac zawartosc czesci stosu bez wierzcholka"
+      },
+      {
+        "id": 3,
+        "text": "algorytm konstrukcji parsera LR(1) nie stworzy tablicy jesli znajdzie stan, w ktorym dla danego symbolu wejsciowego nie ma przejscia"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 0
+  },
+  {
+    "id": 105,
+    "text": "Problem dostepnych wyrazen",
+    "answers": [
+      {
+        "id": 3,
+        "text": "w tyl"
+      },
+      {
+        "id": 2,
+        "text": "w przod"
+      },
+      {
+        "id": 1,
+        "text": "jest analiza przeplywu any-path"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 107,
+    "text": "Prawdziwe zdanie:",
+    "answers": [
+      {
+        "id": 2,
+        "text": "gramatyka atrybutywna dobrze okreslona jest zupelna"
+      },
+      {
+        "id": 0,
+        "text": "robienie parsera ma sens tylko dla gramatyk jednoznacznych"
+      },
+      {
+        "id": 3,
+        "text": "gramatyka zupelna dobrze okreslona jest gramatyka atrybutywna"
+      },
+      {
+        "id": 1,
+        "text": "kazda gramatyka jednoznaczna ma parser LR(1)"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 2
+  },
+  {
+    "id": 110,
+    "text": "Po co badamy osiagalnosc definicji",
+    "answers": [
+      {
+        "id": 3,
+        "text": "Przy eliminacji kopiowania"
+      },
+      {
+        "id": 0,
+        "text": "przy tworzeniu DU"
+      },
+      {
+        "id": 4,
+        "text": "Do wykrywania zmiennych indukowanych, redukcji mocy, eliminacji zmiennych indukowanych"
+      },
+      {
+        "id": 2,
+        "text": "Przy eliminacji wspolnych podwyrazen"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 4
+  },
+  {
+    "id": 112,
+    "text": "Informacja o zywych zmiennych jest uzywana:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "do stworzenia grafu przeplywu"
+      },
+      {
+        "id": 3,
+        "text": "do optymalizacji \"przez szparke\"(ang. peephole)"
+      },
+      {
+        "id": 0,
+        "text": "aby wyeliminowac instrukcje w czasie transformacji grafu DAG"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 0
+  },
+  {
+    "id": 113,
+    "text": "Problem dostepnosci instrukcji kopiowania",
+    "answers": [
+      {
+        "id": 1,
+        "text": "jest problemem przeplywu danych any-path oraz do przodu"
+      },
+      {
+        "id": 3,
+        "text": "jest problemem przeplywu danych any-path oraz wstecz"
+      },
+      {
+        "id": 5,
+        "text": "algorytm redukcji mocy zastosowany do zmiennych indukowanych wprowadza instrukcje kopiowania do transformowanego kodu"
+      },
+      {
+        "id": 2,
+        "text": "jest problemem przeplywu danych all-path oraz wstecz"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 5
+  },
+  {
+    "id": 114,
+    "text": "Problem definicji osiagajacych to",
+    "answers": [
+      {
+        "id": 2,
+        "text": "problem typu \"any-path\"z propagacja \"wstecz\""
+      },
+      {
+        "id": 4,
+        "text": "problem w ktorym dla kazdego bloku definicje osiagajace mozna zapisac w postaci wektora binarnego"
+      },
+      {
+        "id": 1,
+        "text": "problem typu \"all-path\"z propagacja \"do przodu\""
+      },
+      {
+        "id": 5,
+        "text": "taki, ze aby definicja bylo osiagalna w punkcie p, to musi byc osiagalna we wszystkich poprzednich wezlach"
+      },
+      {
+        "id": 0,
+        "text": "problem typu \"all-path\"z propagacja \"wstecz\""
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 4
+  },
+  {
+    "id": 115,
+    "text": "Problem zmiennych zywych:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "all-path i wstecz"
+      },
+      {
+        "id": 4,
+        "text": "zbiory zmiennych zywych moga byc reprezentowane przez wektory bitowe"
+      },
+      {
+        "id": 5,
+        "text": "zmienna jest zywa w p, jesli jest zdefiniowana we wszystkich sciezkach zaczynajacych sie w p"
+      },
+      {
+        "id": 2,
+        "text": "any-path i do przodu"
+      },
+      {
+        "id": 0,
+        "text": "all-path i do przodu"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 117,
+    "text": "Pytanie o bisona. Odpowiedzi w stylu:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "generuje parser ktorego akcje odpowiadaja prawostronnemu wyprowadzeniu"
+      },
+      {
+        "id": 5,
+        "text": "pobiera AST jako wejscie"
+      },
+      {
+        "id": 4,
+        "text": "pobiera wyrazenie regularne jako wejscie"
+      },
+      {
+        "id": 0,
+        "text": "stosuje algorytm Thompsona"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 1
+  },
+  {
+    "id": 118,
+    "text": "Eliminujac niejednoznacznosc gramatyki poprzez konwersje do innej zachowujemy:",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Zbior slow generowanych przez oryginalna gramatyke"
+      },
+      {
+        "id": 3,
+        "text": "Wyprowadzenie oryginalnej gramatyki dla kazdego slowa wejsciowego"
+      },
+      {
+        "id": 0,
+        "text": "Drzewo wyprowadzen dla kazdego slowa wejsciowego oryginalnej gramatyki"
+      },
+      {
+        "id": 1,
+        "text": "Drzewo wyprowadzen dla kazdego jednoznacznego slowa oryginalnej gramatyki"
+      },
+      {
+        "id": 2,
+        "text": "Wyprowadzenie oryginalnej gramatyki dla kazdego jednoznacznego slowa"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 4
+  },
+  {
+    "id": 119,
+    "text": "Ktore z ponizszych twierdzen sa **prawdziwe** dla gramatyk LL(1): ( merge z #18, #20 - prawie identyczne)",
+    "answers": [
+      {
+        "id": 5,
+        "text": "Gramatyka z lewostronna rekursja nie moze byc LL(1),"
+      },
+      {
+        "id": 4,
+        "text": "Nie zawiera symboli bezuzytecznych,"
+      },
+      {
+        "id": 6,
+        "text": "Nie moze zawierac epsilon-produkcji,"
+      },
+      {
+        "id": 2,
+        "text": "Nie moze nie byc prawidlowa,"
+      },
+      {
+        "id": 0,
+        "text": "Nie moze byc rekurencyjna,"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 5
+  },
+  {
+    "id": 120,
+    "text": "Zaznacz stwierdzenia nieprawdziwe:",
+    "answers": [
+      {
+        "id": 3,
+        "text": "pojecie wzorca powiazane jest ze zbiorem regul, czyli leksemow, ktore tworza gramatyke bezkontekstowa..."
+      },
+      {
+        "id": 0,
+        "text": "zastosowanie skanera, na ktorego mozemy zrzucic na przyklad usuwanie komentarzy lub pustego kodu, przyspiesza prace parsera, ktory wykonywalby te akcje mniej efektywnie"
+      },
+      {
+        "id": 2,
+        "text": "podciag symboli wejsciowych nazywany leksemem jest dopasowywany do wzorca symbolu leksykalnego (tokenu)"
+      },
+      {
+        "id": 1,
+        "text": "skaner moze pracowac na okreslonym typie platformy i ciagow do rozpoznania do ktorych jest przystosowany, a parser na innej platformie"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 3
+  },
+  {
+    "id": 121,
+    "text": "Zaznacz stwierdzenia nieprawdziwe:",
+    "answers": [
+      {
+        "id": 2,
+        "text": "redefinicja zmiennej dla innego typu w danym zakresie jest bledem semantycznym"
+      },
+      {
+        "id": 1,
+        "text": "niedomkniecie otwartego nawiasu jest bledem syntaktycznym"
+      },
+      {
+        "id": 3,
+        "text": "zabroniony skok do wnetrza petli jest bledem semantycznym"
+      },
+      {
+        "id": 0,
+        "text": "brak komentarzy w kodzie jest bledem syntaktycznym"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 0
+  },
+  {
+    "id": 122,
+    "text": "Ktore z ponizszych stwierdzen sa nieprawdziwe? ( merge z #47)",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Dwoma zasadniczymi metodami parsingu sa metoda top-down polegajaca na budowaniu drzewa rozbioru syntaktycznego poprzez odtworzenie wywodu lewostronnego poczynajac od korzenia drzewa (symbolu poczatkowego gramatyki) oraz metoda bottom-up polegajaca na budowaniu drzewa rozbioru syntaktycznego poprzez odtworzenie wyprowadzania prawostronnego poczynajac od lisci drzewa (analizowanego ciagu tokenow)."
+      },
+      {
+        "id": 0,
+        "text": "Projektant skanera wykorzystuje glownie mechanizmy teoretyczne zwiazane z automatami skonczonymi oraz gramatykami i wyrazeniami regularnymi."
+      },
+      {
+        "id": 4,
+        "text": "Podstawowymi zadaniami analizy syntaktycznej jest m. in. sprawdzanie zgodnosci typow skladnikow poszczegolnych konstrukcji jezykowych, sprawdzanie unikalnosci etykiet i innych elementow jezyka, kontrola poprawnosci przekazywania sterowania w programie itd."
+      },
+      {
+        "id": 5,
+        "text": "generowanie kodu ostatecznego (docelowego) jest silnie zalezne od platformy systemowo-sprzetowej, na ktorej ma dzialac program bedacy wynikiem tlumaczenia"
+      },
+      {
+        "id": 1,
+        "text": "Parser dokonuje rozbioru wejsciowego ciagu tokenow w oparciu o gramatyke bezkontekstowa opisujaca skladnie jezyka zrodlowego, budujac drzewo rozbioru syntaktycznego."
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 4
+  },
+  {
+    "id": 125,
+    "text": "Mamy kawalek kodu w C:\n    int A[2];\n    int k;\n    foo(int x, int y, int z)\n    {\n   \t z = 0;\n   \t y = 1;\n   \t A[k] = 7;\n   \t x++;\n    }\n    main()\n    {\n   \t A[0] = 2;\n   \t A[1] = 4;\n   \t k = 1;\n   \t foo(A[1], A[k], k);\n   \t cout<<A[0]<<A[1]<<k;\n    }\nCo zostanie wyswietlone, jesli parametry sa przekazywane przez wartosc:",
+    "answers": [
+      {
+        "id": 3,
+        "text": "250"
+      },
+      {
+        "id": 4,
+        "text": "750"
+      },
+      {
+        "id": 1,
+        "text": "720"
+      },
+      {
+        "id": 0,
+        "text": "271"
+      },
+      {
+        "id": 2,
+        "text": "210"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 0
+  },
+  {
+    "id": 126,
+    "text": "Mamy kawalek kodu w C:\n    int A[2];\n    int k;\n    foo(int x, int y, int z)\n    {\n   \t z = 0;\n   \t y = 1;\n   \t A[k] = 7;\n   \t x++;\n    }\n    main()\n    {\n   \t A[0] = 2;\n   \t A[1] = 4;\n   \t k = 1;\n   \t foo(A[1], A[k], k);\n   \t cout<<A[0]<<A[1]<<k;\n    }\nCo zostanie wyswietlone jesli parametry sa przekazywane przez referencje:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "720"
+      },
+      {
+        "id": 3,
+        "text": "250"
+      },
+      {
+        "id": 4,
+        "text": "750"
+      },
+      {
+        "id": 2,
+        "text": "210"
+      },
+      {
+        "id": 0,
+        "text": "271"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 1
+  },
+  {
+    "id": 127,
+    "text": "Mamy kawalek kodu w C:\n    int A[2];\n    int k;\n    foo(int x, int y, int z)\n    {\n   \t z = 0;\n   \t y = 1;\n   \t A[k] = 7;\n   \t x++;\n    }\n    main()\n    {\n   \t A[0] = 2;\n   \t A[1] = 4;\n   \t k = 1;\n   \t foo(A[1], A[k], k);\n   \t cout<<A[0]<<A[1]<<k;\n    }\nCo zostanie wyswietlone jesli parametry sa przekazywane przez nazwe:",
+    "answers": [
+      {
+        "id": 3,
+        "text": "250"
+      },
+      {
+        "id": 2,
+        "text": "210"
+      },
+      {
+        "id": 0,
+        "text": "271"
+      },
+      {
+        "id": 4,
+        "text": "750"
+      },
+      {
+        "id": 1,
+        "text": "720"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 128,
+    "text": "Mamy kawalek kodu w C:\n    int A[2];\n    int k;\n    foo(int x, int y, int z)\n    {\n   \t z = 0;\n   \t y = 1;\n   \t A[k] = 7;\n   \t x++;\n    }\n    main()\n    {\n   \t A[0] = 2;\n   \t A[1] = 4;\n   \t k = 1;\n   \t foo(A[1], A[k], k);\n   \t cout<<A[0]<<A[1]<<k;\n    }\nCo zostanie wyswietlone jesli parametry sa przekazywane przez copy/restore:",
+    "answers": [
+      {
+        "id": 1,
+        "text": "720"
+      },
+      {
+        "id": 0,
+        "text": "271"
+      },
+      {
+        "id": 4,
+        "text": "750"
+      },
+      {
+        "id": 3,
+        "text": "250"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 3
+  },
+  {
+    "id": 129,
+    "text": "Mamy wyrazenie regularne `([A-Z] [a-z]+)*`. Ktore z ponizszych slow zostalo przez nie wygenerowane:",
+    "answers": [
+      {
+        "id": 0,
+        "text": "xyz"
+      },
+      {
+        "id": 2,
+        "text": "XYz"
+      },
+      {
+        "id": 3,
+        "text": "xYz"
+      },
+      {
+        "id": 1,
+        "text": "XyZ"
+      },
+      {
+        "id": 4,
+        "text": "zadne"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 4
+  },
+  {
+    "id": 130,
+    "text": "Mamy dwie gramatyki G1 i G2:\n    G1: S -> for id = E to E do S | repeat S until E | id = E\n    E -> E + V | V\n    V -> id|(E)|id(E)|-V\n    G2: S -> for id = E to E do S | repeat S until E | id = E\n    E -> E + V | V\n    V -> id|(E)|id(E)|-E\nPo przeksztalceniach:",
+    "answers": [
+      {
+        "id": 3,
+        "text": "Gramatyka G1 nie bedzie LL(1) a gramatyka G2 tez nie"
+      },
+      {
+        "id": 1,
+        "text": "Gramatyka G2 bedzie LL(1), a gramatyka G1 nie"
+      },
+      {
+        "id": 0,
+        "text": "Gramatyka G1 bedzie LL(1), a gramatyka G2 nie"
+      },
+      {
+        "id": 2,
+        "text": "Gramatyka G1 bedzie LL(1), a gramatyka G2 tez"
+      },
+      {
+        "id": 4,
+        "text": "zadne z powyzszych"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 0
+  },
+  {
+    "id": 131,
+    "text": "Podana jakas gramatyka: (SLR(1)):\n    E' -> E\n    E -> (E)\n    E -> a(E)\n    E -> a\nI prefiksami aktywnymi sa:",
+    "answers": [
+      {
+        "id": 2,
+        "text": "(("
+      },
+      {
+        "id": 6,
+        "text": "()"
+      },
+      {
+        "id": 1,
+        "text": "EE"
+      },
+      {
+        "id": 5,
+        "text": "a)"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 2
+  },
+  {
+    "id": 132,
+    "text": "Dana jest gramatyka G\n    S'-> S\n    S -> -S\n    S -> L\n    L -> a(S)\n    L -> a\noraz podana jest tablica parsera SLR(1) (wyobraz ja sobie :P) do tej gramatyki. Wskazac aktywne prefiksy:",
+    "answers": [
+      {
+        "id": 3,
+        "text": "a(("
+      },
+      {
+        "id": 4,
+        "text": "a(a"
+      },
+      {
+        "id": 2,
+        "text": "-Sa"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 4
+  },
+  {
+    "id": 133,
+    "text": "Mamy gramatyki G1, G2 i G3:\n    G1: S -> for id = E to E do S | repeat S until E | id = E\n    E -> E + V | V\n    V -> id|(E)|id(E)|-V\n    G2: S -> for id = E to E do S | repeat S until E | id = E\n    E -> E + V | V\n    V -> id|(E)|id(E)|-E\n    G3: S -> U | M\n    M -> if E then M else M | id = E\n    U -> if E then M else U | if E then S\n    E -> E + V | V\n    V -> id | (E) | id(E) | -V\nPo przeksztalceniach ktora gramatyka bedzie LL(1):",
+    "answers": [
+      {
+        "id": 1,
+        "text": "G2 i G3"
+      },
+      {
+        "id": 2,
+        "text": "G1, G2, G3"
+      },
+      {
+        "id": 3,
+        "text": "Jakas kolejna kombinacja."
+      },
+      {
+        "id": 0,
+        "text": "G2"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 3
+  },
+  {
+    "id": 134,
+    "text": "Oto dana byla gramatyka:\n    E' -> E\n    E -> E-V\n    E -> V\n    V -> a(E)\n    V -> a\nDo niej tablica parsera SLR(1). Prefiksami aktywnymi sa:",
+    "answers": [
+      {
+        "id": 6,
+        "text": "-a"
+      },
+      {
+        "id": 3,
+        "text": "a(E"
+      },
+      {
+        "id": 5,
+        "text": "-Va"
+      },
+      {
+        "id": 1,
+        "text": "EE"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 3
+  },
+  {
+    "id": 136,
+    "text": "Ktore z ponizszych stwierdzen dotyczacych parserow sa nieprawdziwe?",
+    "answers": [
+      {
+        "id": 3,
+        "text": "Istnieja gramatyki bezkontekstowe, w oparciu o ktore nie mozna zbudowac parsera top-down przy rownoczesnej mozliwosci zbudowania w oparciu o nie parsera bottom-up"
+      },
+      {
+        "id": 5,
+        "text": "W oparciu o gramatyke z e-produkcjami nie mozna zbudowac parsera typu top-down."
+      },
+      {
+        "id": 2,
+        "text": "Celem projektowania parsera jest zbudowanie deterministycznego automatu ze stosem w oparciu o dana gramatyke bezkontekstowa"
+      },
+      {
+        "id": 1,
+        "text": "Zadaniem analizatora syntaktycznego jest sprawdzanie poprawnosci skladniowej i tworzenie drzewa rozbioru dla analizowanego ciagu tokenow"
+      },
+      {
+        "id": 0,
+        "text": "Parser jest rodzajem deterministycznego automatu ze stosem"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 5
+  },
+  {
+    "id": 137,
+    "text": "Ktore z ponizszych stwierdzen sa nieprawdziwe?",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Analiza syntaktyczna bazuje na metodach opartych o gramatyki atrybutywne i definicje kierowane skladnia lub schematy tlumaczenia"
+      },
+      {
+        "id": 3,
+        "text": "Podstawowymi zadaniami analizy semantycznej jest m. in. sprawdzanie zgodnosci typow skladnikow poszczegolnych konstrukcji jezykowych, sprawdzanie unikalnosci etykiet i innych elementow jezyka, kontrola poprawnosci przekazywania sterowania w programie itd."
+      },
+      {
+        "id": 1,
+        "text": "Parser dokonuje rozbioru wejsciowego ciagu tokenow w oparciu o gramatyke bezkontekstowa opisujaca skladnie jezyka zrodlowego, budujac drzewo rozbioru syntaktycznego"
+      },
+      {
+        "id": 0,
+        "text": "Projektant skanera wykorzystuje glownie mechanizmy teoretyczne zwiazane z automatami skonczonymi oraz gramatykami i wyrazeniami regularnymi"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 139,
+    "text": "Glownym zadaniem parsera jest",
+    "answers": [
+      {
+        "id": 3,
+        "text": "Generacja kodu docelowego i optymalizacja przydzialu zasobow, glownie zwiazanych z procesorem i pamiecia zewnetrzna"
+      },
+      {
+        "id": 1,
+        "text": "Wykonywanie analizy syntaktycznej - sprawdzanie poprawnosci skladniowej i stworzenie drzewa rozbioru dla analizowanego ciagu tokenow"
+      },
+      {
+        "id": 2,
+        "text": "Wykonywanie analizy semantycznej - np. sprawdzanie zgodnosci typow skladnikow poszczegolnych konstrukcji jezykowych, sprawdzanie unikalnosci etykiet i innych elementow jezyka, kontrola poprawnosci przekazywania sterowania w programie itd."
+      },
+      {
+        "id": 4,
+        "text": "Wykonywanie analizy leksykalnej - sprawdzanie poprawnosci"
+      },
+      {
+        "id": 0,
+        "text": "Optymalizacja tzw. kodu posredniego"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 1
+  },
+  {
+    "id": 140,
+    "text": "Glownym zadaniem skanera jest:",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Wykonywanie analizy leksykalnej, sprawdzanie poprawnosci elementarnych skladnikow tlumaczonego tekstu i przeksztalcanie ich na tokeny."
+      },
+      {
+        "id": 3,
+        "text": "Generacja kodu docelowego i optymalizacja przydzialu zasobow, glownie zwiazanych z procesorem i pamiecia wewnetrzna."
+      },
+      {
+        "id": 0,
+        "text": "Optymalizacja tzw. kodu posredniego."
+      },
+      {
+        "id": 2,
+        "text": "Wykonywanie analizy syntaktycznej, sprawdzanie poprawnosci skladniowej i tworzenie drzewa rozbioru dla analizowanego ciagu tokenow."
+      },
+      {
+        "id": 1,
+        "text": "Wykonywanie analizy semantycznej, np. sprawdzanie zgodnosci typow skladnikow poszczegolnych konstrukcji jezykowych, sprawdzanie unikalnosci etykiet i innych elementow jezyka, kontrola poprawnosci przekazywania sterowania w programie. itd."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 4
+  },
+  {
+    "id": 143,
+    "text": "Wybierz zdanie nieprawdziwe",
+    "answers": [
+      {
+        "id": 1,
+        "text": "wykorzystanie tego samego identyfikatora dla nazwania kategorii w definicji typu wyliczeniowego jest bledem semantycznym"
+      },
+      {
+        "id": 2,
+        "text": "nie napisanie nawiasu zamykajacego po wczesniejszym jego otwarciu jest bledem leksykalnym"
+      },
+      {
+        "id": 0,
+        "text": "przypisanie pod nie zdefiniowana wczesniej zmienna jest bledem semantycznym"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 2
+  },
+  {
+    "id": 146,
+    "text": "Dana jest gramatyka LR(1)",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Kazda prawostronnie wyprowadzalna forma zdaniowa ma dokladnie jedna fraze prosta, bedaca osnowa"
+      },
+      {
+        "id": 3,
+        "text": "Algorytm konstrukcji tablicy parsera LR(1) nie stworzy tablicy, jesli znajdzie stan, w ktorym dla danego symbolu wejsciowego nie ma przejscia"
+      },
+      {
+        "id": 1,
+        "text": "Parser typu *shift-reduce* potrafi w kazdym swoim kroku rozpoznac osnowe znajac tylko zawartosc czesci stosu wlaczajac wierzcholek"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 2
+  },
+  {
+    "id": 147,
+    "text": "Ktore z ponizszych stwierdzen sa **nieprawdziwe**?",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Dwoma zasadniczymi metodami parsingu sa: metoda top-down polegajaca na budowaniu drzewa rozbioru syntaktycznego poprzez odtwarzanie wyprowadzenia lewostronnego poczynajac od korzenia drzewa (symbolu poczatkowego gramatyki) oraz metoda bottom-up polegajaca na budowaniu drzewa rozbioru syntaktycznego poprzez odtwarzanie wyprowadzenia prawostronnego poczynajac od lisci drzewa (analizowanego ciagu tokenow)"
+      },
+      {
+        "id": 1,
+        "text": "Parser dokonuje rozbioru wejsciowego ciagu tokenow w oparciu o gramatyke bezkontekstowa opisujaca skladnie jezyka zrodlowego, budujac drzewo rozbioru syntaktycznego"
+      },
+      {
+        "id": 4,
+        "text": "Analiza semantyczna bazuje na metodach opartych o gramatyki atrybutywne i definicje kierowane skladnia"
+      },
+      {
+        "id": 3,
+        "text": "Podstawowymi zadaniami analizy syntaktycznej jest m. in. sprawdzanie zgodnosci typow skladnikow poszczegolnych konstrukcji jezykowych, sprawdzanie unikalnosci etykiet i innych elementow jezyka, kontrola poprawnosci przekazywania sterowania w programie itd."
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 3
+  },
+  {
+    "id": 148,
+    "text": "Ktore z ponizszych stwierdzen **nie jest prawdziwe**?",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Bledem leksykalnym w programie komputerowym jest opuszczenie nawiasu zamykajacego, jesli wczesniej uzyto nawiasu otwierajacego"
+      },
+      {
+        "id": 0,
+        "text": "Przykladem bledu leksykalnego w programie komputerowym jest uzycie niedozwolonego znaku w identyfikatorze"
+      },
+      {
+        "id": 4,
+        "text": "Uzycie tego samego identyfikatora kategorii w dwoch roznych definicjach typu wyliczeniowego to przyklad bledu semantycznego"
+      },
+      {
+        "id": 2,
+        "text": "Bledem semantycznym w programie komputerowym jest uzycie w wyrazeniu niezadeklarowanego wczesniej identyfikatora"
+      },
+      {
+        "id": 3,
+        "text": "Niedozwolony skok do wnetrza ciala petli programowej nalezy do grupy bledow semantycznych"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 1
+  },
+  {
+    "id": 149,
+    "text": "Ktore z ponizszych stwierdzen dotyczacych gramatyk atrybutywnych jest prawdziwe?",
+    "answers": [
+      {
+        "id": 1,
+        "text": "Gramatyki atrybutywne wykorzystywane sa do przeprowadzania analizy leksykalnej"
+      },
+      {
+        "id": 0,
+        "text": "Gramatyka atrybutywna to system bazujacy na gramatyce bezkontekstowej, w ktorym symbolom gramatyki przypisuje sie atrybuty, a produkcjom reguly wyliczania tych atrybutow"
+      },
+      {
+        "id": 2,
+        "text": "Jesli wszystkie atrybuty w gramatyce atrybutywnej zawsze posiadaja reguly przypisane do tych produkcji, w ktorych \"wlasciciele atrybutow\"stanowia lewe strony produkcji, to potrafimy wyliczyc wartosci tych atrybutow rownoczesnie z parsingiem typu top-down wykorzystujac mechanizm drugiego stosu obslugiwanego synchronicznie z zasadniczym stosem parsera"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 0
+  },
+  {
+    "id": 150,
+    "text": "Ktore sposrod ponizszych transformacji optymalizujacych kod posredni moga byc wykonane metoda optymalizacji przez szparke?",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Reorganizacja kodu zawierajacego skoki poprzez zmiane usytuowania instrukcji skokow, w celu zmniejszenia liczby skokow realizowanych w czasie wykonania programu"
+      },
+      {
+        "id": 1,
+        "text": "Eliminacja wspolnych podwyrazen"
+      },
+      {
+        "id": 5,
+        "text": "Przemieszczanie kodu niezmienniczego poza cialo petli"
+      },
+      {
+        "id": 3,
+        "text": "Eliminacja martwego kodu"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 4
+  },
+  {
+    "id": 151,
+    "text": "Ktore z ponizszych stwierdzen sa **prawdziwe**?",
+    "answers": [
+      {
+        "id": 4,
+        "text": "Przy budowaniu tablicy parsera top-down (LL(1)), a takze przy budowaniu tablicy parsera bottom-up (LR(1)) nie mozemy skorzystac z gramatyki zawierajacej produkcje puste (e-produkcje)."
+      },
+      {
+        "id": 5,
+        "text": "Przy budowaniu tablicy parsera SLR(1) wykorzystywane sa zbiory ^^FOLLOW_1^^ wyznaczane dla symboli nieterminalnych gramatyki."
+      },
+      {
+        "id": 1,
+        "text": "Automat ze stosem realizujacy parsing top-down (LL) wykorzystuje mechanizm stanow (takze do akceptacji wejscia)."
+      },
+      {
+        "id": 0,
+        "text": "Automat ze stosem realizujacy parsing bottom-up (LR) akceptuje przez pusty stos i nie uzywa mechanizmu stanow."
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 5
+  },
+  {
+    "id": 152,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe?",
+    "answers": [
+      {
+        "id": 0,
+        "text": "Istnieja gramatyki, dla ktorych rozmiar tablicy parsera LR jest identyczny jak rozmiar tablicy parsera LALR"
+      },
+      {
+        "id": 2,
+        "text": "Jesli budujemy parser bottom-up dla gramatyki niejednoznacznej usuwajac konflikty, to tablica takiego parsera ma rozmiar wiekszy od rozmiaru tablicy parsera bottom-up dla gramatyki jednoznacznej (dla tego samego jezyka) stanowiacej przeksztalcenie gramatyki niejednoznacznej"
+      },
+      {
+        "id": 3,
+        "text": "Budujemy parser bottom-up (typu LR) dla gramatyki niejednoznacznej usuwajac konflikty. Mozliwe konflikty w takich parserach to konflikty typu: shift-shift, shift-reduce"
+      },
+      {
+        "id": 1,
+        "text": "Istnieja gramatyki, dla ktorych rozmiar tablicy parsera SLR jest mniejszy niz rozmiar tablicy parsera LALR"
+      },
+      {
+        "id": 4,
+        "text": "Usuwanie konfliktow w parserach top-down w celu zbudowania deterministycznego parsera dla gramatyki niejednoznacznej nie jest praktykowane, gdyz na  ogol nie jestesmy w stanie uwzglednic dodatkowych wymagan stawianych drzewom rozbioru bedacym wynikiem parsingu przez definicje jezyka programowania"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 0
+  },
+  {
+    "id": 153,
+    "text": "Ktore z ponizszych stwierdzen dotyczacych parserow sa nieprawdziwe?",
+    "answers": [
+      {
+        "id": 4,
+        "text": "W oparciu o gramatyke z lewostronna rekursja nie mozna zbudowac parsera typu top-down."
+      },
+      {
+        "id": 0,
+        "text": "Parser jest rodzajem deterministycznego automatu ze stosem"
+      },
+      {
+        "id": 3,
+        "text": "Istnieja gramatyki bezkontekstowe, w oparciu o ktore nie mozna zbudowac parsera bottom-up przy rownoczesnej mozliwosci zbudowania w oparciu o nie parsera top-down"
+      },
+      {
+        "id": 1,
+        "text": "Zadaniem analizatora syntaktycznego jest sprawdzanie poprawnosci skladniowej i tworzenie drzewa rozbioru dla analizowanego ciagu tokenow"
+      },
+      {
+        "id": 2,
+        "text": "Celem projektowania parsera jest zbudowanie deterministycznego automatu ze stosem w oparciu o dana gramatyke bezkontekstowa"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 3
+  },
+  {
+    "id": 154,
+    "text": "Ktore sposrod ponizszych transformacji optymalizujacych kod posredni moga byc wykonane z wykorzystaniem metody analizy przeplywu?",
+    "answers": [
+      {
+        "id": 5,
+        "text": "Eliminacja zbednych skokow"
+      },
+      {
+        "id": 0,
+        "text": "Reorganizacja kody zawierajacego skoki poprzez zmiane usytuowania instrukcji skokow, w celu zmniejszenia liczby skokow realizowanych w czasie wykonania programu."
+      },
+      {
+        "id": 3,
+        "text": "Optymalizacja przebiegu sterowania poprzez zmniejszenie liczby skokow realizowanych w trakcie wykonania programu (wykrywanie i modyfikacja sytuacji typu \"skok do skoku\")"
+      },
+      {
+        "id": 1,
+        "text": "Eliminacja wspolnych podwyrazen"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 1
+  },
+  {
+    "id": 156,
+    "text": "Ktore zdanie jest prawdziwe:",
+    "answers": [
+      {
+        "id": 2,
+        "text": "Kolejnoscia, w jakiej tworzone sa wierzcholki drzewa wyprowadzenia w analizie zstepujacej (top-down) jest postorder"
+      },
+      {
+        "id": 4,
+        "text": "Kolejnoscia, w jakiej tworzone sa wierzcholki drzewa wyprowadzenia w analizie wstepujacej (bottom-up) jest postorder"
+      },
+      {
+        "id": 5,
+        "text": "Zadne z powyzszych"
+      },
+      {
+        "id": 3,
+        "text": "Kolejnoscia, w jakiej tworzone sa wierzcholki drzewa wyprowadzenia w analizie wstepujacej (bottom-up) jest preorder"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 4
+  },
+  {
+    "id": 157,
+    "text": "Ktore zdanie jest prawdziwe?",
+    "answers": [
+      {
+        "id": 5,
+        "text": "Przy budowie tablicy parsera SLR(1) nie mozemy skorzystac z gramatyki zawierajacej puste produkcje (e-produkcje)"
+      },
+      {
+        "id": 4,
+        "text": "Automat ze stosem, realizujacy parsing bottom-up (LR) nie moze byc oparty o gramatyke wymagajaca lewostronnej faktoryzacji"
+      },
+      {
+        "id": 3,
+        "text": "Przy budowie tablicy parsera bottom-up (LR) wykorzystywane sa zbiory sytuacji dopuszczalnych dla przedrostkow zywotnych"
+      },
+      {
+        "id": 6,
+        "text": "Przy budowie tablicy parsera SLR(1) nie mozemy skorzystac z gramatyki wymagajacej usuniecia lewostronnej rekursji"
+      }
+    ],
+    "difficulty": "HARD",
+    "correctAnswer": 3
+  },
+  {
+    "id": 158,
+    "text": "Zaznacz poprawną odpowiedź:",
+    "answers": [
+      {
+        "id": 0,
+        "text": "Mechanizm gramatyk atrybutywnych jest wykorzystywany przy projektowaniu analizy semantycznej"
+      },
+      {
+        "id": 1,
+        "text": "Atrybut nazywamy syntezowanym, gdy regula go definiujaca jest przypisana do takiej produkcji gramatyki bezkontekstowej,w ktorej symbol bedacy \"wlascicielem\"tego atrybutu wystepuje z prawej strony produkcji"
+      },
+      {
+        "id": 2,
+        "text": "Atrybut moze by rownoczesnie syntezowany i dziedziczony"
+      },
+      {
+        "id": 4,
+        "text": "W zupelnej gramatyce atrybutywnej jezeli symbol stojacy po lewej stronie produkcji posiada atrybut dziedziczony to do tej produkcji musi byc przypisana regula definiujace ten atrybut"
+      }
+    ],
+    "difficulty": "MEDIUM",
+    "correctAnswer": 0
+  },
+  {
+    "id": 159,
+    "text": "Ktore z ponizszych stwierdzen jest prawdziwe?",
+    "answers": [
+      {
+        "id": 0,
+        "text": "Istnieja gramatyki, dla ktorych rozmiar tablicy parsera LR jest mniejszy niz rozmiar tablicy parsera LALR"
+      },
+      {
+        "id": 4,
+        "text": "Usuwanie konfliktow w parserach top-down w celu zbudowania deterministycznego parsera dla gramatyki niejednoznacznej nie jest praktykowane, gdyz na ogol nie jestesmy w stanie uwzglednic dodatkowych wymagan stawianych drzewom rozbioru bedacym wynikiem parsingu przez definicje jezyka programowania"
+      },
+      {
+        "id": 2,
+        "text": "Jesli budujemy parser LR dla gramatyki niejednoznacznej usuwajac konflikty, to tablica takiego parsera ma rozmiar wiekszy od rozmiaru tablicy parsera dla gramatyki jednoznacznej (dla tego samego jezyka) stanowiacej przeksztalcenie gramatyki niejednoznacznej"
+      },
+      {
+        "id": 1,
+        "text": "Istnieja (takie) gramatyki, dla ktorych rozmiar tablicy parsera SLR jest identyczny jak rozmiar tablicy parsera LALR"
+      },
+      {
+        "id": 3,
+        "text": "Budujemy parser bottom-up (typu LR) dla gramatyki niejednoznacznej usuwajac konflikty. Mozliwe konflikty w takich parserach to konflikty typu: shift-shift, shift-reduce"
+      }
+    ],
+    "difficulty": "EASY",
+    "correctAnswer": 1
   }
 ]

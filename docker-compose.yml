@@ -4,6 +4,7 @@ services:
     build: ./communicator
     environment:
       - GAME_MECHANICS_HOST=http://mechanics
+      - QUESTIONS_FILE=assets/questions_local.json
     ports:
       - "4000:4000"
   mechanics:

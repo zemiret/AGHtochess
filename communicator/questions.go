@@ -8,10 +8,6 @@ import (
 	"math/rand"
 )
 
-const (
-	QuestionsFile = "assets/questions.json"
-)
-
 type QuestionList []*Question
 type LoadedQuestions map[QuestionDifficulty]QuestionList
 
@@ -32,18 +28,18 @@ func GetQuestion(difficulty QuestionDifficulty) (*Question, error) {
 	}, nil
 }
 
-func LoadQuestions() (LoadedQuestions, error) {
+func LoadQuestions(file string) (LoadedQuestions, error) {
 	questions := make(LoadedQuestions)
 	var questionList QuestionList
 
-	content, err := ioutil.ReadFile(QuestionsFile)
+	content, err := ioutil.ReadFile(file)
 	if err != nil {
-		log.Printf("Error loading file: %s", QuestionsFile)
+		log.Printf("Error loading file: %s", file)
 		return nil, err
 	}
 
 	if err != json.Unmarshal(content, &questionList) {
-		log.Printf("Error unmarshalling file: %s", QuestionsFile)
+		log.Printf("Error unmarshalling file: %s", file)
 		return nil, err
 	}
 
