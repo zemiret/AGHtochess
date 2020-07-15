@@ -11,9 +11,9 @@ import (
 
 const (
 	initialHp        = 100
-	initialMoney     = 300
-	baseWinnerReward = 160
-	baseDrawReward   = 110
+	initialMoney     = 200
+	baseWinnerReward = 80
+	baseDrawReward   = 70
 	baseLoserReward  = 60
 	boardWidth       = 6
 	boardHeight      = 8
@@ -25,7 +25,7 @@ const (
 
 var phaseDurations = map[GamePhase]time.Duration{
 	GamePhaseWaiting:      1 * time.Second,
-	GamePhaseStore:        30 * time.Second,
+	GamePhaseStore:        60 * time.Second,
 	GamePhaseBattle:       1 * time.Second,
 	GamePhaseBattleResult: 4 * time.Second,
 	GamePhaseGameEnd:      1 * time.Second,
