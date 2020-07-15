@@ -30,6 +30,7 @@ const BoardUnit: React.FunctionComponent<Props> = ({ unit, draggable }: Props) =
             size={58}
             unit={unit}
             shouldDisappear={true}
+            showPrice={true}
           />
         </Col>
       </Row>

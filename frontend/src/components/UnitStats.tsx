@@ -5,9 +5,10 @@ import { STAT_COLORS } from "../constants";
 
 interface Props {
   unit: UnitType;
+  showPrice?: boolean;
 }
 
-const UnitStats: React.FunctionComponent<Props> = ({ unit }: Props) => {
+const UnitStats: React.FunctionComponent<Props> = ({ unit, showPrice }: Props) => {
   return (
     <>
       <div className="unit-caption">
@@ -29,6 +30,7 @@ const UnitStats: React.FunctionComponent<Props> = ({ unit }: Props) => {
         color={STAT_COLORS.criticalChance}
       />
       <UnitStat text="Attack speed" value={unit.attackSpeed} />
+      {showPrice && <UnitStat text="Price" value={unit.price + " €cts"} />}
     </>
   );
 };
