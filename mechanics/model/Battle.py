@@ -60,6 +60,7 @@ class Battle:
 
             if defending_token.unit.dead:
                 self.initiative_queue = [e for e in self.initiative_queue if e.token != defending_token]
+                heapq.heapify(self.initiative_queue)
 
             entry = PrioritizedItem(score + 1, attacking_token, attacking_player)
             heapq.heappush(self.initiative_queue, entry)
