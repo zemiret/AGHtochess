@@ -11,8 +11,8 @@ import (
 
 const (
 	initialHp      = 100
-	initialMoney   = 5000
-	questionReward = 100
+	initialMoney   = 500
+	questionReward = 300
 	boardWidth     = 6
 	boardHeight    = 8
 
