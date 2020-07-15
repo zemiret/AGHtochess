@@ -1,7 +1,6 @@
 from dataclasses import dataclass, field
-from typing import List, Sequence, Generator, Iterator, Tuple
 from random import choice
-from datetime import datetime
+from typing import List
 
 from model.Token import Token
 from model.Unit import Unit
@@ -25,5 +24,6 @@ class Board:
     def anyone_alive(self) -> bool:
         return any(token.unit.alive for token in self.tokens)
 
-    def get_random_alive_token(self) -> Token:
-        return choice([token for token in self.tokens if token.unit.alive])
+    @property
+    def alive_tokens(self) -> List[Token]:
+        return [token for token in self.tokens if token.unit.alive]

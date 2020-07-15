@@ -17,6 +17,13 @@ export interface Unit {
   price: number;
 }
 
+export interface StoreUnit {
+  unit: Unit;
+  questions: {
+    [questionDifficulty: string]: Question;
+  };
+}
+
 export interface UnitPlacement {
   unitId: string;
   x: number;
@@ -24,7 +31,7 @@ export interface UnitPlacement {
 }
 
 export interface BattleStatistics {
-  result: "WIN" | "LOSS";
+  result: GameResult;
   playerHpChange: number;
   log: Array<BattleAction>;
 }
@@ -45,13 +52,14 @@ export interface Question {
   id: number;
   text: string;
   answers: Answer[];
+  difficulty: string;
 }
 
 export interface CommonGameState {
   phaseEndsAt: number;
   round: number;
   player: PlayerInfo;
-  enemy: PlayerInfo;
+  enemy?: PlayerInfo;
   units: Unit[];
   enemyUnits: Unit[];
   unitsPlacement: UnitPlacement[];
@@ -60,17 +68,17 @@ export interface CommonGameState {
 
 export interface StoreGameState extends CommonGameState {
   phase: "STORE";
-  store: Unit[];
+  store: StoreUnit[];
 }
 
 export interface BattleGameState extends CommonGameState {
   phase: "BATTLE";
-  battleStatistics: BattleStatistics;
+  battleStatistics?: BattleStatistics;
 }
 
-export interface QuestionGameState extends CommonGameState {
-  phase: "QUESTION";
-  question: Question;
+export interface BattleResultGameState extends CommonGameState {
+  phase: "BATTLE_RESULT";
+  battleStatistics?: BattleStatistics;
 }
 
 export interface GameEndGameState extends CommonGameState {
@@ -78,8 +86,32 @@ export interface GameEndGameState extends CommonGameState {
   gameResult: "WIN" | "LOSS";
 }
 
+export enum GameType {
+  DUEL = "DUEL",
+  ROYALE = "ROYALE",
+}
+
+export enum QuestionDifficulty {
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
+}
+
+export interface WebsocketOptions {
+  username: string;
+  gameType: string;
+}
+
+export interface BuyUnitWithDiscountPayload {
+  id: string;
+  questionDifficulty: QuestionDifficulty;
+  answerId: number;
+}
+
+export type GameResult = "WIN" | "LOSS" | "DRAW";
+
 export type GameState =
   | StoreGameState
   | BattleGameState
-  | QuestionGameState
+  | BattleResultGameState
   | GameEndGameState;

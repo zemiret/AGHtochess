@@ -1,8 +1,9 @@
-import { GameState, BattleGameState } from "../models/game-state.model";
+import { GameState, QuestionDifficulty } from "../models/game-state.model";
+import { DamageUnit } from "../models/damage-unit.model";
 import { Dispatch } from "../store";
 import React from "react";
 import Store from "./Store";
-import { buyUnit } from "../store/actions";
+import { buyUnit, buyUnitWithDiscount, damageUnit } from "../store/actions";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import BattleLog from "./BattleLog";
@@ -18,18 +19,42 @@ const GamePhaseSpecificSidebar: React.FunctionComponent<Props> = ({
 }: Props) => {
   switch (gameState.phase) {
     case "STORE":
-      return <Store {...gameState} buyUnit={(id: string) => dispatch(buyUnit(id))} />;
-    case "BATTLE":
-      const battleGameState = gameState as BattleGameState;
       return (
-        <BattleLog
-          log={battleGameState.battleStatistics.log}
-          units={gameState.units}
-          enemyUnits={gameState.enemyUnits}
+        <Store
+          {...gameState}
+          playerMoney={gameState.player.money}
+          buyUnit={(id: string) => dispatch(buyUnit(id))}
+          buyUnitWithDiscount={(
+            id: string,
+            questionDifficulty: QuestionDifficulty,
+            answerId: number,
+          ) =>
+            dispatch(
+              buyUnitWithDiscount({
+                id,
+                questionDifficulty,
+                answerId,
+              }),
+            )
+          }
         />
       );
+    case "BATTLE":
+    case "BATTLE_RESULT":
+      return (
+        <>
+          {gameState.battleStatistics?.log && (
+            <BattleLog
+              log={gameState.battleStatistics?.log}
+              units={gameState.units}
+              enemyUnits={gameState.enemyUnits}
+              damageUnit={(command: DamageUnit) => dispatch(damageUnit(command))}
+            />
+          )}
+        </>
+      );
     default:
-      return <p></p>;
+      return null;
   }
 };
 

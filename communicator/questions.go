@@ -12,15 +12,17 @@ const (
 	QuestionsFile = "assets/questions.json"
 )
 
-type Questions []*Question
+type QuestionList []*Question
+type LoadedQuestions map[QuestionDifficulty]QuestionList
 
-var questions Questions
+var questions LoadedQuestions
 
-func GetQuestion() (*Question, error) {
+func GetQuestion(difficulty QuestionDifficulty) (*Question, error) {
 	if questions == nil {
 		return nil, errors.New("questions not loaded")
 	}
-	question := questions[rand.Intn(len(questions))]
+	questionList := questions[difficulty]
+	question := questionList[rand.Intn(len(questionList))]
 	answers := make([]Answer, len(question.Answers))
 	copy(answers, question.Answers)
 
@@ -30,9 +32,9 @@ func GetQuestion() (*Question, error) {
 	}, nil
 }
 
-
-func LoadQuestions() (Questions, error) {
-	var questions Questions
+func LoadQuestions() (LoadedQuestions, error) {
+	questions := make(LoadedQuestions)
+	var questionList QuestionList
 
 	content, err := ioutil.ReadFile(QuestionsFile)
 	if err != nil {
@@ -40,9 +42,17 @@ func LoadQuestions() (Questions, error) {
 		return nil, err
 	}
 
-	if err != json.Unmarshal(content, &questions) {
+	if err != json.Unmarshal(content, &questionList) {
 		log.Printf("Error unmarshalling file: %s", QuestionsFile)
 		return nil, err
+	}
+
+	questions[QuestionDifficultyEasy] = QuestionList{}
+	questions[QuestionDifficultyMedium] = QuestionList{}
+	questions[QuestionDifficultyHard] = QuestionList{}
+
+	for _, q := range questionList {
+		questions[q.Difficulty] = append(questions[q.Difficulty], q)
 	}
 
 	return questions, err

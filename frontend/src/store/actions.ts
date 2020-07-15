@@ -1,8 +1,14 @@
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import * as api from "../api";
-import { GameState, Unit, UnitPlacement } from "../models/game-state.model";
+import {
+  BuyUnitWithDiscountPayload,
+  GameState,
+  UnitPlacement,
+  WebsocketOptions,
+} from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 import { MessageType } from "../models/message-type.enum";
+import { DamageUnit } from "../models/damage-unit.model";
 
 export const setUsername = createAction<string>("setUsername");
 export const changeView = createAction<string>("changeView")
@@ -10,15 +16,15 @@ export const closeWebSocket = createAction("closeWebSocket");
 
 export const changeGameState = createAction<GameState>("changeGameState");
 
-export const selectUnit = createAction<Unit>("selectUnit");
-
 export const showInfoMessage = createAction<InfoMessage>("showInfoMessage");
 export const showErrorMessage = createAction<InfoMessage>("showErrorMessage");
 export const hideMessage = createAction("hideMessage");
 
+export const damageUnit = createAction<DamageUnit>("damageUnit");
+
 export const connectWebSocket = createAsyncThunk(
   "connectWebSocket",
-  async (username: string, thunkApi) => {
+  async (options: WebsocketOptions, thunkApi) => {
     const onMessage = (message: api.Message) => {
       switch (message.messageType) {
         case MessageType.INFO:
@@ -31,13 +37,13 @@ export const connectWebSocket = createAsyncThunk(
           thunkApi.dispatch(changeGameState(message.payload as GameState));
           break;
         default:
-          console.log("Received unknown message");
+          console.log("Received unknown message: ", message);
       }
     };
     const onClosed = () => {
       thunkApi.dispatch(closeWebSocket());
     };
-    return await api.connect(username, onMessage, onClosed);
+    return await api.connect(options.username, options.gameType, onMessage, onClosed);
   },
 );
 
@@ -45,12 +51,16 @@ export const buyUnit = createAsyncThunk("buyUnit", async (id: string) => {
   return api.buyUnit(id);
 });
 
-export const answerQuestion = createAsyncThunk(
-  "answerQuestion",
-  async ({ questionId, answerId }: { questionId: number; answerId: number }) => {
-    return api.answerQuestion(questionId, answerId);
+export const buyUnitWithDiscount = createAsyncThunk(
+  "buyUnitWithDiscount",
+  async ({ id, questionDifficulty, answerId }: BuyUnitWithDiscountPayload) => {
+    return api.buyUnitWithDiscount(id, questionDifficulty, answerId);
   },
 );
+
+export const sellUnit = createAsyncThunk("sellUnit", async (id: string) => {
+  return api.sellUnit(id);
+});
 
 export const placeUnit = createAsyncThunk(
   "placeUnit",

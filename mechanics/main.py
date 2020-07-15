@@ -1,5 +1,3 @@
-from random import randint
-
 from flask import Flask, request
 
 from mechanics import generate_unit, resolve_battle

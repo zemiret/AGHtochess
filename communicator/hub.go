@@ -7,6 +7,10 @@ import (
 	"time"
 )
 
+const (
+	battleRoyaleRoomCapacity = 8
+)
+
 // Hub maintains the set of active clients and broadcasts messages to the
 // clients.
 type Hub struct {
@@ -14,7 +18,8 @@ type Hub struct {
 	// Registered clients.
 	clients map[*Client]*Room
 
-	waitingRoom *Room
+	duelWaitingRoom   *Room
+	royaleWaitingRoom *Room
 
 	// Inbound messages from the clients.
 	inbound chan InboundMessage
@@ -25,19 +30,23 @@ type Hub struct {
 	// Unregister requests from clients.
 	unregister chan *Client
 
-	roomClosing chan *Room
+	roomClosing   chan *Room
+	clientClosing chan *Client
 }
 
 func newHub() *Hub {
 	roomClosing := make(chan *Room)
+	clientClosing := make(chan *Client)
 	return &Hub{
-		log:         log.New(os.Stdout, "[Hub]", log.Flags()),
-		inbound:     make(chan InboundMessage),
-		register:    make(chan *Client),
-		unregister:  make(chan *Client),
-		clients:     make(map[*Client]*Room),
-		roomClosing: roomClosing,
-		waitingRoom: newRoom(roomClosing),
+		log:               log.New(os.Stdout, "[Hub]", log.Flags()),
+		inbound:           make(chan InboundMessage),
+		register:          make(chan *Client),
+		unregister:        make(chan *Client),
+		clients:           make(map[*Client]*Room),
+		roomClosing:       roomClosing,
+		clientClosing:     clientClosing,
+		duelWaitingRoom:   newRoom(roomClosing, clientClosing, 2),
+		royaleWaitingRoom: newRoom(roomClosing, clientClosing, battleRoyaleRoomCapacity),
 	}
 }
 
@@ -45,29 +54,39 @@ func (h *Hub) run() {
 	for {
 		select {
 		case client := <-h.register:
-			h.waitingRoom.AddClient(client)
-			h.clients[client] = h.waitingRoom
+			var roomForClient *Room
+			if client.gameType == GameTypeDuel {
+				h.log.Printf("Adding %v to duel room\n", client.nickname)
+				roomForClient = h.duelWaitingRoom
+			} else if client.gameType == GameTypeRoyale {
+				h.log.Printf("Adding %v to royale room\n", client.nickname)
+				roomForClient = h.royaleWaitingRoom
+			} else {
+				h.log.Printf("Invalid gameType %v for %v\n", client.gameType, client.nickname)
+				continue
+			}
 
-			if h.waitingRoom.Full() {
-				go h.waitingRoom.Start()
-				h.waitingRoom = newRoom(h.roomClosing)
+			roomForClient.AddClient(client)
+			h.clients[client] = roomForClient
+
+			if roomForClient.Full() {
+				go roomForClient.Start()
+
+				if client.gameType == GameTypeDuel {
+					h.duelWaitingRoom = newRoom(h.roomClosing, h.clientClosing, 2)
+				} else if client.gameType == GameTypeRoyale {
+					h.royaleWaitingRoom = newRoom(h.roomClosing, h.clientClosing, battleRoyaleRoomCapacity)
+				}
 			}
 		case closingRoom := <-h.roomClosing:
-			for player, room := range h.clients {
+			for client, room := range h.clients {
 				if room != closingRoom {
 					continue
 				}
-				delete(h.clients, player)
-
-				closeFun := func(client *Client) func() {
-					return func() {
-						h.log.Printf("Closing %s connection\n", client.nickname)
-						close(client.send)
-					}
-				}
-
-				time.AfterFunc(5*time.Second, closeFun(player))
+				h.closeClient(client)
 			}
+		case closingClient := <-h.clientClosing:
+			h.closeClient(closingClient)
 		case client := <-h.unregister:
 			if room, ok := h.clients[client]; ok {
 				room.ClientDisconnectChannel <- client
@@ -77,10 +96,6 @@ func (h *Hub) run() {
 
 			client := inboundMessage.Client
 			if clientRoom, ok := h.clients[client]; ok {
-				if !clientRoom.Full() {
-					h.log.Println("Unexpected message: ", inboundMessage.Message)
-					continue
-				}
 				var messageType struct {
 					MessageType MessageType `json:"messageType"`
 				}
@@ -98,14 +113,14 @@ func (h *Hub) run() {
 					}
 					buyUnitMessage.Client = inboundMessage.Client
 					clientRoom.BuyUnitChannel <- buyUnitMessage
-				case MessageTypeAnswerQuestion:
-					var answerQuestionMessage AnswerQuestionMessage
-					if err := json.Unmarshal(inboundMessage.Message, &answerQuestionMessage); err != nil {
+				case MessageTypeSellUnit:
+					var sellUnitMessage SellUnitMessage
+					if err := json.Unmarshal(inboundMessage.Message, &sellUnitMessage); err != nil {
 						h.log.Println("Invalid message", err)
 						continue
 					}
-					answerQuestionMessage.Client = inboundMessage.Client
-					clientRoom.AnswerQuestionChannel <- answerQuestionMessage
+					sellUnitMessage.Client = inboundMessage.Client
+					clientRoom.SellUnitChannel <- sellUnitMessage
 				case MessageTypePlaceUnit:
 					var placeUnitMessage PlaceUnitMessage
 					if err := json.Unmarshal(inboundMessage.Message, &placeUnitMessage); err != nil {
@@ -128,4 +143,20 @@ func (h *Hub) run() {
 			}
 		}
 	}
+}
+
+func (h *Hub) closeClient(client *Client) {
+	if _, ok := h.clients[client]; !ok {
+		return
+	}
+
+	delete(h.clients, client)
+	closeFun := func(client *Client) func() {
+		return func() {
+			h.log.Printf("Closing %s connection\n", client.nickname)
+			close(client.send)
+		}
+	}
+
+	time.AfterFunc(5*time.Second, closeFun(client))
 }

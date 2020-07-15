@@ -6,15 +6,27 @@ import {
   setUsername,
   showInfoMessage,
   changeGameState,
-  selectUnit,
   showErrorMessage,
   hideMessage,
   changeView,
+  damageUnit,
 } from "./actions";
 import { InfoMessage } from "../models/info-message.model";
 import { GameState, Unit } from "../models/game-state.model";
+import { DamageUnit } from "../models/damage-unit.model";
 import { statsReducer } from "./stats/reducers";
 import { initialState } from "./root-schema";
+
+function damageUnitMapper(command: DamageUnit) {
+  return (unit: Unit): Unit => {
+    if (unit.id !== command.unitId) {
+      return unit;
+    }
+    const newUnit = { ...unit };
+    newUnit.hp -= command.damage;
+    return newUnit;
+  };
+}
 
 export const rootReducer = createReducer(initialState, {
   [setUsername.type]: (state, action: PayloadAction<string>) => ({
@@ -25,9 +37,15 @@ export const rootReducer = createReducer(initialState, {
     ...state,
     state: action.payload
   }),
-  [selectUnit.type]: (state, action: PayloadAction<Unit>) => ({
+  [damageUnit.type]: (state, action: PayloadAction<DamageUnit>) => ({
     ...state,
-    selectedUnit: action.payload,
+    gameState: state.gameState
+      ? {
+          ...state.gameState,
+          units: state.gameState.units.map(damageUnitMapper(action.payload)),
+          enemyUnits: state.gameState.enemyUnits.map(damageUnitMapper(action.payload)),
+        }
+      : undefined,
   }),
   [buyUnit.pending.type]: (state, _: PayloadAction) => ({ ...state }),
   [buyUnit.fulfilled.type]: (state, _: PayloadAction<number>) => ({
