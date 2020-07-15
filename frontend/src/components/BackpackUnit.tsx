@@ -3,7 +3,6 @@ import { useDrag } from "react-dnd";
 import { Unit as UnitType } from "../models/game-state.model";
 import Unit from "./Unit";
 import { Button } from "reactstrap";
-import { UNIT_SELL_PRICE_MULTIPLIER } from "../constants";
 
 interface Props {
   unit: UnitType;
@@ -18,8 +17,6 @@ const BackpackUnit: React.FunctionComponent<Props> = ({ unit, sellUnit }: Props)
     },
   })[1];
 
-  const sellingPrice = Math.ceil(unit.price * UNIT_SELL_PRICE_MULTIPLIER);
-
   return (
     <>
       <Unit unit={unit} dragRef={drag} />
@@ -27,7 +24,7 @@ const BackpackUnit: React.FunctionComponent<Props> = ({ unit, sellUnit }: Props)
 
       <div className="unit-action-row v-flex-align-center">
         <div>
-          <span className="strong">{sellingPrice}</span> €cts
+          <span className="strong">{unit.price}</span> €cts
         </div>
         <Button outline color="primary" size="sm" onClick={sellUnit}>
           Sell
