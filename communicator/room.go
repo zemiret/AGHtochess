@@ -11,10 +11,10 @@ import (
 
 const (
 	initialHp        = 100
-	initialMoney     = 500
-	baseWinnerReward = 200
-	baseDrawReward   = 150
-	baseLooserReward = 100
+	initialMoney     = 300
+	baseWinnerReward = 160
+	baseDrawReward   = 110
+	baseLoserReward  = 60
 	boardWidth       = 6
 	boardHeight      = 8
 
@@ -32,9 +32,9 @@ var phaseDurations = map[GamePhase]time.Duration{
 }
 
 var difficultyMultipliers = map[QuestionDifficulty]float64{
-	QuestionDifficultyEasy:   0.7,
-	QuestionDifficultyMedium: 0.5,
-	QuestionDifficultyHard:   0.3,
+	QuestionDifficultyEasy:   0.9,
+	QuestionDifficultyMedium: 0.7,
+	QuestionDifficultyHard:   0.5,
 }
 
 type PlayerState struct {
@@ -234,13 +234,8 @@ func (r *Room) rerollPlayersMatching() {
 	}
 }
 
-func (r *Room) grantRoundReward() {
-	// TODO: Here
-}
-
 func (r *Room) startStorePhase() {
 	r.rerollPlayersMatching()
-	r.grantRoundReward()
 	r.round++
 
 	for _, state := range r.playersState {
@@ -304,34 +299,30 @@ func (r *Room) statePropagationFail(client *Client, err error) {
 }
 
 func (r *Room) startBattlePhase() {
-	type PlayerPair struct {
-		players [2]*Client
-	}
+	type PlayerPair [2]*Client
 	var alreadyMatched []*Client
 	var playerPairs []*PlayerPair
 
 	battleDuration := phaseDurations[GamePhaseBattle]
 
 	for client := range r.playersState {
-		playerPair := &PlayerPair{
-			players: [2]*Client{client, r.getEnemy(client)},
-		}
-		if clientInSlice(client, alreadyMatched) || playerPair.players[1] == nil {
+		playerPair := &PlayerPair{client, r.getEnemy(client)}
+		if clientInSlice(client, alreadyMatched) || playerPair[1] == nil {
 			continue
 		}
 
-		alreadyMatched = append(alreadyMatched, playerPair.players[0], playerPair.players[1])
+		alreadyMatched = append(alreadyMatched, playerPair[0], playerPair[1])
 		playerPairs = append(playerPairs, playerPair)
 	}
 
 	for _, playerPair := range playerPairs {
-		player1State := r.playersState[playerPair.players[0]]
+		player1State := r.playersState[playerPair[0]]
 		player1 := PlayerBattleSetup{
 			UnitPlacement: player1State.UnitsPlacement,
 			Units:         player1State.Units,
 		}
 
-		player2State := r.playersState[playerPair.players[1]]
+		player2State := r.playersState[playerPair[1]]
 		player2 := PlayerBattleSetup{
 			UnitPlacement: mirrorUnitPlacements(player2State.UnitsPlacement),
 			Units:         player2State.Units,
@@ -349,7 +340,7 @@ func (r *Room) startBattlePhase() {
 			battleDuration = duration
 		}
 
-		for i, c := range playerPair.players {
+		for i, c := range playerPair {
 			battleStatistics := BattleStatistics{
 				Log: battleResult.Log,
 			}
@@ -415,7 +406,7 @@ func (r *Room) calculateReward(statistics *BattleStatistics) int {
 	} else if statistics.Result == ResultDraw {
 		return baseDrawReward * r.round
 	} else {
-		return baseLooserReward * r.round
+		return baseLoserReward * r.round
 	}
 }
 
@@ -559,6 +550,7 @@ func (r *Room) handleBuyUnit(c *Client, payload BuyUnitPayload) {
 	}
 
 	if canBuy {
+		unitToBuy.Unit.Price = price
 		playerState.Units = append(playerState.Units, unitToBuy.Unit)
 
 		if err := c.SendMessage(newInfoMessage(fmt.Sprintf("Unit bought -%d €cts", price))); err != nil {

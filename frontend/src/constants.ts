@@ -15,7 +15,7 @@ export const STAT_COLORS: { [key: string]: string } = Object.freeze({
 });
 
 export const QUESTION_DIFFICULTY_MULTIPLIERS = {
-  [QuestionDifficulty.EASY]: 0.7,
-  [QuestionDifficulty.MEDIUM]: 0.5,
-  [QuestionDifficulty.HARD]: 0.3,
+  [QuestionDifficulty.EASY]: 0.9,
+  [QuestionDifficulty.MEDIUM]: 0.7,
+  [QuestionDifficulty.HARD]: 0.5,
 };
