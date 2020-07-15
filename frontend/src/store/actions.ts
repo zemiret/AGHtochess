@@ -1,6 +1,11 @@
 import { createAsyncThunk, createAction } from "@reduxjs/toolkit";
 import * as api from "../api";
-import { GameState, UnitPlacement, WebsocketOptions } from "../models/game-state.model";
+import {
+  BuyUnitWithDiscountPayload,
+  GameState,
+  UnitPlacement,
+  WebsocketOptions,
+} from "../models/game-state.model";
 import { InfoMessage } from "../models/info-message.model";
 import { MessageType } from "../models/message-type.enum";
 import { DamageUnit } from "../models/damage-unit.model";
@@ -31,7 +36,7 @@ export const connectWebSocket = createAsyncThunk(
           thunkApi.dispatch(changeGameState(message.payload as GameState));
           break;
         default:
-          console.log("Received unknown message");
+          console.log("Received unknown message: ", message);
       }
     };
     const onClosed = () => {
@@ -45,16 +50,16 @@ export const buyUnit = createAsyncThunk("buyUnit", async (id: string) => {
   return api.buyUnit(id);
 });
 
+export const buyUnitWithDiscount = createAsyncThunk(
+  "buyUnitWithDiscount",
+  async ({ id, questionDifficulty, answerId }: BuyUnitWithDiscountPayload) => {
+    return api.buyUnitWithDiscount(id, questionDifficulty, answerId);
+  },
+);
+
 export const sellUnit = createAsyncThunk("sellUnit", async (id: string) => {
   return api.sellUnit(id);
 });
-
-export const answerQuestion = createAsyncThunk(
-  "answerQuestion",
-  async ({ questionId, answerId }: { questionId: number; answerId: number }) => {
-    return api.answerQuestion(questionId, answerId);
-  },
-);
 
 export const placeUnit = createAsyncThunk(
   "placeUnit",

@@ -10,35 +10,41 @@ import (
 )
 
 const (
-	initialHp      = 100
-	initialMoney   = 500
-	questionReward = 300
-	boardWidth     = 6
-	boardHeight    = 8
+	initialHp        = 100
+	initialMoney     = 300
+	baseWinnerReward = 160
+	baseDrawReward   = 110
+	baseLoserReward  = 60
+	boardWidth       = 6
+	boardHeight      = 8
 
-	logActionTime = 200 * time.Millisecond
-	logStaleTime  = 2 * time.Second
+	logActionTime           = 200 * time.Millisecond
+	logStaleTime            = 2 * time.Second
 	unitSellPriceMultiplier = 0.5
 )
 
 var phaseDurations = map[GamePhase]time.Duration{
 	GamePhaseWaiting:      1 * time.Second,
-	GamePhaseStore:        15 * time.Second,
+	GamePhaseStore:        30 * time.Second,
 	GamePhaseBattle:       1 * time.Second,
 	GamePhaseBattleResult: 4 * time.Second,
-	GamePhaseQuestion:     10 * time.Second,
 	GamePhaseGameEnd:      1 * time.Second,
 }
 
+var difficultyMultipliers = map[QuestionDifficulty]float64{
+	QuestionDifficultyEasy:   0.9,
+	QuestionDifficultyMedium: 0.7,
+	QuestionDifficultyHard:   0.5,
+}
+
 type PlayerState struct {
-	Player           Player            `json:"player"`
-	Question         *Question         `json:"question"`
-	Store            []Unit            `json:"store"`
-	Units            []Unit            `json:"units"`
-	UnitsPlacement   []UnitPlacement   `json:"unitsPlacement"`
-	BattleStatistics *BattleStatistics `json:"battleStatistics,omitempty"`
-	GameResult       *GameResult       `json:"gameResult,omitempty"`
-	enemy            *Client           `json:"-"`
+	Player           Player
+	Store            []StoreUnit
+	Units            []Unit
+	UnitsPlacement   []UnitPlacement
+	BattleStatistics *BattleStatistics
+	GameResult       *GameResult
+	enemy            *Client
 }
 
 type Room struct {
@@ -53,12 +59,11 @@ type Room struct {
 
 	round int
 
-	BuyUnitChannel        chan BuyUnitMessage
-	SellUnitChannel       chan SellUnitMessage
-	PlaceUnitChannel      chan PlaceUnitMessage
-	UnplaceUnitChannel    chan UnplaceUnitMessage
-	AnswerQuestionChannel chan AnswerQuestionMessage
-	changePhaseChannel    chan GamePhase
+	BuyUnitChannel     chan BuyUnitMessage
+	SellUnitChannel    chan SellUnitMessage
+	PlaceUnitChannel   chan PlaceUnitMessage
+	UnplaceUnitChannel chan UnplaceUnitMessage
+	changePhaseChannel chan GamePhase
 
 	ClientDisconnectChannel chan *Client
 	roomClosing             chan<- *Room
@@ -77,11 +82,6 @@ type BuyUnitMessage struct {
 type SellUnitMessage struct {
 	Client          *Client          `json:"-"`
 	SellUnitPayload *SellUnitPayload `json:"payload"`
-}
-
-type AnswerQuestionMessage struct {
-	Client                *Client                `json:"-"`
-	AnswerQuestionPayload *AnswerQuestionPayload `json:"payload"`
 }
 
 type PlaceUnitMessage struct {
@@ -103,7 +103,6 @@ func newRoom(roomClosing chan<- *Room, clientClosing chan<- *Client, capacity in
 		phase:                   GamePhaseWaiting,
 		BuyUnitChannel:          make(chan BuyUnitMessage),
 		SellUnitChannel:         make(chan SellUnitMessage),
-		AnswerQuestionChannel:   make(chan AnswerQuestionMessage),
 		PlaceUnitChannel:        make(chan PlaceUnitMessage),
 		UnplaceUnitChannel:      make(chan UnplaceUnitMessage),
 		ClientDisconnectChannel: make(chan *Client, capacity),
@@ -122,8 +121,7 @@ func (r *Room) AddClient(client *Client) {
 			Hp:       initialHp,
 			Money:    initialMoney,
 		},
-		Question:       nil,
-		Store:          []Unit{},
+		Store:          []StoreUnit{},
 		Units:          []Unit{},
 		UnitsPlacement: []UnitPlacement{},
 	}
@@ -148,7 +146,7 @@ func (r *Room) Shutdown(reason string) {
 	r.log.Println("Shutting down")
 	for client := range r.playersState {
 		if err := client.SendMessage(newErrorMessage(reason)); err != nil {
-			r.log.Println("Error sending shutdown message: ", err)
+			r.logErrorSendingMessage(err)
 		}
 	}
 	r.playersState = nil
@@ -198,11 +196,6 @@ func (r *Room) generateClientState(client *Client) *Message {
 		enemyUnitsPlacement = mirrorUnitPlacements(enemyState.UnitsPlacement)
 	}
 
-	var publicQuestion *PublicQuestion
-	if playerState.Question != nil {
-		publicQuestion = &playerState.Question.PublicQuestion
-	}
-
 	// haaa ckathon? :>
 	phase := r.phase
 	if playerState.GameResult != nil {
@@ -218,7 +211,6 @@ func (r *Room) generateClientState(client *Client) *Message {
 			GameResult:          playerState.GameResult,
 			Player:              playerState.Player,
 			Enemy:               enemyPlayer,
-			Question:            publicQuestion,
 			Store:               playerState.Store,
 			Units:               playerState.Units,
 			UnitsPlacement:      playerState.UnitsPlacement,
@@ -253,7 +245,39 @@ func (r *Room) startStorePhase() {
 			r.Shutdown("Failed fetching units")
 			return
 		}
-		state.Store = units
+
+		state.Store = nil
+		for _, u := range units {
+			errHandler := func() {
+				r.log.Println("Failed fetching questions ", err)
+				r.Shutdown("Failed fetching questions")
+			}
+
+			questionEasy, err := GetQuestion(QuestionDifficultyEasy)
+			if err != nil {
+				errHandler()
+				return
+			}
+			questionMedium, err := GetQuestion(QuestionDifficultyMedium)
+			if err != nil {
+				errHandler()
+				return
+			}
+			questionHard, err := GetQuestion(QuestionDifficultyHard)
+			if err != nil {
+				errHandler()
+				return
+			}
+
+			state.Store = append(state.Store, StoreUnit{
+				Unit: u,
+				Questions: UnitQuestions{
+					QuestionDifficultyEasy:   *questionEasy,
+					QuestionDifficultyMedium: *questionMedium,
+					QuestionDifficultyHard:   *questionHard,
+				},
+			})
+		}
 	}
 
 	r.schedulePhase(phaseDurations[GamePhaseStore], GamePhaseBattle)
@@ -275,35 +299,30 @@ func (r *Room) statePropagationFail(client *Client, err error) {
 }
 
 func (r *Room) startBattlePhase() {
-	type PlayerPair struct {
-		players  [2]*Client
-		loserIdx int
-	}
+	type PlayerPair [2]*Client
 	var alreadyMatched []*Client
 	var playerPairs []*PlayerPair
 
 	battleDuration := phaseDurations[GamePhaseBattle]
 
 	for client := range r.playersState {
-		playerPair := &PlayerPair{
-			players: [2]*Client{client, r.getEnemy(client)},
-		}
-		if clientInSlice(client, alreadyMatched) || playerPair.players[1] == nil {
+		playerPair := &PlayerPair{client, r.getEnemy(client)}
+		if clientInSlice(client, alreadyMatched) || playerPair[1] == nil {
 			continue
 		}
 
-		alreadyMatched = append(alreadyMatched, playerPair.players[0], playerPair.players[1])
+		alreadyMatched = append(alreadyMatched, playerPair[0], playerPair[1])
 		playerPairs = append(playerPairs, playerPair)
 	}
 
 	for _, playerPair := range playerPairs {
-		player1State := r.playersState[playerPair.players[0]]
+		player1State := r.playersState[playerPair[0]]
 		player1 := PlayerBattleSetup{
 			UnitPlacement: player1State.UnitsPlacement,
 			Units:         player1State.Units,
 		}
 
-		player2State := r.playersState[playerPair.players[1]]
+		player2State := r.playersState[playerPair[1]]
 		player2 := PlayerBattleSetup{
 			UnitPlacement: mirrorUnitPlacements(player2State.UnitsPlacement),
 			Units:         player2State.Units,
@@ -321,21 +340,18 @@ func (r *Room) startBattlePhase() {
 			battleDuration = duration
 		}
 
-		for i, c := range playerPair.players {
-			if i != battleResult.Winner {
-				playerPair.loserIdx = i
-				r.playersState[c].Player.Hp += battleResult.PlayerHpChange
-			}
-		}
-
-		for i, c := range playerPair.players {
+		for i, c := range playerPair {
 			battleStatistics := BattleStatistics{
 				Log: battleResult.Log,
 			}
-			if i == battleResult.Winner {
-				battleStatistics.Result = GameResultWin
+
+			if battleResult.PlayerHpChange == 0 {
+				battleStatistics.Result = ResultDraw
+			} else if i == battleResult.Winner {
+				battleStatistics.Result = ResultWin
 			} else {
-				battleStatistics.Result = GameResultLoss
+				battleStatistics.Result = ResultLoss
+				r.playersState[c].Player.Hp += battleResult.PlayerHpChange
 				battleStatistics.PlayerHpChange = battleResult.PlayerHpChange
 			}
 
@@ -365,7 +381,7 @@ func (r *Room) startBattlePhase() {
 
 func (r *Room) startBattleResultPhase() {
 	if len(r.clients) > 1 {
-		r.schedulePhase(phaseDurations[GamePhaseBattleResult], GamePhaseQuestion)
+		r.schedulePhase(phaseDurations[GamePhaseBattleResult], GamePhaseStore)
 	} else {
 		r.schedulePhase(phaseDurations[GamePhaseBattleResult], GamePhaseGameEnd)
 	}
@@ -377,7 +393,20 @@ func (r *Room) startBattleResultPhase() {
 				return
 			}
 		}
+
+		// Grant some moni
+		state.Player.Money += r.calculateReward(state.BattleStatistics)
 		state.BattleStatistics = nil
+	}
+}
+
+func (r *Room) calculateReward(statistics *BattleStatistics) int {
+	if statistics.Result == ResultWin {
+		return baseWinnerReward * r.round
+	} else if statistics.Result == ResultDraw {
+		return baseDrawReward * r.round
+	} else {
+		return baseLoserReward * r.round
 	}
 }
 
@@ -389,7 +418,7 @@ func (r *Room) finishGameForPlayer(c *Client, sendState bool) {
 	if enemy != nil {
 		r.playersState[enemy].enemy = nil
 		if err := enemy.SendMessage(newErrorMessage("Enemy disconnected")); err != nil {
-			r.log.Println("Error sending disconnect message message: ", err)
+			r.logErrorSendingMessage(err)
 		}
 
 		if err := enemy.SendMessage(r.generateClientState(enemy)); err != nil {
@@ -404,34 +433,13 @@ func (r *Room) finishGameForPlayer(c *Client, sendState bool) {
 	if sendState {
 		r.sendGameEndState(c, r.playersState[c])
 		if err := c.SendMessage(newInfoMessage("Game finished")); err != nil {
-			r.log.Println("Error sending finishing message: ", err)
+			r.logErrorSendingMessage(err)
 		}
 	}
 
 	r.clients = removeClientFromSlice(r.clients, findClientInSlice(c, r.clients))
 	delete(r.playersState, c)
 	r.clientClosing <- c
-}
-
-func (r *Room) startQuestionPhase() {
-	question, err := GetQuestion()
-	if err != nil {
-		r.Shutdown("Failed to fetch question")
-		r.log.Println("Failed to fetch question", err)
-		return
-	}
-
-	r.schedulePhase(phaseDurations[GamePhaseQuestion], GamePhaseStore)
-
-	for c, state := range r.playersState {
-		state.Question = question
-		if err := c.SendMessage(r.generateClientState(c)); err != nil {
-			r.statePropagationFail(c, err)
-			if r.duelMode() {
-				return
-			}
-		}
-	}
 }
 
 func (r *Room) startGameEndPhase() {
@@ -444,9 +452,9 @@ func (r *Room) startGameEndPhase() {
 func (r *Room) sendGameEndState(c *Client, state *PlayerState) {
 	var gameResult GameResult
 	if state.Player.Hp > 0 {
-		gameResult = GameResultWin
+		gameResult = ResultWin
 	} else {
-		gameResult = GameResultLoss
+		gameResult = ResultLoss
 	}
 	state.GameResult = &gameResult
 	if err := c.SendMessage(r.generateClientState(c)); err != nil {
@@ -461,8 +469,7 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 	r.log.Println("Starting new phase ", phase)
 
 	for client, state := range r.playersState {
-		state.Question = nil
-		state.Store = []Unit{}
+		state.Store = []StoreUnit{}
 
 		if !r.duelMode() && state.Player.Hp <= 0 {
 			r.finishGameForPlayer(client, true)
@@ -477,8 +484,6 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 		r.startBattlePhase()
 	case GamePhaseBattleResult:
 		r.startBattleResultPhase()
-	case GamePhaseQuestion:
-		r.startQuestionPhase()
 	case GamePhaseGameEnd:
 		r.startGameEndPhase()
 	}
@@ -486,16 +491,18 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 
 func (r *Room) handleBuyUnit(c *Client, payload BuyUnitPayload) {
 	if r.phase != GamePhaseStore {
-		c.SendMessage(newErrorMessage("You can only buy units in store phase"))
+		if err := c.SendMessage(newErrorMessage("You can only buy units in store phase")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		return
 	}
 
-	state := r.playersState[c]
+	playerState := r.playersState[c]
 
-	var unitToBuy *Unit
+	var unitToBuy *StoreUnit
 	var unitIndex int
-	for i, unitInStore := range state.Store {
-		if unitInStore.ID == payload.ID {
+	for i, unitInStore := range playerState.Store {
+		if unitInStore.Unit.ID == payload.ID {
 			unitToBuy = &unitInStore
 			unitIndex = i
 			break
@@ -503,18 +510,53 @@ func (r *Room) handleBuyUnit(c *Client, payload BuyUnitPayload) {
 	}
 
 	if unitToBuy == nil {
-		c.SendMessage(newErrorMessage("Unit not in store"))
+		if err := c.SendMessage(newErrorMessage("Unit not in store")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		return
 	}
 
-	if state.Player.Money < unitToBuy.Price {
-		c.SendMessage(newErrorMessage("You don't have enough money"))
+	priceMultiplier := 1.0
+	if r.triesBuyingWithDiscount(payload) {
+		if !r.validQuestionDifficulty(*payload.QuestionDifficulty) {
+			if err := c.SendMessage(newErrorMessage("Invalid question difficulty received")); err != nil {
+				r.logErrorSendingMessage(err)
+			}
+			return
+		}
+		priceMultiplier = difficultyMultipliers[*payload.QuestionDifficulty]
+	}
+
+	price := roundMoney(float64(unitToBuy.Unit.Price) * priceMultiplier)
+	if playerState.Player.Money < price {
+		if err := c.SendMessage(newErrorMessage("You don't have enough money")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		return
 	}
 
-	state.Player.Money -= unitToBuy.Price
-	state.Store = append(state.Store[:unitIndex], state.Store[unitIndex+1:]...)
-	state.Units = append(state.Units, *unitToBuy)
+	playerState.Store = append(playerState.Store[:unitIndex], playerState.Store[unitIndex+1:]...)
+	playerState.Player.Money -= price
+
+	canBuy := true
+	if r.triesBuyingWithDiscount(payload) {
+		question := unitToBuy.Questions[*payload.QuestionDifficulty]
+		if question.CorrectAnswer != *payload.QuestionAnswerID {
+			if err := c.SendMessage(newErrorMessage(fmt.Sprintf("Incorrect answer -%d €cts", price))); err != nil {
+				r.logErrorSendingMessage(err)
+			}
+			canBuy = false
+		}
+	}
+
+	if canBuy {
+		unitToBuy.Unit.Price = price
+		playerState.Units = append(playerState.Units, unitToBuy.Unit)
+
+		if err := c.SendMessage(newInfoMessage(fmt.Sprintf("Unit bought -%d €cts", price))); err != nil {
+			r.logErrorSendingMessage(err)
+		}
+	}
 
 	if err := c.SendMessage(r.generateClientState(c)); err != nil {
 		r.statePropagationFail(c, err)
@@ -522,13 +564,16 @@ func (r *Room) handleBuyUnit(c *Client, payload BuyUnitPayload) {
 			return
 		}
 	}
+}
 
-	if err := c.SendMessage(newInfoMessage("Unit bought")); err != nil {
-		r.statePropagationFail(c, err)
-		if r.duelMode() {
-			return
-		}
-	}
+func (r *Room) triesBuyingWithDiscount(payload BuyUnitPayload) bool {
+	return payload.QuestionDifficulty != nil && payload.QuestionAnswerID != nil
+}
+
+func (r *Room) validQuestionDifficulty(difficulty QuestionDifficulty) bool {
+	return difficulty == QuestionDifficultyEasy ||
+		difficulty == QuestionDifficultyMedium ||
+		difficulty == QuestionDifficultyHard
 }
 
 func (r *Room) handleSellUnit(c *Client, payload SellUnitPayload) {
@@ -545,7 +590,9 @@ func (r *Room) handleSellUnit(c *Client, payload SellUnitPayload) {
 	}
 
 	if unitToSell == nil {
-		c.SendMessage(newErrorMessage("Unit not in backpack"))
+		if err := c.SendMessage(newErrorMessage("Unit not in backpack")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		return
 	}
 
@@ -556,7 +603,7 @@ func (r *Room) handleSellUnit(c *Client, payload SellUnitPayload) {
 		}
 	}
 
-	state.Player.Money += int(math.Ceil(float64(unitToSell.Price) * unitSellPriceMultiplier))
+	state.Player.Money += roundMoney(float64(unitToSell.Price) * unitSellPriceMultiplier)
 	state.Units = append(state.Units[:unitIndex], state.Units[unitIndex+1:]...)
 
 	if err := c.SendMessage(r.generateClientState(c)); err != nil {
@@ -567,72 +614,22 @@ func (r *Room) handleSellUnit(c *Client, payload SellUnitPayload) {
 	}
 
 	if err := c.SendMessage(newInfoMessage("Unit sold")); err != nil {
-		r.statePropagationFail(c, err)
-		if r.duelMode() {
-			return
-		}
-	}
-}
-
-func (r *Room) handleAnswerQuestion(c *Client, answer AnswerQuestionPayload) {
-	if r.phase != GamePhaseQuestion {
-		c.SendMessage(newErrorMessage("You can only answer questions in question phase"))
-		return
-	}
-
-	state := r.playersState[c]
-
-	if state.Question == nil {
-		c.SendMessage(newErrorMessage("Missing question"))
-		r.log.Println("Missing question while in question phase")
-		return
-	}
-
-	questionResult := QuestionResultIncorrect
-	reward := 0
-	if state.Question.CorrectAnswer == answer.AnswerID {
-		reward = questionReward
-		questionResult = QuestionResultCorrect
-		state.Player.Money += reward
-	}
-
-	state.Question = nil
-
-	if err := c.SendMessage(r.generateClientState(c)); err != nil {
-		r.statePropagationFail(c, err)
-		if r.duelMode() {
-			return
-		}
-	}
-
-	if err := c.SendMessage(newQuestionResultMessage(questionResult, reward)); err != nil {
-		r.statePropagationFail(c, err)
-		if r.duelMode() {
-			return
-		}
-	}
-
-	message := newInfoMessage(fmt.Sprintf("Correct answer, +%d €cts", reward))
-	if questionResult == QuestionResultIncorrect {
-		message = newErrorMessage("Incorrect answer")
-	}
-
-	if err := c.SendMessage(message); err != nil {
-		r.statePropagationFail(c, err)
-		if r.duelMode() {
-			return
-		}
+		r.logErrorSendingMessage(err)
 	}
 }
 
 func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 	if r.phase != GamePhaseStore {
-		client.SendMessage(newErrorMessage("You can only place units in store phase"))
+		if err := client.SendMessage(newErrorMessage("You can only place units in store phase")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		return
 	}
 
 	if payload.X < 0 || payload.X >= boardWidth || payload.Y < boardHeight/2 || payload.Y >= boardHeight {
-		client.SendMessage(newErrorMessage("You can only place units on your side"))
+		if err := client.SendMessage(newErrorMessage("You can only place units on your side")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		return
 	}
 
@@ -653,7 +650,9 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 	}
 
 	if unitToPlace == nil {
-		client.SendMessage(newErrorMessage("You don't own that unit"))
+		if err := client.SendMessage(newErrorMessage("You don't own that unit")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		r.log.Println("Client tried to place invalid unit")
 		return
 	}
@@ -697,7 +696,9 @@ func (r *Room) handlePlaceUnit(client *Client, payload PlaceUnitPayload) {
 
 func (r *Room) handleUnplaceUnit(client *Client, payload UnplaceUnitPayload) {
 	if r.phase != GamePhaseStore {
-		client.SendMessage(newInfoMessage("You can only place units in store phase"))
+		if err := client.SendMessage(newInfoMessage("You can only place units in store phase")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		return
 	}
 	state := r.playersState[client]
@@ -711,7 +712,9 @@ func (r *Room) handleUnplaceUnit(client *Client, payload UnplaceUnitPayload) {
 	}
 
 	if unitToUnplace == nil {
-		client.SendMessage(newInfoMessage("You don't own that unit"))
+		if err := client.SendMessage(newInfoMessage("You don't own that unit")); err != nil {
+			r.logErrorSendingMessage(err)
+		}
 		r.log.Println("Client tried to place invalid unit")
 		return
 	}
@@ -737,6 +740,10 @@ func (r *Room) handleUnplaceUnit(client *Client, payload UnplaceUnitPayload) {
 	}
 }
 
+func (r *Room) logErrorSendingMessage(err error) {
+	r.log.Println("Error sending message", err)
+}
+
 func (r *Room) Start() {
 	r.log.Println("Starting room")
 	// should send battle beginning phase to clients
@@ -750,31 +757,33 @@ func (r *Room) Start() {
 			r.handlePhaseChange(phase)
 		case message := <-r.SellUnitChannel:
 			if message.SellUnitPayload == nil {
-				message.Client.SendMessage(newErrorMessage("Missing payload"))
+				if err := message.Client.SendMessage(newErrorMessage("Missing payload")); err != nil {
+					r.logErrorSendingMessage(err)
+				}
 				continue
 			}
 			r.handleSellUnit(message.Client, *message.SellUnitPayload)
 		case message := <-r.BuyUnitChannel:
 			if message.BuyUnitPayload == nil {
-				message.Client.SendMessage(newErrorMessage("Missing payload"))
+				if err := message.Client.SendMessage(newErrorMessage("Missing payload")); err != nil {
+					r.logErrorSendingMessage(err)
+				}
 				continue
 			}
 			r.handleBuyUnit(message.Client, *message.BuyUnitPayload)
-		case message := <-r.AnswerQuestionChannel:
-			if message.AnswerQuestionPayload == nil {
-				message.Client.SendMessage(newErrorMessage("Missing payload"))
-				continue
-			}
-			r.handleAnswerQuestion(message.Client, *message.AnswerQuestionPayload)
 		case message := <-r.PlaceUnitChannel:
 			if message.PlaceUnitPayload == nil {
-				message.Client.SendMessage(newErrorMessage("Missing payload"))
+				if err := message.Client.SendMessage(newErrorMessage("Missing payload")); err != nil {
+					r.logErrorSendingMessage(err)
+				}
 				continue
 			}
 			r.handlePlaceUnit(message.Client, *message.PlaceUnitPayload)
 		case message := <-r.UnplaceUnitChannel:
 			if message.UnplaceUnitPayload == nil {
-				message.Client.SendMessage(newInfoMessage("Missing payload"))
+				if err := message.Client.SendMessage(newInfoMessage("Missing payload")); err != nil {
+					r.logErrorSendingMessage(err)
+				}
 				continue
 			}
 			r.handleUnplaceUnit(message.Client, *message.UnplaceUnitPayload)
@@ -805,4 +814,8 @@ func removeClientFromSlice(s []*Client, i int) []*Client {
 
 func calculateBattleDuration(battle *PlayerBattleResult) time.Duration {
 	return time.Duration(len(battle.Log))*logActionTime + logStaleTime
+}
+
+func roundMoney(value float64) int {
+	return int(math.Ceil(value))
 }

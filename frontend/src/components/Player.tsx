@@ -42,7 +42,7 @@ const Player: React.FunctionComponent<PlayerInfoDisplay> = ({
 
           <Row className="next-player-row v-flex-align-center">
             <Col xs={isEnemy ? "12" : "10"}>
-              <Progress color={progressColor} value={progressState}>
+              <Progress color={progressColor} value={Math.max(0, progressState)}>
                 {hp}/{MAX_PLAYER_HP}
               </Progress>
             </Col>

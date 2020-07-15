@@ -40,17 +40,21 @@ export const buyUnit = (id: string): void => {
   socket?.send(JSON.stringify({ messageType: "BUY_UNIT", payload: { id } }));
 };
 
-export const sellUnit = (id: string): void => {
-  socket?.send(JSON.stringify({ messageType: "SELL_UNIT", payload: { id } }));
-};
-
-export const answerQuestion = (q: number, a: number): void => {
+export const buyUnitWithDiscount = (
+  id: string,
+  questionDifficulty: string,
+  questionAnswerId: number,
+): void => {
   socket?.send(
     JSON.stringify({
-      messageType: "ANSWER_QUESTION",
-      payload: { questionId: q, answerId: a },
+      messageType: "BUY_UNIT",
+      payload: { id, questionDifficulty, questionAnswerId },
     }),
   );
+};
+
+export const sellUnit = (id: string): void => {
+  socket?.send(JSON.stringify({ messageType: "SELL_UNIT", payload: { id } }));
 };
 
 export const placeUnit = (unitPlacement: UnitPlacement): void => {

@@ -2,6 +2,7 @@
   {
     "id": 1,
     "text": "JS: 2 + 2 = ?",
+    "difficulty": "EASY",
     "answers": [
       {
         "id": 1,
@@ -21,6 +22,7 @@
   {
     "id": 2,
     "text": "JS: '2' + 2 = ?",
+    "difficulty": "MEDIUM",
     "answers": [
       {
         "id": 1,
@@ -40,6 +42,7 @@
   {
     "id": 3,
     "text": "JS: '2' + '2' - 2 = ?",
+    "difficulty": "HARD",
     "answers": [
       {
         "id": 1,

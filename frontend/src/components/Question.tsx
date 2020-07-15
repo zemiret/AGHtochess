@@ -10,33 +10,31 @@ import {
   ListGroupItem,
 } from "reactstrap";
 
-interface Props extends QuestionType {
-  answerQuestion: (q: number, a: number) => void;
+interface Props {
+  answerQuestion: (answerId: number) => void;
+  question: QuestionType;
 }
 
 const Question: React.FunctionComponent<Props> = ({
-  id: questionId,
-  text,
-  answers,
+  question,
   answerQuestion,
 }: Props) => {
   return (
     <>
-      {!answers && "No more questions"}
-      {answers && (
+      {question.answers && (
         <Card>
           <CardHeader>Question</CardHeader>
           <CardBody>
-            <CardTitle>{text}</CardTitle>
+            <CardTitle>{question.text}</CardTitle>
             <CardText>
               <ListGroup>
-                {answers.map(a => {
+                {question.answers.map(a => {
                   return (
                     <ListGroupItem
                       key={a.id}
                       tag="button"
                       action
-                      onClick={() => answerQuestion(questionId, a.id)}
+                      onClick={() => answerQuestion(a.id)}
                     >
                       {a.text}
                     </ListGroupItem>
