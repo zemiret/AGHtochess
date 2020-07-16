@@ -26,7 +26,7 @@ const UnitStats: React.FunctionComponent<Props> = ({ unit, showPrice }: Props) =
       <UnitStat text="Range" value={unit.range} color={STAT_COLORS.range} />
       <UnitStat
         text="Critic chance"
-        value={unit.criticalChance}
+        value={unit.criticalChance + "%"}
         color={STAT_COLORS.criticalChance}
       />
       <UnitStat text="Attack speed" value={unit.attackSpeed} />
