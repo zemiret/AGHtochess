@@ -266,3 +266,25 @@ body, html {
 	cursor: grab;
 }
 
+.projectile {
+	background-color: lime;
+	position: fixed;
+	height: 10px;
+	width: 10px;
+	border-radius: 50%;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	transition-property: transform;
+	animation-name: hide;
+	animation-fill-mode: forwards;
+}
+
+@keyframes hide {
+	0% {
+		visibility: visible;
+	}
+	100% {
+		visibility: hidden;
+	}
+}

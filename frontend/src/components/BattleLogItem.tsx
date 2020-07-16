@@ -5,35 +5,34 @@ import { Badge, ListGroupItem } from "reactstrap";
 
 interface Props {
   action: BattleAction;
-  units: Unit[];
-  enemyUnits: Unit[];
+  positiveNews: boolean;
+  who: Unit;
+  whom: Unit;
 }
 
 const BattleLogItem: React.FunctionComponent<Props> = ({
   action,
-  units,
-  enemyUnits,
+  positiveNews,
+  who,
+  whom,
 }: Props) => {
   const actionVerb = action.action === "kill" ? " killed" : " damaged";
-  const allUnits = [...units, ...enemyUnits];
-  const who = allUnits.find(unit => unit.id === action.who) || units[0];
-  const whom = allUnits.find(unit => unit.id === action.whom) || units[0];
-
-  const positiveNews = units.indexOf(who) !== -1;
   const whoDescription = positiveNews ? "You " : "Enemy ";
   const whomDescription = !positiveNews ? " you " : " enemy ";
 
   return (
-    <ListGroupItem
-      color={action.action === "kill" ? (positiveNews ? "success" : "danger") : ""}
-    >
-      {whoDescription}
-      <PopoverUnitAvatar unit={who} size={20} />
-      {actionVerb}
-      {whomDescription}
-      <PopoverUnitAvatar unit={whom} size={20} /> dealing{" "}
-      <Badge pill>{Math.round(action.damage * 10) / 10}</Badge> damage
-    </ListGroupItem>
+    <>
+      <ListGroupItem
+        color={action.action === "kill" ? (positiveNews ? "success" : "danger") : ""}
+      >
+        {whoDescription}
+        <PopoverUnitAvatar unit={who} size={20} />
+        {actionVerb}
+        {whomDescription}
+        <PopoverUnitAvatar unit={whom} size={20} /> dealing{" "}
+        <Badge pill>{Math.round(action.damage * 10) / 10}</Badge> damage
+      </ListGroupItem>
+    </>
   );
 };
 

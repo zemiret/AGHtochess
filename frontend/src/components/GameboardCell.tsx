@@ -39,6 +39,7 @@ const GameboardCell: React.FunctionComponent<Props> = ({
 
   return (
     <td
+      id={unit && `board-unit-${unit.id}`}
       ref={drop}
       className={
         "board-cell with-border " +

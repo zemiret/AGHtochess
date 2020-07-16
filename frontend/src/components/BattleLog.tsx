@@ -4,6 +4,7 @@ import { DamageUnit } from "../models/damage-unit.model";
 import BattleLogItem from "./BattleLogItem";
 import { ListGroup } from "reactstrap";
 import Caption from "./Caption";
+import Projectile from "./Projectile";
 
 interface Props {
   log: Array<BattleAction>;
@@ -20,9 +21,21 @@ const BattleLog: React.FunctionComponent<Props> = ({
   enemyUnits,
   damageUnit,
 }: Props) => {
+  const allUnits = [...units, ...enemyUnits];
+  const whos = log.map(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    action => allUnits.find(unit => unit.id === action.who)!,
+  );
+  const whoms = log.map(
+    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+    action => allUnits.find(unit => unit.id === action.whom)!,
+  );
+
   const [currentLog, setCurrentLog] = useState<Array<BattleAction>>([]);
   const lastElement = useRef<HTMLDivElement>(null);
   const [lastExecute, setLastExecute] = useState<number>(performance.now());
+
+  const projectileDuration = log.length / actionDuration;
 
   useEffect(() => {
     if (currentLog.length === log.length) return;
@@ -47,14 +60,27 @@ const BattleLog: React.FunctionComponent<Props> = ({
     <div>
       <Caption text="Battle log"></Caption>
       <ListGroup flush>
-        {currentLog.map((action, i) => (
-          <BattleLogItem
-            key={i}
-            action={action}
-            units={units}
-            enemyUnits={enemyUnits}
-          />
-        ))}
+        {currentLog.map((action, i) => {
+          const who = whos[i];
+          const whom = whoms[i];
+          return (
+            <>
+              <BattleLogItem
+                key={`log-${i}`}
+                action={action}
+                who={who}
+                whom={whom}
+                positiveNews={units.indexOf(who) !== -1}
+              />
+              <Projectile
+                key={`projectile-${i}`}
+                duration={projectileDuration}
+                source={who.id}
+                target={whom.id}
+              />
+            </>
+          );
+        })}
         <div ref={lastElement}></div>
       </ListGroup>
     </div>
