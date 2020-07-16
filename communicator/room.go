@@ -550,7 +550,7 @@ func (r *Room) handleBuyUnit(c *Client, payload BuyUnitPayload) {
 	}
 
 	if canBuy {
-		unitToBuy.Unit.Price = price
+		unitToBuy.Unit.Price = roundMoney(float64(price) * unitSellPriceMultiplier)
 		playerState.Units = append(playerState.Units, unitToBuy.Unit)
 
 		if err := c.SendMessage(newInfoMessage(fmt.Sprintf("Unit bought -%d €cts", price))); err != nil {
@@ -603,7 +603,7 @@ func (r *Room) handleSellUnit(c *Client, payload SellUnitPayload) {
 		}
 	}
 
-	state.Player.Money += roundMoney(float64(unitToSell.Price) * unitSellPriceMultiplier)
+	state.Player.Money += unitToSell.Price
 	state.Units = append(state.Units[:unitIndex], state.Units[unitIndex+1:]...)
 
 	if err := c.SendMessage(r.generateClientState(c)); err != nil {
