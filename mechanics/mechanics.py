@@ -7,8 +7,6 @@ from model.Param import Param
 from model.Unit import Unit
 from model.UnitFactory import UnitFactory
 
-golden_ratio = (1 + 5 ** 0.5) / 2
-
 
 def generate_unit(round: int) -> Unit:
     tank_factory = UnitFactory(attack=Param(low=10, high=20, multiplier=1.1),
