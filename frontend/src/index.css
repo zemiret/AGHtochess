@@ -268,7 +268,8 @@ body, html {
 	cursor: grab;
 }
 
-.login-container {
+.login-container,
+.lobby-container {
   display: flex;
 	height: 100vh;
 	align-items: center;

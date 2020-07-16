@@ -4,14 +4,23 @@
   --color-background: #13242c;
   --color-border: #5da1c6;
   --color-accent-light: #b1ffff;
-  --color-warning: #dc3545;
+  --color-accent-light-transparent: rgba(177, 255, 255, 0.2);
+  --color-enemy: #dc3545;
+  --color-enemy-transparent: rgba(220, 53, 69, 0.3);
+  --color-white: #ffffff;
+  --color-black: #000000;
 }
 
 body {
   font-family: 'Orbitron', sans-serif;
   font-size: 14px;
   background: var(--color-background);
-  color: #ffffff;
+  color: var(--color-white);
+  overflow-y: hidden;
+}
+
+*:focus {
+  outline: none !important;
 }
 
 .btn {
@@ -51,7 +60,7 @@ table.board {
 
 .enemy-board-cell {
   background: var(--color-background);
-  --aug-border-bg: var(--color-warning);
+  --aug-border-bg: var(--color-enemy);
 }
 
 .unit-container {
@@ -73,13 +82,10 @@ table.board {
   --aug-tl: 10px;
 }
 
-.login-container .jumbotron {
-  /*background: rgba(25, 60, 100, 0.2);*/
-  /*background: var(--bor);*/
+.login-container .jumbotron,
+.lobby-container .jumbotron {
   background: rgba(177, 255, 255, 0.1);
 
-  /*--aug-border: 4px;*/
-  /*--aug-border-bg: var(--color-border);*/
   --aug-t: 20px;
   --aug-t-width: 50%;
   --aug-b: 20px;
@@ -90,4 +96,57 @@ table.board {
 .login-container input, .login-container select,
 .login-container input:focus, .login-container select:focus {
   background: none;
+  color: var(--color-white);
+}
+
+.login-container select option, .login-container select:focus option {
+  color: var(--color-black);
+}
+
+.backpack-overlay {
+  background-color: var(--color-accent-light-transparent);
+}
+
+.question-card,
+.question-card button, .question-card button:focus, .question-card button:hover {
+  background-color: var(--color-background);
+  color: var(--color-white);
+}
+
+.question-card button {
+  --aug-br: 10px;
+  --aug-bl: 10px;
+  --aug-tr: 10px;
+  --aug-tl: 10px;
+}
+
+.question-card button:hover {
+  --aug-border: 2px;
+  --aug-border-bg: radial-gradient(circle at top left, var(--color-accent-light), var(--color-accent-light) 20px, transparent 20px),
+  radial-gradient(circle at top right, var(--color-accent-light), var(--color-accent-light) 20px, transparent 20px),
+  radial-gradient(circle at bottom left, var(--color-accent-light), var(--color-accent-light) 20px, transparent 20px),
+  radial-gradient(circle at bottom right, var(--color-accent-light), var(--color-accent-light) 20px, transparent 20px);
+}
+
+.info-toast {
+  font-size: 24px;
+  position: absolute;
+  width: 30%;
+  padding-bottom: 1em;
+  padding-top: .8em;
+  text-align: center;
+  background: var(--color-background);
+  --aug-border: 2px;
+  --aug-border-bg: var(--color-border);
+  --aug-b: 10px;
+  --aug-b-width: 50%;
+  --aug-inset: 8px;
+  --aug-inset-bg: var(--color-accent-light-transparent);
+  color: var(--color-accent-light);
+
+  transform: translateY(-12px) translateX(-50%);
+}
+
+.info-toast.alert-danger {
+  --aug-inset-bg: var(--color-enemy-transparent);
 }
