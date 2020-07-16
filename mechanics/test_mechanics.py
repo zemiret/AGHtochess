@@ -7,11 +7,6 @@ from mechanics import generate_unit
     (1, 0, 1e6),
     (5, 0, 1e6),
     (10, 0, 1e6),
-
-    # TODO: balance
-    # (1, 100, 500),
-    # (5, 500, 10000),
-    # (10, 5000, 20000),
 ])
 def test_generate_unit_price(round, min_expected, max_expected):
     unit = generate_unit(round)
