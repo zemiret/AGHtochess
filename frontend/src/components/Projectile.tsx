@@ -38,10 +38,7 @@ const Projectile: React.FunctionComponent<Props> = ({
 
   const [isStarted, setStarted] = useState<boolean>(false);
 
-  useEffect(() => {
-    console.log({ sourceCenter, targetCenter });
-    setStarted(true);
-  }, []);
+  useEffect(() => setStarted(true), []);
 
   const transform = isStarted
     ? {
