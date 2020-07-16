@@ -19,13 +19,15 @@ const Store: React.FunctionComponent<Props> = ({
   buyUnitWithDiscount,
   playerMoney,
 }: Props) => {
+  const augmentedClips = "exe tl-clip tr-clip bl-clip br-clip";
+
   return (
     <div className="store">
       <Caption text="Store" />
       <ul>
         {store.map(storeUnit => (
           <li key={storeUnit.unit.id}>
-            <div className="unit-container">
+            <div className="unit-container" augmented-ui={augmentedClips}>
               <StoreUnit
                 playerMoney={playerMoney}
                 storeUnit={storeUnit}
