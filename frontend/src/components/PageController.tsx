@@ -4,9 +4,11 @@ import LoginPage from "./LoginPage";
 import LobbyPage from "./LobbyPage";
 import { connect } from "react-redux";
 import GamePage from "./GamePage";
+import StatsPage from "./StatsPage";
+import { PageState } from "../models/page-state.model";
 
 interface Props {
-  state: "login" | "lobby" | "game";
+  state: PageState;
 }
 
 const PageController: React.FunctionComponent<Props> = ({ state }: Props) => {
@@ -19,6 +21,9 @@ const PageController: React.FunctionComponent<Props> = ({ state }: Props) => {
 
     case "game":
       return <GamePage />;
+
+    case "stats":
+      return <StatsPage />;
   }
 };
 
