@@ -28,10 +28,10 @@ const Gameboard: React.FunctionComponent<Props> = ({
   return (
     <Container>
       <Row className="h-flex-align-center">
-        <table className="board with-border">
+        <table className="board">
           <tbody>
             {range(BOARD_HEIGHT).map(y => (
-              <tr key={y} className="with-border">
+              <tr key={y}>
                 {range(BOARD_WIDTH).map(x => (
                   <GameboardCell
                     key={y * BOARD_WIDTH + x}

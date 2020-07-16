@@ -55,6 +55,8 @@ body, html {
   -ms-user-select: none; /* Internet Explorer/Edge */
 }
 
+/* ----------- END RESET ------------- */
+
 #root {
 	height: 100%;
 }

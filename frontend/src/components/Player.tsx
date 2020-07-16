@@ -27,8 +27,11 @@ const Player: React.FunctionComponent<PlayerInfoDisplay> = ({
   const progressColor = isEnemy ? "danger" : "success";
   const progressState = (hp / MAX_PLAYER_HP) * 100;
 
+  const augmentedClips = isEnemy ? "b-clip-x exe" : "t-clip-x exe";
+  const additionalClass = isEnemy ? "enemy-card" : "";
+
   return (
-    <Card className="player-card">
+    <Card className={`player-card ${additionalClass}`} augmented-ui={augmentedClips}>
       <CardBody>
         <Container>
           <Row className="v-flex-align-center">
