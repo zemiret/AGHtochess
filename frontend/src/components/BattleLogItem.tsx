@@ -4,27 +4,27 @@ import { BattleAction, Unit } from "../models/game-state.model";
 import { Badge, ListGroupItem } from "reactstrap";
 
 interface Props {
-  visible: boolean;
   action: BattleAction;
-  positiveNews: boolean;
-  who: Unit;
-  whom: Unit;
+  units: Unit[];
+  enemyUnits: Unit[];
 }
 
 const BattleLogItem: React.FunctionComponent<Props> = ({
-  visible,
   action,
-  positiveNews,
-  who,
-  whom,
+  units,
+  enemyUnits,
 }: Props) => {
   const actionVerb = action.action === "kill" ? " killed" : " damaged";
+  const allUnits = [...units, ...enemyUnits];
+  const who = allUnits.find(unit => unit.id === action.who) || units[0];
+  const whom = allUnits.find(unit => unit.id === action.whom) || units[0];
+
+  const positiveNews = units.indexOf(who) !== -1;
   const whoDescription = positiveNews ? "You " : "Enemy ";
   const whomDescription = !positiveNews ? " you " : " enemy ";
 
   return (
     <ListGroupItem
-      className={visible ? "battle-log-item--hidden" : ""}
       color={action.action === "kill" ? (positiveNews ? "success" : "danger") : ""}
     >
       {whoDescription}
