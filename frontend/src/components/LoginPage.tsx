@@ -130,7 +130,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
                     color="info"
                     onClick={handleStatsClicked}
                   >
-                    Stats
+                    Statistics
                   </Button>
                 )}
               </Col>

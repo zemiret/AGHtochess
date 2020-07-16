@@ -43,10 +43,12 @@ const BattleLog: React.FunctionComponent<Props> = ({
     lastElement.current?.scrollIntoView(false);
   }, [currentLog, lastElement]);
 
+  const augmentedClips = "exe";
+
   return (
-    <div>
-      <Caption text="Battle log"></Caption>
-      <ListGroup flush>
+    <div className="battle-log-container">
+      <Caption text="Battle log" />
+      <ListGroup flush augmented-ui={augmentedClips}>
         {currentLog.map((action, i) => (
           <BattleLogItem
             key={i}
@@ -55,7 +57,7 @@ const BattleLog: React.FunctionComponent<Props> = ({
             enemyUnits={enemyUnits}
           />
         ))}
-        <div ref={lastElement}></div>
+        <div ref={lastElement} />
       </ListGroup>
     </div>
   );

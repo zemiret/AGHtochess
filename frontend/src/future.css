@@ -6,6 +6,7 @@
   --color-accent-light: #b1ffff;
   --color-accent-light-transparent: rgba(177, 255, 255, 0.2);
   --color-enemy: #dc3545;
+  --color-player: #28a745;
   --color-enemy-transparent: rgba(220, 53, 69, 0.3);
   --color-white: #ffffff;
   --color-black: #000000;
@@ -158,4 +159,43 @@ table.board {
 .timer-bar {
   padding: 0;
   margin-top: -4px;
+}
+
+.battle-log-container,
+.battle-log-container .list-group,
+.battle-log-container .list-group-item {
+  background: var(--color-background);
+}
+
+.battle-log-container .list-group-item-danger {
+  color: var(--color-enemy);
+}
+
+.battle-log-container .list-group-item-success {
+  color: var(--color-player);
+}
+
+.battle-log-container .list-group {
+  --aug-border: 2px;
+  --aug-border-bg: radial-gradient(circle at top left, var(--color-accent-light), var(--color-accent-light) 20px, transparent 20px),
+  radial-gradient(circle at top right, var(--color-accent-light), var(--color-accent-light) 20px, transparent 20px),
+  radial-gradient(circle at bottom left, var(--color-accent-light), var(--color-accent-light) 20px, transparent 20px),
+  radial-gradient(circle at bottom right, var(--color-accent-light), var(--color-accent-light) 20px, transparent 20px);
+
+  --aug-br: 10px;
+  --aug-bl: 10px;
+  --aug-tr: 10px;
+  --aug-tl: 10px;
+}
+
+.unit-popover .popover-body {
+  background: var(--color-background);
+  font-family: 'Orbitron', sans-serif;
+  color: var(--color-white);
+  border: 1px solid var(--color-accent-light);
+}
+
+.unit-popover .popover .arrow::after {
+  background: var(--color-background);
+  border-left-color: var(--color-accent-light);
 }
