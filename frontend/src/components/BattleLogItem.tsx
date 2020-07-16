@@ -4,6 +4,7 @@ import { BattleAction, Unit } from "../models/game-state.model";
 import { Badge, ListGroupItem } from "reactstrap";
 
 interface Props {
+  visible: boolean;
   action: BattleAction;
   positiveNews: boolean;
   who: Unit;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const BattleLogItem: React.FunctionComponent<Props> = ({
+  visible,
   action,
   positiveNews,
   who,
@@ -22,6 +24,7 @@ const BattleLogItem: React.FunctionComponent<Props> = ({
 
   return (
     <ListGroupItem
+      className={visible ? "battle-log-item--hidden" : ""}
       color={action.action === "kill" ? (positiveNews ? "success" : "danger") : ""}
     >
       {whoDescription}

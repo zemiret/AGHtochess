@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 interface Props {
   source: string;
   target: string;
+  delay: number;
   duration: number;
   positiveNews: boolean;
 }
@@ -25,6 +26,7 @@ const center = (element: HTMLElement | null): Coordinates => {
 const Projectile: React.FunctionComponent<Props> = ({
   source,
   target,
+  delay,
   duration,
   positiveNews,
 }: Props) => {
@@ -50,7 +52,9 @@ const Projectile: React.FunctionComponent<Props> = ({
 
   const style = {
     ...transform,
+    transitionDelay: delay + "ms",
     transitionDuration: duration + "ms",
+    animationDelay: delay + "ms",
     animationDuration: duration + "ms",
   };
 

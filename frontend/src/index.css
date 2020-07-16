@@ -266,11 +266,16 @@ body, html {
 	cursor: grab;
 }
 
+.battle-log-item--hidden {
+	display: none;
+}
+
 .projectile {
 	position: fixed;
 	height: 32px;
 	width: 4px;
 	border-radius: 4px;
+	visibility: hidden;
 	z-index: 1000;
 	left: 0;
 	top: 0;
