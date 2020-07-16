@@ -11,13 +11,23 @@ import (
 
 const port = 4000
 
+const (
+	DefaultQuestionsFile = "assets/questions_local.json"
+)
+
 func main() {
 	log.SetFlags(log.Flags() | log.Lshortfile)
 
 	rand.Seed(time.Now().UTC().UnixNano())
 
 	fmt.Printf("Starting communicator at :%d\n", port)
-	loadedQuestions, err := LoadQuestions()
+
+	questionsFile := os.Getenv("QUESTIONS_FILE")
+	if len(questionsFile) == 0 {
+		questionsFile = DefaultQuestionsFile
+	}
+
+	loadedQuestions, err := LoadQuestions(questionsFile)
 	if err != nil {
 		log.Fatal("Did not load questions", err)
 	}
