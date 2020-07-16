@@ -6,33 +6,35 @@ type GameResult string
 type QuestionResult string
 type GameType string
 
+type QuestionDifficulty string
+
 const (
 	MessageTypeStateChange    MessageType = "STATE_CHANGE"
 	MessageTypeInfo           MessageType = "INFO"
 	MessageTypeError          MessageType = "ERROR"
 	MessageTypeQuestionResult MessageType = "QUESTION_RESULT"
 
-	MessageTypeBuyUnit        MessageType = "BUY_UNIT"
-	MessageTypeSellUnit       MessageType = "SELL_UNIT"
-	MessageTypePlaceUnit      MessageType = "PLACE_UNIT"
-	MessageTypeUnplaceUnit    MessageType = "UNPLACE_UNIT"
-	MessageTypeAnswerQuestion MessageType = "ANSWER_QUESTION"
+	MessageTypeBuyUnit     MessageType = "BUY_UNIT"
+	MessageTypeSellUnit    MessageType = "SELL_UNIT"
+	MessageTypePlaceUnit   MessageType = "PLACE_UNIT"
+	MessageTypeUnplaceUnit MessageType = "UNPLACE_UNIT"
 
 	GamePhaseWaiting      GamePhase = "WAITING_FOR_PLAYERS"
 	GamePhaseStore        GamePhase = "STORE"
 	GamePhaseBattle       GamePhase = "BATTLE"
 	GamePhaseBattleResult GamePhase = "BATTLE_RESULT"
-	GamePhaseQuestion     GamePhase = "QUESTION"
 	GamePhaseGameEnd      GamePhase = "GAME_END"
 
-	GameResultWin  GameResult = "WIN"
-	GameResultLoss GameResult = "LOSS"
-
-	QuestionResultCorrect   QuestionResult = "CORRECT"
-	QuestionResultIncorrect QuestionResult = "INCORRECT"
+	ResultWin  GameResult = "WIN"
+	ResultLoss GameResult = "LOSS"
+	ResultDraw GameResult = "DRAW"
 
 	GameTypeDuel   = "DUEL"
 	GameTypeRoyale = "ROYALE"
+
+	QuestionDifficultyEasy   = "EASY"
+	QuestionDifficultyMedium = "MEDIUM"
+	QuestionDifficultyHard   = "HARD"
 )
 
 type Message struct {
@@ -69,8 +71,7 @@ type PlayerStatePayload struct {
 	GameResult          *GameResult       `json:"gameResult,omitempty"`
 	Player              Player            `json:"player"`
 	Enemy               *Player           `json:"enemy"`
-	Question            *PublicQuestion   `json:"question,omitempty"`
-	Store               []Unit            `json:"store"`
+	Store               []StoreUnit       `json:"store"`
 	Units               []Unit            `json:"units"`
 	UnitsPlacement      []UnitPlacement   `json:"unitsPlacement"`
 	EnemyUnits          []Unit            `json:"enemyUnits"`
@@ -95,9 +96,10 @@ type Question struct {
 }
 
 type PublicQuestion struct {
-	ID      int      `json:"id"`
-	Text    string   `json:"text"`
-	Answers []Answer `json:"answers"`
+	ID         int                `json:"id"`
+	Text       string             `json:"text"`
+	Answers    []Answer           `json:"answers"`
+	Difficulty QuestionDifficulty `json:"difficulty"`
 }
 
 type Unit struct {
@@ -113,6 +115,13 @@ type Unit struct {
 	Price          int    `json:"price"`
 }
 
+type UnitQuestions map[QuestionDifficulty]Question
+
+type StoreUnit struct {
+	Unit      Unit          `json:"unit"`
+	Questions UnitQuestions `json:"questions"`
+}
+
 type UnitPlacement struct {
 	UnitID string `json:"unitId"`
 	X      int    `json:"x"`
@@ -126,16 +135,13 @@ type BattleStatistics struct {
 }
 
 type BuyUnitPayload struct {
-	ID string `json:"id"`
+	ID                 string              `json:"id"`
+	QuestionDifficulty *QuestionDifficulty `json:"questionDifficulty,omitempty"`
+	QuestionAnswerID   *int                `json:"questionAnswerId,omitempty"`
 }
 
 type SellUnitPayload struct {
 	ID string `json:"id"`
-}
-
-type AnswerQuestionPayload struct {
-	QuestionID int `json:"questionId"`
-	AnswerID   int `json:"answerId"`
 }
 
 type QuestionResultPayload struct {

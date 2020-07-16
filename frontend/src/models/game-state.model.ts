@@ -17,6 +17,13 @@ export interface Unit {
   price: number;
 }
 
+export interface StoreUnit {
+  unit: Unit;
+  questions: {
+    [questionDifficulty: string]: Question;
+  };
+}
+
 export interface UnitPlacement {
   unitId: string;
   x: number;
@@ -24,7 +31,7 @@ export interface UnitPlacement {
 }
 
 export interface BattleStatistics {
-  result: "WIN" | "LOSS";
+  result: GameResult;
   playerHpChange: number;
   log: Array<BattleAction>;
 }
@@ -45,6 +52,7 @@ export interface Question {
   id: number;
   text: string;
   answers: Answer[];
+  difficulty: string;
 }
 
 export interface CommonGameState {
@@ -60,7 +68,7 @@ export interface CommonGameState {
 
 export interface StoreGameState extends CommonGameState {
   phase: "STORE";
-  store: Unit[];
+  store: StoreUnit[];
 }
 
 export interface BattleGameState extends CommonGameState {
@@ -73,11 +81,6 @@ export interface BattleResultGameState extends CommonGameState {
   battleStatistics?: BattleStatistics;
 }
 
-export interface QuestionGameState extends CommonGameState {
-  phase: "QUESTION";
-  question: Question;
-}
-
 export interface GameEndGameState extends CommonGameState {
   phase: "GAME_END";
   gameResult: "WIN" | "LOSS";
@@ -88,14 +91,27 @@ export enum GameType {
   ROYALE = "ROYALE",
 }
 
+export enum QuestionDifficulty {
+  EASY = "EASY",
+  MEDIUM = "MEDIUM",
+  HARD = "HARD",
+}
+
 export interface WebsocketOptions {
   username: string;
   gameType: string;
 }
 
+export interface BuyUnitWithDiscountPayload {
+  id: string;
+  questionDifficulty: QuestionDifficulty;
+  answerId: number;
+}
+
+export type GameResult = "WIN" | "LOSS" | "DRAW";
+
 export type GameState =
   | StoreGameState
   | BattleGameState
   | BattleResultGameState
-  | QuestionGameState
   | GameEndGameState;

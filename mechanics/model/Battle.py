@@ -1,7 +1,7 @@
 from dataclasses import dataclass, field
-from queue import PriorityQueue
+import heapq
 from random import randint, uniform
-from typing import Optional, List
+from typing import Optional, List, Tuple, Dict
 
 from model.Board import Board
 from model.Token import Token
@@ -18,7 +18,8 @@ class PrioritizedItem:
 class Battle:
     player1: Board
     player2: Board
-    initiative_queue: PriorityQueue
+    initiative_queue: List[PrioritizedItem]
+    distance_to_opponents: Dict
 
     log: List[dict]
     winner: Optional[Board] = None
@@ -27,23 +28,42 @@ class Battle:
         self.player1 = player1
         self.player2 = player2
         self.log = []
-        self.initiative_queue = PriorityQueue()
+        self.distance_to_opponents = {}
+        self._calculate_distance_to_opponents()
+        self.initiative_queue = []
         self._initialize_queue()
+
+    def _calculate_distance_for_one_player(self, attacker, defender):
+        for token in attacker.tokens:
+            self.distance_to_opponents[token.unit.id] = [(token.distance(enemy_token), enemy_token) for enemy_token in defender.tokens]
+            self.distance_to_opponents[token.unit.id].sort(key=lambda x: x[0])
+
+    def _calculate_distance_to_opponents(self):
+        self._calculate_distance_for_one_player(self.player1, self.player2)
+        self._calculate_distance_for_one_player(self.player2, self.player1)
 
     def _initialize_queue(self):
         for board in self.player1, self.player2:
             for token in board.alive_tokens:
                 entry = PrioritizedItem(-token.unit.attackSpeed, token, board)
-                self.initiative_queue.put(entry)
+                heapq.heappush(self.initiative_queue, entry)
 
     def _get_entry_from_queue(self) -> PrioritizedItem:
-        entry = self.initiative_queue.get()
+        entry = heapq.heappop(self.initiative_queue)
+        
         if entry.score == 0:
-            self.initiative_queue.queue.clear()
+            self.initiative_queue.clear()
             self._initialize_queue()
             return self._get_entry_from_queue()
 
         return entry
+
+    def _get_nearest_defending_token(self, attacking_token) -> Token:
+        while True:
+            distance, token = self.distance_to_opponents[attacking_token.unit.id][0]
+            if token.unit.alive:
+                return token
+            self.distance_to_opponents[attacking_token.unit.id].pop(0)
 
     def resolve(self) -> None:
         while self.player1.anyone_alive and self.player2.anyone_alive:
@@ -53,13 +73,16 @@ class Battle:
             attacking_player = entry.player
 
             defending_player = self.player2 if attacking_player is self.player1 else self.player1
-            defending_token = defending_player.get_random_alive_token()
+            defending_token = self._get_nearest_defending_token(attacking_token)
 
             damage = self._resolve_duel(attacking_token, defending_token)
 
-            if defending_token.unit.alive:
-                entry = PrioritizedItem(score + 1, attacking_token, attacking_player)
-                self.initiative_queue.put(entry)
+            if defending_token.unit.dead:
+                self.initiative_queue = [e for e in self.initiative_queue if e.token != defending_token]
+                heapq.heapify(self.initiative_queue)
+
+            entry = PrioritizedItem(score + 1, attacking_token, attacking_player)
+            heapq.heappush(self.initiative_queue, entry)
 
             self.log.append({
                 "action": "kill" if defending_token.unit.dead else "damage",

@@ -11,6 +11,7 @@ interface Props {
   dragRef?: DragElementWrapper<DragSourceOptions>;
   isDragging?: boolean;
   shouldDisappear?: boolean;
+  showPrice?: boolean;
 }
 
 const PopoverUnitAvatar: React.FunctionComponent<Props> = ({
@@ -19,6 +20,7 @@ const PopoverUnitAvatar: React.FunctionComponent<Props> = ({
   dragRef,
   isDragging,
   shouldDisappear,
+  showPrice,
 }: Props) => {
   const [hover, setHover] = useState<boolean>(false);
   const [randomValue] = useState<string>(
@@ -54,7 +56,7 @@ const PopoverUnitAvatar: React.FunctionComponent<Props> = ({
         }}
       >
         <PopoverBody>
-          <UnitStats unit={unit} />
+          <UnitStats unit={unit} showPrice={showPrice} />
         </PopoverBody>
       </Popover>
     </div>
