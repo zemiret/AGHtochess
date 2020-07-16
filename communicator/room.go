@@ -11,10 +11,10 @@ import (
 
 const (
 	initialHp        = 100
-	initialMoney     = 200
-	baseWinnerReward = 80
-	baseDrawReward   = 70
-	baseLoserReward  = 60
+	initialMoney     = 300
+	baseWinnerReward = 160
+	baseDrawReward   = 150
+	baseLoserReward  = 140
 	boardWidth       = 6
 	boardHeight      = 8
 
