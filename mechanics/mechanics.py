@@ -73,7 +73,7 @@ def resolve_battle(board1: Board, board2: Board) -> Tuple[int, int, List[dict]]:
     battle.resolve()
 
     winner_number = 1 if battle.winner is board2 else 0
-    player_hp_change = -3 * len(battle.winner.alive_tokens + 1)
+    player_hp_change = -3 * len(battle.winner.alive_tokens)
     log = battle.log
 
     return winner_number, player_hp_change, log
