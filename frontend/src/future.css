@@ -87,3 +87,7 @@ table.board {
   padding: 120px;
 }
 
+.login-container input, .login-container select,
+.login-container input:focus, .login-container select:focus {
+  background: none;
+}

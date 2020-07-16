@@ -4,14 +4,15 @@ import { connect } from "react-redux";
 import { Dispatch } from "../store";
 import { connectWebSocket, setUsername } from "../store/actions";
 import {
-  Jumbotron,
+  Button,
+  Col,
   Container,
   Form,
-  Input,
-  Button,
   FormGroup,
+  Input,
+  Jumbotron,
+  Label,
   Row,
-  Col,
 } from "reactstrap";
 import { GameType, WebsocketOptions } from "../models/game-state.model";
 
@@ -54,54 +55,60 @@ const LoginPage: React.FunctionComponent<Props> = ({
           </p>
           <hr className="my-4" />
           <Form onSubmit={handleSubmit}>
-            <FormGroup>
-              <Row noGutters={true}>
-                <Col sm="3" />
-                <Col>
-                  <Input
-                    className="mr-2"
-                    type="text"
-                    value={username}
-                    onChange={handleUsernameChange}
-                    placeholder="Username"
-                    required={true}
-                  />
-                </Col>
-                <Col sm="3" />
-              </Row>
-              <Row noGutters={true}>
-                <Col sm="3" />
-                <Col>
-                  <Input
-                    type="select"
-                    value={gameType}
-                    className="mr-2"
-                    onChange={handleGameTypeChange}
-                    placeholder="Game type"
-                    required={true}
-                  >
-                    <option>{GameType.DUEL}</option>
-                    <option>{GameType.ROYALE}</option>
-                  </Input>
-                </Col>
-                <Col sm="3" />
-              </Row>
-              <Row noGutters={true}>
-                <Col sm="3" />
-                <Col>
-                  {!connecting && (
-                    <Button color="primary" type="submit">
-                      Play
-                    </Button>
-                  )}
-                  {connecting && (
-                    <Button type="submit" disabled={true}>
-                      Connecting
-                    </Button>
-                  )}
-                </Col>
-                <Col sm="3" />
-              </Row>
+            <FormGroup row>
+              <Col sm="3" />
+              <Col>
+                <Input
+                  className="mr-2"
+                  type="text"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  placeholder="Username"
+                  required={true}
+                />
+              </Col>
+              <Col sm="3" />
+            </FormGroup>
+            <FormGroup row>
+              <Col sm="3" />
+              <Col>
+                <Row noGutters={true}>
+                  <Label sm="4" for="gameTypeSelect">
+                    Game type:
+                  </Label>
+                  <Col sm="8">
+                    <Input
+                      id="gameTypeSelect"
+                      type="select"
+                      value={gameType}
+                      className="mr-2"
+                      onChange={handleGameTypeChange}
+                      placeholder="Game type"
+                      required={true}
+                    >
+                      <option>{GameType.DUEL}</option>
+                      <option>{GameType.ROYALE}</option>
+                    </Input>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm="3" />
+            </FormGroup>
+            <FormGroup row>
+              <Col sm="3" />
+              <Col>
+                {!connecting && (
+                  <Button color="primary" type="submit">
+                    Play
+                  </Button>
+                )}
+                {connecting && (
+                  <Button type="submit" disabled={true}>
+                    Connecting
+                  </Button>
+                )}
+              </Col>
+              <Col sm="3" />
             </FormGroup>
           </Form>
         </Jumbotron>

@@ -276,5 +276,9 @@ body, html {
 }
 
 .login-container .form-control {
-	margin-bottom: 1.5em;
+	margin-bottom: 1em;
+}
+
+.login-container .btn {
+	width: 100%;
 }
