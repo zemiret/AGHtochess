@@ -35,8 +35,6 @@ const BattleLog: React.FunctionComponent<Props> = ({
   const lastElement = useRef<HTMLDivElement>(null);
   const [lastExecute, setLastExecute] = useState<number>(performance.now());
 
-  const projectileDuration = log.length / actionDuration;
-
   useEffect(() => {
     if (currentLog.length === log.length) return;
     const timer = setTimeout(() => {
@@ -63,6 +61,8 @@ const BattleLog: React.FunctionComponent<Props> = ({
         {currentLog.map((action, i) => {
           const who = whos[i];
           const whom = whoms[i];
+          if (!(who && whom)) return null;
+
           const positiveNews = units.indexOf(who) !== -1;
           return (
             <>
@@ -75,7 +75,7 @@ const BattleLog: React.FunctionComponent<Props> = ({
               />
               <Projectile
                 key={`projectile-${i}`}
-                duration={projectileDuration}
+                duration={actionDuration}
                 source={who.id}
                 target={whom.id}
                 positiveNews={positiveNews}

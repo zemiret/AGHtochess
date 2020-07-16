@@ -50,8 +50,8 @@ const Projectile: React.FunctionComponent<Props> = ({
 
   const style = {
     ...transform,
-    transitionDuration: duration + "s",
-    animationDuration: duration + "s",
+    transitionDuration: duration + "ms",
+    animationDuration: duration + "ms",
   };
 
   return (
