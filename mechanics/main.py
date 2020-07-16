@@ -1,6 +1,6 @@
 from flask import Flask, request
 
-from mechanics import generate_unit, resolve_battle
+from mechanics import resolve_battle, HackyHack
 from model.Board import Board
 
 app = Flask(__name__)
@@ -13,7 +13,7 @@ def generate_units_handler():
     count: int = data.get('count', 5)
 
     return {
-        "units": [generate_unit(round) for _ in range(count)]
+        "units": [HackyHack().generate_unit(round) for _ in range(count)]
     }
 
 

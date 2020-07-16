@@ -1,6 +1,6 @@
 import pytest
 
-from mechanics import generate_unit
+from mechanics import HackyHack
 
 
 @pytest.mark.parametrize('round, min_expected, max_expected', [
@@ -14,7 +14,7 @@ from mechanics import generate_unit
     # (10, 5000, 20000),
 ])
 def test_generate_unit_price(round, min_expected, max_expected):
-    unit = generate_unit(round)
+    unit = HackyHack().generate_unit(round)
 
     if min_expected is not None:
         assert unit.price >= min_expected
