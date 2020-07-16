@@ -10,4 +10,8 @@ export interface PlayerStats {
   unitsLosts: number;
   damageTaken: number;
   damageGiven: number;
+  questionsAnswered: { [key: string]: number };
+  questionsCorrect: { [key: string]: number };
+  moneyLost: number;
+  moneySaved: number;
 }
