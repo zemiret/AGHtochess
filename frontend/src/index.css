@@ -281,12 +281,12 @@ body, html {
 	animation-fill-mode: forwards;
 }
 
-.projectile-enemy {
+.projectile-ally {
 	background-color: rgb(200, 255, 200);
 	box-shadow: 0 0 3px 2px rgb(100, 255, 100), 0 0 2px 6px rgb(200, 255, 200);
 }
 
-.projectile-ally {
+.projectile-enemy {
 	background-color: rgb(255, 200, 200);
 	box-shadow: 0 0 3px 2px rgb(255, 100, 100), 0 0 2px 6px rgb(255, 200, 200);
 }

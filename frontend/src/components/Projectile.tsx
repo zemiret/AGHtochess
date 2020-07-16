@@ -44,10 +44,10 @@ const Projectile: React.FunctionComponent<Props> = ({
 
   const transform = isStarted
     ? {
-        transform: `translate(${sourceCenter.x}px,${sourceCenter.y}px) rotate(${angle}rad)`,
+        transform: `translate(${targetCenter.x}px,${targetCenter.y}px) rotate(${angle}rad)`,
       }
     : {
-        transform: `translate(${targetCenter.x}px,${targetCenter.y}px) rotate(${angle}rad)`,
+        transform: `translate(${sourceCenter.x}px,${sourceCenter.y}px) rotate(${angle}rad)`,
       };
 
   const style = {
