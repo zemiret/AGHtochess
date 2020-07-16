@@ -261,6 +261,7 @@ body, html {
 
 .player-waiting-caption {
 	font-size: 48px;
+	margin-bottom: 24px;
 }
 
 .unit-avatar-draggable {

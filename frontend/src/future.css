@@ -41,12 +41,21 @@ body {
   transform: translateY(6px);
 }
 
+.player-card .player-username {
+  text-align: center;
+}
+
 .player-card .card-body {
-  padding: 1rem;
+  padding: 1.5rem;
 }
 
 .enemy-card {
   transform: translateY(-4px);
+}
+
+table {
+  background: var(--color-background);
+  color: var(--color-white);
 }
 
 table.board {
@@ -198,4 +207,31 @@ table.board {
 .unit-popover .popover .arrow::after {
   background: var(--color-background);
   border-left-color: var(--color-accent-light);
+  border-right-color: var(--color-accent-light);
+}
+
+.battle-result h1 {
+  font-size: 48px;
+  margin-bottom: 18px;
+}
+
+.battle-result.battle-result-success h1 {
+  color: var(--color-player);
+}
+
+.battle-result.battle-result-danger h1 {
+  color: var(--color-enemy);
+}
+
+.stats-back-btn {
+  margin-top: 24px;
+}
+
+.statistics-container .caption {
+  margin-bottom: 24px;
+  margin-top: 24px;
+}
+
+.statistics-container table {
+  color: var(--color-white);
 }

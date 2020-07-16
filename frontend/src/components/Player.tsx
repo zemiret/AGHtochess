@@ -1,6 +1,5 @@
 import React from "react";
 import { PlayerInfo } from "../models/game-state.model";
-import RoundIcon from "./RoundIcon";
 import {
   Card,
   CardBody,
@@ -34,13 +33,8 @@ const Player: React.FunctionComponent<PlayerInfoDisplay> = ({
     <Card className={`player-card ${additionalClass}`} augmented-ui={augmentedClips}>
       <CardBody>
         <Container>
-          <Row className="v-flex-align-center">
-            <Col xs="auto">
-              <RoundIcon />
-            </Col>
-            <Col xs="4">
-              <CardTitle className="player-username">{username}</CardTitle>
-            </Col>
+          <Row className="h-flex-align-center">
+            <CardTitle className="player-username">{username}</CardTitle>
           </Row>
 
           <Row className="next-player-row v-flex-align-center">
