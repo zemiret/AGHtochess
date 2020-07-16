@@ -63,6 +63,7 @@ const BattleLog: React.FunctionComponent<Props> = ({
         {currentLog.map((action, i) => {
           const who = whos[i];
           const whom = whoms[i];
+          const positiveNews = units.indexOf(who) !== -1;
           return (
             <>
               <BattleLogItem
@@ -70,13 +71,14 @@ const BattleLog: React.FunctionComponent<Props> = ({
                 action={action}
                 who={who}
                 whom={whom}
-                positiveNews={units.indexOf(who) !== -1}
+                positiveNews={positiveNews}
               />
               <Projectile
                 key={`projectile-${i}`}
                 duration={projectileDuration}
                 source={who.id}
                 target={whom.id}
+                positiveNews={positiveNews}
               />
             </>
           );

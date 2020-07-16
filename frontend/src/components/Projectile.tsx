@@ -4,6 +4,7 @@ interface Props {
   source: string;
   target: string;
   duration: number;
+  positiveNews: boolean;
 }
 
 interface Coordinates {
@@ -25,6 +26,7 @@ const Projectile: React.FunctionComponent<Props> = ({
   source,
   target,
   duration,
+  positiveNews,
 }: Props) => {
   const sourceEl = document.getElementById(`board-unit-${source}`);
   const targetEl = document.getElementById(`board-unit-${target}`);
@@ -48,7 +50,12 @@ const Projectile: React.FunctionComponent<Props> = ({
     animationDuration: duration + "s",
   };
 
-  return <div className="projectile" style={style} />;
+  return (
+    <div
+      className={`projectile projectile-${positiveNews ? "ally" : "enemy"}`}
+      style={style}
+    />
+  );
 };
 
 export default Projectile;
