@@ -16,7 +16,7 @@ body {
   font-size: 14px;
   background: var(--color-background);
   color: var(--color-white);
-  overflow-y: hidden;
+  /*overflow-y: hidden;*/
 }
 
 *:focus {
