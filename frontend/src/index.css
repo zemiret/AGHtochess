@@ -266,3 +266,13 @@ body, html {
 	cursor: grab;
 }
 
+.stats-header {
+	font-weight: bold;
+	padding: 20px 0;
+	font-size: 40px;
+}
+
+.stats-button {
+	margin-left: 10px;
+}
+

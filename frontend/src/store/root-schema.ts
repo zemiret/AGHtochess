@@ -9,7 +9,7 @@ export interface RootSchema {
   message: string;
   messageType: "success" | "danger";
   messageVisible: boolean;
-  stats: Stats
+  stats: Stats;
 }
 
 export const initialState: RootSchema = {
@@ -20,5 +20,5 @@ export const initialState: RootSchema = {
   message: "",
   messageType: "success",
   messageVisible: false,
-  stats: {}
+  stats: {},
 };

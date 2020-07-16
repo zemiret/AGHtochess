@@ -17,7 +17,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
   username: defaultUsername,
   connecting,
   login,
-  changeView
+  changeView,
 }: Props) => {
   const [username, setUsername] = useState<string>(defaultUsername);
   const [gameType, setGameType] = useState<string>(GameType.DUEL);
@@ -36,8 +36,8 @@ const LoginPage: React.FunctionComponent<Props> = ({
   };
 
   const handleStatsClicked = () => {
-    changeView(username)
-  }
+    changeView(username);
+  };
 
   return (
     <Container>
@@ -78,7 +78,11 @@ const LoginPage: React.FunctionComponent<Props> = ({
                 </Button>
               )}
               {!connecting && (
-                <Button color="info" onClick={handleStatsClicked}>
+                <Button
+                  className="stats-button"
+                  color="info"
+                  onClick={handleStatsClicked}
+                >
                   Stats
                 </Button>
               )}
@@ -103,7 +107,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   changeView: (username: string) => {
     dispatch(setUsername(username));
     dispatch(changeView("stats"));
-  }
+  },
 });
 
 export default connect(mapStateToProps, mapDispatchToProps)(LoginPage);
