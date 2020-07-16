@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import { Dispatch } from "../store";
-import { connectWebSocket, setUsername } from "../store/actions";
+import { changeView, connectWebSocket, setUsername } from "../store/actions";
 import {
   Button,
   Col,
@@ -19,6 +19,7 @@ import { GameType, WebsocketOptions } from "../models/game-state.model";
 interface Props {
   username: string;
   connecting: boolean;
+  showStatistics: (username: string) => void;
   login: (wsOptions: WebsocketOptions) => void;
 }
 
@@ -26,6 +27,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
   username: defaultUsername,
   connecting,
   login,
+  showStatistics,
 }: Props) => {
   const [username, setUsername] = useState<string>(defaultUsername);
   const [gameType, setGameType] = useState<string>(GameType.DUEL);
@@ -41,6 +43,10 @@ const LoginPage: React.FunctionComponent<Props> = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     login({ username, gameType });
+  };
+
+  const handleStatsClicked = () => {
+    showStatistics(username);
   };
 
   const augmentedClips = "exe t-clip-x b-clip-x";
@@ -110,6 +116,26 @@ const LoginPage: React.FunctionComponent<Props> = ({
               </Col>
               <Col sm="3" />
             </FormGroup>
+            <FormGroup row>
+              <Col sm="3" />
+              <Col>
+                {connecting && (
+                  <Button type="submit" disabled={true}>
+                    Connecting
+                  </Button>
+                )}
+                {!connecting && (
+                  <Button
+                    className="stats-button"
+                    color="info"
+                    onClick={handleStatsClicked}
+                  >
+                    Stats
+                  </Button>
+                )}
+              </Col>
+              <Col sm="3" />
+            </FormGroup>
           </Form>
         </Jumbotron>
       </div>
@@ -126,6 +152,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   login: (wsOptions: WebsocketOptions) => {
     dispatch(setUsername(wsOptions.username));
     dispatch(connectWebSocket(wsOptions));
+  },
+  showStatistics: (username: string) => {
+    dispatch(setUsername(username));
+    dispatch(changeView("stats"));
   },
 });
 

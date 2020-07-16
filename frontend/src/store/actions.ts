@@ -11,6 +11,7 @@ import { MessageType } from "../models/message-type.enum";
 import { DamageUnit } from "../models/damage-unit.model";
 
 export const setUsername = createAction<string>("setUsername");
+export const changeView = createAction<string>("changeView");
 export const closeWebSocket = createAction("closeWebSocket");
 
 export const changeGameState = createAction<GameState>("changeGameState");
