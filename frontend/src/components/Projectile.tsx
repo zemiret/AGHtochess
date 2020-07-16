@@ -32,6 +32,9 @@ const Projectile: React.FunctionComponent<Props> = ({
   const targetEl = document.getElementById(`board-unit-${target}`);
   const sourceCenter = center(sourceEl);
   const targetCenter = center(targetEl);
+  const dx = targetCenter.x - sourceCenter.x;
+  const dy = targetCenter.y - sourceCenter.y;
+  const angle = -Math.atan2(dx, dy);
 
   const [isStarted, setStarted] = useState<boolean>(false);
 
@@ -41,8 +44,12 @@ const Projectile: React.FunctionComponent<Props> = ({
   }, []);
 
   const transform = isStarted
-    ? { transform: `translate(${sourceCenter.x}px,${sourceCenter.y}px)` }
-    : { transform: `translate(${targetCenter.x}px,${targetCenter.y}px)` };
+    ? {
+        transform: `translate(${sourceCenter.x}px,${sourceCenter.y}px) rotate(${angle}rad)`,
+      }
+    : {
+        transform: `translate(${targetCenter.x}px,${targetCenter.y}px) rotate(${angle}rad)`,
+      };
 
   const style = {
     ...transform,

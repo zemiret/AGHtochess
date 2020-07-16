@@ -275,6 +275,7 @@ body, html {
 	left: 0;
 	top: 0;
 	transition-property: transform;
+	transition-timing-function: linear;
 	animation-name: hide;
 	animation-fill-mode: forwards;
 }
