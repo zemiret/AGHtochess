@@ -42,6 +42,7 @@ const GameboardCell: React.FunctionComponent<Props> = ({
   return (
     <td
       augmented-ui={augmentedClips}
+      id={unit && `board-unit-${unit.id}`}
       ref={drop}
       className={
         "board-cell " +
