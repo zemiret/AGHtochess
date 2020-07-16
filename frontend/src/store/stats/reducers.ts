@@ -1,10 +1,14 @@
 import {
+  statsCorrectAnswer,
   statsDamageGiven,
   statsDamageTaken,
   statsGamePlayed,
   statsGameWon,
+  statsIncorrectAnswer,
   statsKilledUnits,
   statsLostUnits,
+  statsMoneyLost,
+  statsMoneySaved,
   statsRoundPlayed,
   statsRoundWon,
 } from "./actions";
@@ -55,5 +59,34 @@ export const statsReducer = {
   [statsLostUnits.type]: (state: RootSchema, action: PayloadAction<number>) =>
     updatePlayerStats(state, {
       unitsLosts: (state.stats[state.username]?.unitsLosts ?? 0) + action.payload,
+    }),
+  [statsCorrectAnswer.type]: (state: RootSchema, action: PayloadAction<string>) =>
+    updatePlayerStats(state, {
+      questionsAnswered: {
+        ...state.stats[state.username]?.questionsAnswered,
+        [action.payload]:
+          (state.stats[state.username]?.questionsAnswered?.[action.payload] ?? 0) + 1,
+      },
+      questionsCorrect: {
+        ...state.stats[state.username]?.questionsCorrect,
+        [action.payload]:
+          (state.stats[state.username]?.questionsCorrect?.[action.payload] ?? 0) + 1,
+      },
+    }),
+  [statsIncorrectAnswer.type]: (state: RootSchema, action: PayloadAction<string>) =>
+    updatePlayerStats(state, {
+      questionsAnswered: {
+        ...state.stats[state.username]?.questionsCorrect,
+        [action.payload]:
+          (state.stats[state.username]?.questionsCorrect?.[action.payload] ?? 0) + 1,
+      },
+    }),
+  [statsMoneySaved.type]: (state: RootSchema, action: PayloadAction<number>) =>
+    updatePlayerStats(state, {
+      moneySaved: (state.stats[state.username]?.moneySaved ?? 0) + action.payload,
+    }),
+  [statsMoneyLost.type]: (state: RootSchema, action: PayloadAction<number>) =>
+    updatePlayerStats(state, {
+      moneyLost: (state.stats[state.username]?.moneyLost ?? 0) + action.payload,
     }),
 };

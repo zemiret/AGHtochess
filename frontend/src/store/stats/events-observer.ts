@@ -1,5 +1,13 @@
+import { PayloadAction } from "@reduxjs/toolkit";
 import { AnyAction, MiddlewareAPI } from "redux";
-import { BattleGameState, GameEndGameState } from "../../models/game-state.model";
+import {
+  BattleGameState,
+  StoreGameState,
+  BuyUnitWithDiscountPayload,
+  GameEndGameState,
+} from "../../models/game-state.model";
+import { InfoMessage } from "../../models/info-message.model";
+import { buyUnitWithDiscount, showErrorMessage, showInfoMessage } from "../actions";
 import { initialState, RootSchema } from "../root-schema";
 import {
   statsGamePlayed,
@@ -10,10 +18,15 @@ import {
   statsDamageTaken,
   statsKilledUnits,
   statsLostUnits,
+  statsMoneySaved,
+  statsMoneyLost,
+  statsCorrectAnswer,
+  statsIncorrectAnswer,
 } from "./actions";
 
 export class EventsObserver {
   currentState = initialState;
+  buyUnitsRequests: { [key: string]: string } = {};
 
   storeChanged(state: MiddlewareAPI, action: AnyAction) {
     if (action.type.startsWith("stats")) return;
@@ -24,15 +37,19 @@ export class EventsObserver {
     const checkers: ((
       prevState: RootSchema,
       state: RootSchema,
+      action: AnyAction,
     ) => AnyAction[] | null)[] = [
       EventsObserver.checkNewGame,
       EventsObserver.checkGameWon,
       EventsObserver.checkNewRound,
       EventsObserver.checkRoundWon,
       EventsObserver.checkDamages,
+      EventsObserver.checkMoneySpent,
+      this.checkCorrectAnswer.bind(this),
     ];
+    this.saveBuyRequests(action);
     checkers.forEach(checker => {
-      const statsActions = checker(prevState, this.currentState);
+      const statsActions = checker(prevState, this.currentState, action);
       if (statsActions) {
         statsActions.forEach(state.dispatch);
       }
@@ -42,6 +59,7 @@ export class EventsObserver {
   private static checkNewGame(
     prevState: RootSchema,
     newState: RootSchema,
+    _: AnyAction,
   ): AnyAction[] | null {
     return prevState.state !== newState.state && newState.state === "game"
       ? [statsGamePlayed()]
@@ -51,6 +69,7 @@ export class EventsObserver {
   private static checkGameWon(
     prevState: RootSchema,
     newState: RootSchema,
+    _: AnyAction,
   ): AnyAction[] | null {
     return prevState.gameState?.phase !== newState.gameState?.phase &&
       newState.gameState?.phase === "GAME_END" &&
@@ -62,6 +81,7 @@ export class EventsObserver {
   private static checkNewRound(
     prevState: RootSchema,
     newState: RootSchema,
+    _: AnyAction,
   ): AnyAction[] | null {
     return prevState.gameState?.phase !== newState.gameState?.phase &&
       newState.gameState?.phase === "STORE"
@@ -72,6 +92,7 @@ export class EventsObserver {
   private static checkRoundWon(
     prevState: RootSchema,
     newState: RootSchema,
+    _: AnyAction,
   ): AnyAction[] | null {
     return prevState.gameState?.phase !== newState.gameState?.phase &&
       newState.gameState?.phase === "BATTLE" &&
@@ -83,6 +104,7 @@ export class EventsObserver {
   private static checkDamages(
     prevState: RootSchema,
     newState: RootSchema,
+    _: AnyAction,
   ): AnyAction[] | null {
     if (
       prevState.gameState?.phase !== newState.gameState?.phase &&
@@ -113,6 +135,78 @@ export class EventsObserver {
         statsKilledUnits(killedUnits),
         statsLostUnits(lostUnits),
       ];
+    }
+    return null;
+  }
+
+  private static getPriceFromMessage(message: string): number {
+    const startIndex = message.indexOf("-") + 1;
+    const endIndex = message.indexOf("€") - 1;
+    return Number(message.substring(startIndex, endIndex));
+  }
+
+  private static checkMoneySpent(
+    _: RootSchema,
+    _2: RootSchema,
+    action: AnyAction,
+  ): AnyAction[] | null {
+    const payloadAction = action as PayloadAction<InfoMessage>;
+    if (
+      action.type === showInfoMessage.type &&
+      payloadAction.payload.message.includes("Unit bought")
+    ) {
+      return [
+        statsMoneySaved(
+          EventsObserver.getPriceFromMessage(payloadAction.payload.message),
+        ),
+      ];
+    }
+    if (
+      action.type === showErrorMessage.type &&
+      payloadAction.payload.message.includes("Incorrect answer")
+    ) {
+      return [
+        statsMoneyLost(
+          EventsObserver.getPriceFromMessage(payloadAction.payload.message),
+        ),
+      ];
+    }
+    return null;
+  }
+
+  private saveBuyRequests(action: AnyAction): AnyAction[] | null {
+    if (action.type === buyUnitWithDiscount.pending.type) {
+      const payload = action.meta.arg as BuyUnitWithDiscountPayload;
+      this.buyUnitsRequests[payload.id] = payload.questionDifficulty;
+    }
+    return null;
+  }
+
+  private checkCorrectAnswer(
+    prevState: RootSchema,
+    newState: RootSchema,
+    _: AnyAction,
+  ): AnyAction[] | null {
+    if (newState.gameState?.phase !== "STORE" || prevState.gameState?.phase !== "STORE")
+      return null;
+    const prevStoreUnits = (prevState?.gameState as StoreGameState)?.store?.map(
+      u => u.unit.id,
+    );
+    const newStoreUnits = (newState?.gameState as StoreGameState)?.store?.map(
+      u => u.unit.id,
+    );
+    if (newStoreUnits.length < prevStoreUnits.length) {
+      const newStoreSet = new Set(newStoreUnits);
+      const removedUnit = prevStoreUnits.find(u => !newStoreSet.has(u));
+      const currentUnits = new Set(newState?.gameState?.units?.map(u => u.id));
+      if (removedUnit && this.buyUnitsRequests[removedUnit]) {
+        const type = this.buyUnitsRequests[removedUnit];
+        return [
+          currentUnits.has(removedUnit)
+            ? statsCorrectAnswer(type)
+            : statsIncorrectAnswer(type),
+        ];
+      }
     }
     return null;
   }

@@ -55,6 +55,23 @@ const StatsPage: React.FunctionComponent<Props> = ({
               <td>Lost units</td>
               <td>{stats.unitsLosts ?? 0}</td>
             </tr>
+            {["EASY", "MEDIUM", "HARD"].map(qkey => (
+              <tr key={qkey}>
+                <td>Correct {qkey} answers ratio</td>
+                <td>
+                  {stats.questionsCorrect?.[qkey] ?? 0}/
+                  {stats.questionsAnswered?.[qkey] ?? 0}
+                </td>
+              </tr>
+            ))}
+            <tr>
+              <td>Money saved due to correct answers</td>
+              <td>{stats.moneySaved ?? 0}</td>
+            </tr>
+            <tr>
+              <td>Money lost due to incorrect answers</td>
+              <td>{stats.moneyLost ?? 0}</td>
+            </tr>
           </tbody>
         </Table>
       )}
