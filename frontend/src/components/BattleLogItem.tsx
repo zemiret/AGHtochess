@@ -21,18 +21,16 @@ const BattleLogItem: React.FunctionComponent<Props> = ({
   const whomDescription = !positiveNews ? " you " : " enemy ";
 
   return (
-    <>
-      <ListGroupItem
-        color={action.action === "kill" ? (positiveNews ? "success" : "danger") : ""}
-      >
-        {whoDescription}
-        <PopoverUnitAvatar unit={who} size={20} />
-        {actionVerb}
-        {whomDescription}
-        <PopoverUnitAvatar unit={whom} size={20} /> dealing{" "}
-        <Badge pill>{Math.round(action.damage * 10) / 10}</Badge> damage
-      </ListGroupItem>
-    </>
+    <ListGroupItem
+      color={action.action === "kill" ? (positiveNews ? "success" : "danger") : ""}
+    >
+      {whoDescription}
+      <PopoverUnitAvatar unit={who} size={20} />
+      {actionVerb}
+      {whomDescription}
+      <PopoverUnitAvatar unit={whom} size={20} /> dealing{" "}
+      <Badge pill>{Math.round(action.damage * 10) / 10}</Badge> damage
+    </ListGroupItem>
   );
 };
 
