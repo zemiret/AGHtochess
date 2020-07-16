@@ -74,7 +74,7 @@ class Battle:
         if attacking_token.unit.physical:
             attack = attacking_token.unit.attack
             if randint(0, 100) < attacking_token.unit.criticalChance:
-                attack *= int(uniform(1, 2))
+                attack *= int(uniform(1.5, 2))
             else:
                 attack = randint(0, attack)
             defense = randint(0, defending_token.unit.defense)
@@ -89,7 +89,7 @@ class Battle:
 
         damage_reduction_divider = self._calculate_damage_divider(distance, attack_range)
 
-        damage = max(0, attack - defense)
+        damage = max(1, attack - defense)
         damage /= damage_reduction_divider
 
         defending_token.unit.hp = max(0, defending_token.unit.hp - damage)
