@@ -266,10 +266,6 @@ body, html {
 	cursor: grab;
 }
 
-.battle-log-item--hidden {
-	display: none;
-}
-
 .projectile {
 	position: fixed;
 	height: 32px;
@@ -302,4 +298,8 @@ body, html {
 	100% {
 		visibility: hidden;
 	}
+}
+
+.stats-button {
+	margin-left: 10px;
 }

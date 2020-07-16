@@ -27,8 +27,9 @@ const StoreUnit: React.FunctionComponent<Props> = ({
 }: Props) => {
   const difficulties = Object.keys(QuestionDifficulty);
   const prices = difficulties.reduce<{ [k: string]: number }>((acc, cur) => {
-    acc[cur] =
-      storeUnit.unit.price * QUESTION_DIFFICULTY_MULTIPLIERS[cur as QuestionDifficulty];
+    acc[cur] = Math.ceil(
+      storeUnit.unit.price * QUESTION_DIFFICULTY_MULTIPLIERS[cur as QuestionDifficulty],
+    );
     return acc;
   }, {});
 

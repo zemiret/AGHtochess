@@ -2,13 +2,14 @@ import React, { useState } from "react";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import { Dispatch } from "../store";
-import { connectWebSocket, setUsername } from "../store/actions";
+import { connectWebSocket, setUsername, changeView } from "../store/actions";
 import { Jumbotron, Container, Form, Input, Button, FormGroup, Row } from "reactstrap";
 import { GameType, WebsocketOptions } from "../models/game-state.model";
 
 interface Props {
   username: string;
   connecting: boolean;
+  showStatistics: (username: string) => void;
   login: (wsOptions: WebsocketOptions) => void;
 }
 
@@ -16,6 +17,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
   username: defaultUsername,
   connecting,
   login,
+  showStatistics,
 }: Props) => {
   const [username, setUsername] = useState<string>(defaultUsername);
   const [gameType, setGameType] = useState<string>(GameType.DUEL);
@@ -31,6 +33,10 @@ const LoginPage: React.FunctionComponent<Props> = ({
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>): void => {
     e.preventDefault();
     login({ username, gameType });
+  };
+
+  const handleStatsClicked = () => {
+    showStatistics(username);
   };
 
   return (
@@ -71,6 +77,15 @@ const LoginPage: React.FunctionComponent<Props> = ({
                   Connecting
                 </Button>
               )}
+              {!connecting && (
+                <Button
+                  className="stats-button"
+                  color="info"
+                  onClick={handleStatsClicked}
+                >
+                  Stats
+                </Button>
+              )}
             </Row>
           </FormGroup>
         </Form>
@@ -88,6 +103,10 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
   login: (wsOptions: WebsocketOptions) => {
     dispatch(setUsername(wsOptions.username));
     dispatch(connectWebSocket(wsOptions));
+  },
+  showStatistics: (username: string) => {
+    dispatch(setUsername(username));
+    dispatch(changeView("stats"));
   },
 });
 
