@@ -5,10 +5,11 @@ import { RootSchema } from "../store/root-schema";
 import { Dispatch } from "../store";
 import { changeView } from "../store/actions";
 import { connect } from "react-redux";
+import Caption from "./Caption";
 
 interface Props {
   username: string;
-  stats: PlayerStats;
+  stats?: PlayerStats;
   dispatch: Dispatch;
 }
 
@@ -20,46 +21,44 @@ const StatsPage: React.FunctionComponent<Props> = ({
   const back = () => {
     dispatch(changeView("login"));
   };
-  const gameSuccessRatio =
-    stats && stats.playedGames ? (stats.wonGames ?? 0) / stats.playedGames : "No info";
-  const roundsSuccessRatio =
-    stats && stats.playedRounds
-      ? (stats.wonRounds ?? 0) / stats.playedRounds
-      : "No info";
   return (
     <Container>
-      <h1 className="stats-header">Stats for user {username}</h1>
+      <Caption text={`Stats for user ${username}`}></Caption>
       {stats && (
         <Table striped>
           <tbody>
             <tr>
               <td>Games success ratio</td>
-              <td>{gameSuccessRatio}</td>
+              <td>
+                {stats.wonGames ?? 0}/{stats.playedGames ?? 0}
+              </td>
             </tr>
             <tr>
               <td>Rounds success ratio</td>
-              <td>{roundsSuccessRatio}</td>
+              <td>
+                {stats.wonRounds ?? 0}/{stats.playedRounds ?? 0}
+              </td>
             </tr>
             <tr>
               <td>Overall damage taken</td>
-              <td>{stats.damageTaken}</td>
+              <td>{stats.damageTaken ?? 0}</td>
             </tr>
             <tr>
               <td>Overall damage given</td>
-              <td>{stats.damageGiven}</td>
+              <td>{stats.damageGiven ?? 0}</td>
             </tr>
             <tr>
               <td>Killed units</td>
-              <td>{stats.unitsKilled}</td>
+              <td>{stats.unitsKilled ?? 0}</td>
             </tr>
             <tr>
               <td>Lost units</td>
-              <td>{stats.unitsLosts}</td>
+              <td>{stats.unitsLosts ?? 0}</td>
             </tr>
           </tbody>
         </Table>
       )}
-      {!stats && <div>No stats for this user yet</div>}
+      {!stats && <div>You have no statistics yet</div>}
       <Button onClick={back}>Back</Button>
     </Container>
   );

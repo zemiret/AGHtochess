@@ -9,7 +9,7 @@ import { GameType, WebsocketOptions } from "../models/game-state.model";
 interface Props {
   username: string;
   connecting: boolean;
-  changeView: (username: string) => void;
+  showStatistics: (username: string) => void;
   login: (wsOptions: WebsocketOptions) => void;
 }
 
@@ -17,7 +17,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
   username: defaultUsername,
   connecting,
   login,
-  changeView,
+  showStatistics,
 }: Props) => {
   const [username, setUsername] = useState<string>(defaultUsername);
   const [gameType, setGameType] = useState<string>(GameType.DUEL);
@@ -36,7 +36,7 @@ const LoginPage: React.FunctionComponent<Props> = ({
   };
 
   const handleStatsClicked = () => {
-    changeView(username);
+    showStatistics(username);
   };
 
   return (
@@ -104,7 +104,7 @@ const mapDispatchToProps = (dispatch: Dispatch) => ({
     dispatch(setUsername(wsOptions.username));
     dispatch(connectWebSocket(wsOptions));
   },
-  changeView: (username: string) => {
+  showStatistics: (username: string) => {
     dispatch(setUsername(username));
     dispatch(changeView("stats"));
   },
