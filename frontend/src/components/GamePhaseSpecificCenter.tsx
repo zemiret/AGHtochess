@@ -7,6 +7,7 @@ import BattleResult from "./BattleResult";
 import { Dispatch } from "../store";
 import { placeUnit } from "../store/actions";
 import Gameboard from "./Gameboard";
+import Projectiles from "./Projectiles";
 
 interface Props {
   gameState: GameState;
@@ -30,10 +31,18 @@ const GamePhaseSpecificCenter: React.FunctionComponent<Props> = ({
       );
     case "BATTLE":
       return (
-        <Gameboard
-          {...gameState}
-          units={[...gameState.units, ...gameState.enemyUnits]}
-        />
+        <>
+          <Gameboard
+            {...gameState}
+            units={[...gameState.units, ...gameState.enemyUnits]}
+          />
+          {gameState.battleStatistics && (
+            <Projectiles
+              log={gameState.battleStatistics.log}
+              unitIds={gameState.units.map(u => u.id)}
+            />
+          )}
+        </>
       );
     case "BATTLE_RESULT":
       return gameState.battleStatistics ? (

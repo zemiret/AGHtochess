@@ -266,7 +266,40 @@ body, html {
 	cursor: grab;
 }
 
+.projectile {
+	position: fixed;
+	height: 32px;
+	width: 4px;
+	border-radius: 4px;
+	visibility: hidden;
+	z-index: 1000;
+	left: 0;
+	top: 0;
+	transition-property: transform;
+	transition-timing-function: linear;
+	animation-name: hide;
+	animation-fill-mode: forwards;
+}
+
+.projectile-enemy {
+	background-color: rgb(200, 255, 200);
+	box-shadow: 0 0 3px 2px rgb(100, 255, 100), 0 0 2px 6px rgb(200, 255, 200);
+}
+
+.projectile-ally {
+	background-color: rgb(255, 200, 200);
+	box-shadow: 0 0 3px 2px rgb(255, 100, 100), 0 0 2px 6px rgb(255, 200, 200);
+}
+
+@keyframes hide {
+	0% {
+		visibility: visible;
+	}
+	100% {
+		visibility: hidden;
+	}
+}
+
 .stats-button {
 	margin-left: 10px;
 }
-
