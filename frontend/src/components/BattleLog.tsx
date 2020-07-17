@@ -1,4 +1,4 @@
-import React, { useState, useLayoutEffect, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { BattleAction, Unit } from "../models/game-state.model";
 import { DamageUnit } from "../models/damage-unit.model";
 import BattleLogItem from "./BattleLogItem";
@@ -34,14 +34,10 @@ const BattleLog: React.FunctionComponent<Props> = ({
         unitId: nextAction.whom,
         damage: nextAction.damage,
       });
-      setCurrentLog([...currentLog, nextAction]);
+      setCurrentLog([nextAction, ...currentLog]);
     }, actionDuration - (performance.now() - lastExecute));
     return () => clearTimeout(timer);
   }, [currentLog, log, damageUnit, lastExecute]);
-
-  useLayoutEffect(() => {
-    lastElement.current?.scrollIntoView(false);
-  }, [currentLog, lastElement]);
 
   const augmentedClips = "exe";
 
