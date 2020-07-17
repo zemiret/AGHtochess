@@ -161,7 +161,7 @@ func (r *Room) ShutdownOrFinish(client *Client, reason string) {
 	if r.duelMode() {
 		r.Shutdown(reason)
 	} else {
-		r.finishGameForPlayer(client, false)
+		r.finishGameForPlayer(client, false, true)
 	}
 }
 
@@ -410,15 +410,17 @@ func (r *Room) calculateReward(statistics *BattleStatistics) int {
 	}
 }
 
-func (r *Room) finishGameForPlayer(c *Client, sendState bool) {
+func (r *Room) finishGameForPlayer(c *Client, sendState bool, sendMessageToEnemy bool) {
 	r.log.Printf("Finishing game for: %v\n", c.nickname)
 
 	// I am disconnecting, so my enemy loses his opponent (me)
 	enemy := r.getEnemy(c)
 	if enemy != nil {
 		r.playersState[enemy].enemy = nil
-		if err := enemy.SendMessage(newErrorMessage("Enemy disconnected")); err != nil {
-			r.logErrorSendingMessage(err)
+		if sendMessageToEnemy {
+			if err := enemy.SendMessage(newErrorMessage("Enemy disconnected")); err != nil {
+				r.logErrorSendingMessage(err)
+			}
 		}
 
 		if err := enemy.SendMessage(r.generateClientState(enemy)); err != nil {
@@ -473,7 +475,7 @@ func (r *Room) handlePhaseChange(phase GamePhase) {
 		state.Store = []StoreUnit{}
 
 		if !duelMode && state.Player.Hp <= 0 {
-			r.finishGameForPlayer(client, true)
+			r.finishGameForPlayer(client, true, false)
 		}
 	}
 
