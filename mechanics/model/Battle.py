@@ -85,6 +85,7 @@ class Battle:
             heapq.heappush(self.initiative_queue, entry)
 
             self.initiative_queue = [PrioritizedItem(score=e.score - e.token.unit.attackSpeed,token=e.token,player=e.player) for e in self.initiative_queue]
+            heapq.heapify(self.initiative_queue)
 
 
             self.log.append({
