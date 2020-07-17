@@ -15,7 +15,7 @@ def generate_unit(round: int) -> Unit:
                                criticalChance=Param(low=10, high=20, multiplier=1.02, max=100),
                                hp=Param(low=100, high=140, multiplier=1.1),
                                range=Param(low=2, high=3),
-                               attackSpeed=Param(low=7, high=10, multiplier=1.1),
+                               attackSpeed=Param(low=7, high=10, multiplier=1.05),
                                type="PHYSICAL")
 
     sniper_factory = UnitFactory(attack=Param(low=30, high=60, multiplier=1.1),
@@ -24,7 +24,7 @@ def generate_unit(round: int) -> Unit:
                                  criticalChance=Param(low=40, high=50, multiplier=1.05, max=100),
                                  hp=Param(low=40, high=60, multiplier=1.1),
                                  range=Param(low=6, high=10),
-                                 attackSpeed=Param(low=4, high=5, multiplier=1.1),
+                                 attackSpeed=Param(low=4, high=5, multiplier=1.05),
                                  type="PHYSICAL")
 
     rogue_factory = UnitFactory(attack=Param(low=25, high=50, multiplier=1.1),
@@ -33,7 +33,7 @@ def generate_unit(round: int) -> Unit:
                                 criticalChance=Param(low=30, high=40, multiplier=1.05, max=100),
                                 hp=Param(low=30, high=50, multiplier=1.1),
                                 range=Param(low=2, high=4),
-                                attackSpeed=Param(low=15, high=20, multiplier=1.1),
+                                attackSpeed=Param(low=10, high=15, multiplier=1.05),
                                 type="PHYSICAL")
 
     magician_factory = UnitFactory(attack=Param(low=20, high=30, multiplier=1.1),
@@ -42,7 +42,7 @@ def generate_unit(round: int) -> Unit:
                                    criticalChance=0,
                                    hp=Param(low=70, high=90, multiplier=1.1),
                                    range=Param(low=3, high=6),
-                                   attackSpeed=Param(low=8, high=12, multiplier=1.1),
+                                   attackSpeed=Param(low=8, high=12, multiplier=1.05),
                                    type="MAGICAL")
 
     magical_tank_factory = UnitFactory(attack=Param(low=15, high=22, multiplier=1.1),
@@ -51,7 +51,7 @@ def generate_unit(round: int) -> Unit:
                                        criticalChance=0,
                                        hp=Param(low=90, high=120, multiplier=1.1),
                                        range=Param(low=3, high=4),
-                                       attackSpeed=Param(low=7, high=10, multiplier=1.1),
+                                       attackSpeed=Param(low=7, high=10, multiplier=1.05),
                                        type="MAGICAL")
 
     unit_factory = choice([
