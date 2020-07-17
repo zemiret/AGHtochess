@@ -468,10 +468,11 @@ func (r *Room) sendGameEndState(c *Client, state *PlayerState) {
 func (r *Room) handlePhaseChange(phase GamePhase) {
 	r.log.Println("Starting new phase ", phase)
 
+	duelMode := len(r.playersState) <= 2
 	for client, state := range r.playersState {
 		state.Store = []StoreUnit{}
 
-		if !r.duelMode() && state.Player.Hp <= 0 {
+		if !duelMode && state.Player.Hp <= 0 {
 			r.finishGameForPlayer(client, true)
 		}
 	}
