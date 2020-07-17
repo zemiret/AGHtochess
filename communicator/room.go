@@ -401,10 +401,10 @@ func (r *Room) startBattleResultPhase() {
 }
 
 func (r *Room) calculateReward(statistics *BattleStatistics) int {
-	if statistics.Result == ResultWin {
-		return baseWinnerReward * r.round
-	} else if statistics.Result == ResultDraw {
+	if statistics == nil || statistics.Result == ResultDraw {
 		return baseDrawReward * r.round
+	} else if statistics.Result == ResultWin {
+		return baseWinnerReward * r.round
 	} else {
 		return baseLoserReward * r.round
 	}
