@@ -4,7 +4,6 @@ import { HTML5Backend } from "react-dnd-html5-backend";
 import { DndProvider } from "react-dnd";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./index.css";
-import "./augmented.css";
 import "./future.css";
 import App from "./App";
 import { Provider } from "react-redux";
@@ -25,13 +24,16 @@ const eventsObserver = new EventsObserver();
 const getStoredStats = () => {
   return Array.from(Array(localStorage.length).keys())
     .map(k => localStorage.key(k) as string)
-    .reduce(
-      (prev, cur) => ({
-        ...prev,
-        [cur]: JSON.parse(localStorage.getItem(cur) ?? "{}"),
-      }),
-      {},
-    );
+    .reduce((prev, cur) => {
+      try {
+        return {
+          ...prev,
+          [cur]: JSON.parse(localStorage.getItem(cur) ?? "{}"),
+        };
+      } catch {
+        return prev;
+      }
+    }, {});
 };
 
 const storedStats = getStoredStats();
