@@ -21,9 +21,13 @@ const StatsPage: React.FunctionComponent<Props> = ({
   const back = () => {
     dispatch(changeView("login"));
   };
+  const roundStat = (stat: number) => {
+    return Math.round(stat * 10) / 10;
+  };
+
   return (
-    <Container>
-      <Caption text={`Stats for user ${username}`}></Caption>
+    <Container className="statistics-container">
+      <Caption text={`${username} progress in exploring the galaxy`} />
       {stats && (
         <Table striped>
           <tbody>
@@ -41,11 +45,11 @@ const StatsPage: React.FunctionComponent<Props> = ({
             </tr>
             <tr>
               <td>Overall damage taken</td>
-              <td>{stats.damageTaken ?? 0}</td>
+              <td>{roundStat(stats.damageTaken ?? 0)}</td>
             </tr>
             <tr>
               <td>Overall damage given</td>
-              <td>{stats.damageGiven ?? 0}</td>
+              <td>{roundStat(stats.damageGiven ?? 0)}</td>
             </tr>
             <tr>
               <td>Killed units</td>
@@ -76,7 +80,9 @@ const StatsPage: React.FunctionComponent<Props> = ({
         </Table>
       )}
       {!stats && <div>You have no statistics yet</div>}
-      <Button onClick={back}>Back</Button>
+      <Button className="stats-back-btn" onClick={back}>
+        Back
+      </Button>
     </Container>
   );
 };

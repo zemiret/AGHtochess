@@ -2,8 +2,18 @@ import React, { useState } from "react";
 import { RootSchema } from "../store/root-schema";
 import { connect } from "react-redux";
 import { Dispatch } from "../store";
-import { connectWebSocket, setUsername, changeView } from "../store/actions";
-import { Jumbotron, Container, Form, Input, Button, FormGroup, Row } from "reactstrap";
+import { changeView, connectWebSocket, setUsername } from "../store/actions";
+import {
+  Button,
+  Col,
+  Container,
+  Form,
+  FormGroup,
+  Input,
+  Jumbotron,
+  Label,
+  Row,
+} from "reactstrap";
 import { GameType, WebsocketOptions } from "../models/game-state.model";
 
 interface Props {
@@ -39,57 +49,96 @@ const LoginPage: React.FunctionComponent<Props> = ({
     showStatistics(username);
   };
 
+  const augmentedClips = "exe t-clip-x b-clip-x";
+
   return (
     <Container>
-      <Jumbotron className="my-4 mx-5">
-        <h1 className="display-4">AGHtochess</h1>
-        <p className="lead">In order to play the game you need to log in.</p>
-        <hr className="my-4" />
-        <Form onSubmit={handleSubmit} inline={true}>
-          <FormGroup>
-            <Row noGutters={true}>
-              <Input
-                className="mr-2"
-                type="text"
-                value={username}
-                onChange={handleUsernameChange}
-                placeholder="Username"
-                required={true}
-              />
-              <Input
-                type="select"
-                value={gameType}
-                className="mr-2"
-                onChange={handleGameTypeChange}
-                placeholder="Game type"
-                required={true}
-              >
-                <option>{GameType.DUEL}</option>
-                <option>{GameType.ROYALE}</option>
-              </Input>
-              {!connecting && (
-                <Button color="primary" type="submit">
-                  Play
-                </Button>
-              )}
-              {connecting && (
-                <Button type="submit" disabled={true}>
-                  Connecting
-                </Button>
-              )}
-              {!connecting && (
-                <Button
-                  className="stats-button"
-                  color="info"
-                  onClick={handleStatsClicked}
-                >
-                  Stats
-                </Button>
-              )}
-            </Row>
-          </FormGroup>
-        </Form>
-      </Jumbotron>
+      <div className="login-container">
+        <Jumbotron className="my-4 mx-5 jumbotron" augmented-ui={augmentedClips}>
+          <h1 className="display-4">AGHtochess</h1>
+          <p className="lead">
+            Welcome, savior of the galaxy. How should we address you?
+          </p>
+          <hr className="my-4" />
+          <Form onSubmit={handleSubmit}>
+            <FormGroup row>
+              <Col sm="3" />
+              <Col>
+                <Input
+                  className="mr-2"
+                  type="text"
+                  value={username}
+                  onChange={handleUsernameChange}
+                  placeholder="Username"
+                  required={true}
+                />
+              </Col>
+              <Col sm="3" />
+            </FormGroup>
+            <FormGroup row>
+              <Col sm="3" />
+              <Col>
+                <Row noGutters={true}>
+                  <Label sm="4" for="gameTypeSelect">
+                    Game type:
+                  </Label>
+                  <Col sm="8">
+                    <Input
+                      id="gameTypeSelect"
+                      type="select"
+                      value={gameType}
+                      className="mr-2"
+                      onChange={handleGameTypeChange}
+                      placeholder="Game type"
+                      required={true}
+                    >
+                      <option>{GameType.DUEL}</option>
+                      <option>{GameType.ROYALE}</option>
+                    </Input>
+                  </Col>
+                </Row>
+              </Col>
+              <Col sm="3" />
+            </FormGroup>
+            <FormGroup row>
+              <Col sm="3" />
+              <Col>
+                {!connecting && (
+                  <Button color="primary" type="submit">
+                    Play
+                  </Button>
+                )}
+                {connecting && (
+                  <Button type="submit" disabled={true}>
+                    Connecting
+                  </Button>
+                )}
+              </Col>
+              <Col sm="3" />
+            </FormGroup>
+            <FormGroup row>
+              <Col sm="3" />
+              <Col>
+                {connecting && (
+                  <Button type="submit" disabled={true}>
+                    Connecting
+                  </Button>
+                )}
+                {!connecting && (
+                  <Button
+                    className="stats-button"
+                    color="info"
+                    onClick={handleStatsClicked}
+                  >
+                    Statistics
+                  </Button>
+                )}
+              </Col>
+              <Col sm="3" />
+            </FormGroup>
+          </Form>
+        </Jumbotron>
+      </div>
     </Container>
   );
 };

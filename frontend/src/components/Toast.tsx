@@ -25,8 +25,15 @@ const Toast: React.FunctionComponent<Props> = ({
     }
   }, [text, visible, hide]);
 
+  const augmentedClips = "exe b-clip-x";
   return (
-    <Alert size="lg" className="info-toast" isOpen={visible} color={color}>
+    <Alert
+      size="md"
+      className="info-toast"
+      isOpen={visible}
+      color={color}
+      augmented-ui={augmentedClips}
+    >
       {text}
     </Alert>
   );

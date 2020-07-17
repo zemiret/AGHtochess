@@ -47,6 +47,7 @@ const PopoverUnitAvatar: React.FunctionComponent<Props> = ({
         />
       </div>
       <Popover
+        className="unit-popover"
         placement="left"
         isOpen={!isDragging && hover}
         trigger="hover"

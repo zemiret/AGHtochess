@@ -8,11 +8,23 @@ interface Props {
 const GameEnd: React.FunctionComponent<Props> = ({ gameResult }: Props) => {
   switch (gameResult) {
     case "WIN":
-      return <h1>You Win!</h1>;
+      return (
+        <div className="battle-result battle-result-success">
+          <h1>Victory</h1>
+        </div>
+      );
     case "DRAW":
-      return <h1>Draw</h1>;
+      return (
+        <div className="battle-result">
+          <h1>Draw</h1>
+        </div>
+      );
     case "LOSS":
-      return <h1>You Lose!</h1>;
+      return (
+        <div className="battle-result battle-result-danger">
+          <h1>Defeat</h1>
+        </div>
+      );
   }
 };
 

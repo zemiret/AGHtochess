@@ -29,13 +29,15 @@ const Backpack: React.FunctionComponent<Props> = ({
     }),
   });
 
+  const augmentedClips = "exe tl-clip tr-clip bl-clip br-clip";
+
   return (
     <div className="backpack" ref={drop}>
       <div className={hovered ? "backpack-overlay" : ""}>
         <Caption text="Units" />
         <ul>
           {units.map(unit => (
-            <li key={unit.id} className="unit">
+            <li key={unit.id} className="unit" augmented-ui={augmentedClips}>
               <div className="unit-container">
                 <BackpackUnit unit={unit} sellUnit={() => sellUnit(unit.id)} />
               </div>

@@ -37,12 +37,15 @@ const GameboardCell: React.FunctionComponent<Props> = ({
     }),
   });
 
+  const augmentedClips = "tl-clip tr-clip bl-clip br-clip exe";
+
   return (
     <td
+      augmented-ui={augmentedClips}
       id={unit && `board-unit-${unit.id}`}
       ref={drop}
       className={
-        "board-cell with-border " +
+        "board-cell " +
         (isEnemyCell ? "enemy-board-cell" : "") +
         (hovered ? "board-cell-hovered" : "")
       }

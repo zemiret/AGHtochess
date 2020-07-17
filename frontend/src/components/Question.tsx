@@ -19,10 +19,11 @@ const Question: React.FunctionComponent<Props> = ({
   question,
   answerQuestion,
 }: Props) => {
+  const augmentedClips = "exe tl-clip tr-clip bl-clip br-clip";
   return (
     <>
       {question.answers && (
-        <Card>
+        <Card className="question-card">
           <CardHeader>Question</CardHeader>
           <CardBody>
             <CardTitle>{question.text}</CardTitle>
@@ -31,6 +32,7 @@ const Question: React.FunctionComponent<Props> = ({
                 {question.answers.map(a => {
                   return (
                     <ListGroupItem
+                      augmented-ui={augmentedClips}
                       key={a.id}
                       tag="button"
                       action
